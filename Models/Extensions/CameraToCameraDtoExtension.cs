@@ -1,8 +1,7 @@
-﻿using RetroGraph.Controllers;
-using RetroGraph.LogicViewing;
+﻿using RetroGraph.LogicViewing;
 using RetroGraph.Mathmatics;
 
-namespace RetroGraph.Model.Extensions
+namespace RetroGraph.Models.Extensions
 {
     public static class CameraToCameraDtoExtension
     {

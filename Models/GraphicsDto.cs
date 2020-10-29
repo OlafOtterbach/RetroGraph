@@ -1,4 +1,4 @@
-﻿namespace RetroGraph.Model
+﻿namespace RetroGraph.Models
 {
     public class GraphicsDto
     {

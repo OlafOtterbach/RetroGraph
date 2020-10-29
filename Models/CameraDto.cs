@@ -1,4 +1,4 @@
-﻿namespace RetroGraph.Controllers
+﻿namespace RetroGraph.Models
 {
     public class CameraDto
     {
