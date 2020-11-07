@@ -2,6 +2,7 @@
 {
     public class GraphicsDto
     {
-        public double[] DrawLines { get; set; }
+        public CameraDto Camera { get; set; }
+        public int[] DrawLines { get; set; }
     }
 }
