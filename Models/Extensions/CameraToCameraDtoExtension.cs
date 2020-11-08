@@ -1,5 +1,5 @@
-﻿using RetroGraph.LogicViewing;
-using RetroGraph.Mathmatics;
+﻿using RetroGraph.Application.LogicViewing;
+using RetroGraph.Application.Mathmatics;
 
 namespace RetroGraph.Models.Extensions
 {

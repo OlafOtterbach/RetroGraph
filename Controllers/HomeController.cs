@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RetroGraph.Graphics;
-using RetroGraph.HiddenLine;
-using RetroGraph.LogicViewing;
-using RetroGraph.Mathmatics;
+using RetroGraph.Application.Graphics;
+using RetroGraph.Application.HiddenLine;
+using RetroGraph.Application.LogicViewing;
+using RetroGraph.Application.Mathmatics;
 using RetroGraph.Models;
 using RetroGraph.Models.Extensions;
 
@@ -15,10 +15,10 @@ namespace RetroGraph.Controllers
 {
     public class HomeController : Controller
     {
-        private LogicView _logicView;
+        private LogicHiddenLineView _logicView;
         private Scene _scene;
 
-        public HomeController(LogicView logicView, Scene scene)
+        public HomeController(LogicHiddenLineView logicView, Scene scene)
         {
             _logicView = logicView;
             _scene = scene;
@@ -42,7 +42,6 @@ namespace RetroGraph.Controllers
             return View();
         }
 
-        //[HttpGet("initial-graphics/{canvasWidth}/{canvasHeight}")]
         [HttpGet("initial-graphics")]
         public ActionResult GetScene([FromQuery] int canvasWidth, [FromQuery] int canvasHeight)
         {
@@ -63,14 +62,13 @@ namespace RetroGraph.Controllers
             return Ok(graphics);
         }
 
-        //[HttpGet("orbit/{camera}/{canvasWidth}/{canvasHeight}/{deltaX}/{deltaY}")]
         [HttpPost("orbit")]
-        public ActionResult Orbit([FromQuery] int deltaX, [FromQuery] int deltaY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        public ActionResult Orbit([FromQuery] double deltaX, [FromQuery] double deltaY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
-            var camera = _logicView.Orbit(deltaX, deltaY, cameraDto.ToCamera());
+            var (camera, lines) = _logicView.Orbit(deltaX, deltaY, canvasWidth, canvasHeight, cameraDto.ToCamera());
             var graphics = new GraphicsDto()
             {
-                DrawLines = HiddenLineGraphics.GetHiddenLineGraphics(_scene, camera, canvasWidth, canvasHeight).ToArray(),
+                DrawLines = lines,
                 Camera = camera.ToCameraDto()
             };
 
@@ -80,10 +78,10 @@ namespace RetroGraph.Controllers
         [HttpPost("zoom")]
         public ActionResult Zoom([FromQuery] double delta, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
-            var camera = _logicView.Zoom(delta, cameraDto.ToCamera());
+            var (camera, lines) = _logicView.Zoom(delta, canvasWidth, canvasHeight, cameraDto.ToCamera());
             var graphics = new GraphicsDto()
             {
-                DrawLines = HiddenLineGraphics.GetHiddenLineGraphics(_scene, camera, canvasWidth, canvasHeight).ToArray(),
+                DrawLines = lines,
                 Camera = camera.ToCameraDto()
             };
 
@@ -94,10 +92,10 @@ namespace RetroGraph.Controllers
         [HttpPost("select")]
         public ActionResult Select(double canvasX, [FromQuery] double canvasY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
-            var camera = _logicView.Select(canvasX, canvasY, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            var (camera, lines) = _logicView.Select(canvasX, canvasY, canvasWidth, canvasHeight, cameraDto.ToCamera());
             var graphics = new GraphicsDto()
             {
-                DrawLines = HiddenLineGraphics.GetHiddenLineGraphics(_scene, camera, canvasWidth, canvasHeight).ToArray(),
+                DrawLines = lines,
                 Camera = camera.ToCameraDto()
             };
 

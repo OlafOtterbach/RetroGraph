@@ -5,8 +5,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using RetroGraph.LogicViewing;
-using RetroGraph.SceneModel;
+using RetroGraph.Application;
+using RetroGraph.Application.HiddenLine;
+using RetroGraph.Application.LogicViewing;
 
 namespace RetroGraph
 {
@@ -29,10 +30,8 @@ namespace RetroGraph
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
-            var builder = new SceneBuilder();
-            var scene = builder.Create();
-            services.AddSingleton(scene);
-            services.AddSingleton(typeof(LogicView));
+            services.AddSingleton(SeedScene.CreateAndPopulateScene());
+            services.AddSingleton(typeof(LogicHiddenLineView));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
