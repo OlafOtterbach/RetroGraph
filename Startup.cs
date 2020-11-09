@@ -1,3 +1,6 @@
+using IGraphics;
+using IGraphics.Graphics.Graphics.Creators;
+using IHiddenLineGraphics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -5,9 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using RetroGraph.Application;
-using RetroGraph.Application.HiddenLine;
-using RetroGraph.Application.LogicViewing;
 
 namespace RetroGraph
 {
@@ -30,8 +30,9 @@ namespace RetroGraph
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
-            services.AddSingleton(SeedScene.CreateAndPopulateScene());
-            services.AddSingleton(typeof(LogicHiddenLineView));
+            ModuleIGraphics.Register(services);
+            ModuleHiddenLineGraphics.Register(services);
+            services.AddSingleton(typeof(LogicHiddenLineViewService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
