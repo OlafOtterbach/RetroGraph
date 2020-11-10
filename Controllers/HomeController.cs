@@ -1,11 +1,8 @@
 ﻿using IGraphics.Graphics;
-using IGraphics.LogicViewing;
-using IGraphics.Mathmatics;
 using IHiddenLineGraphics;
 using Microsoft.AspNetCore.Mvc;
 using RetroGraph.Models;
 using RetroGraph.Models.Extensions;
-using System.Linq;
 
 namespace RetroGraph.Controllers
 {

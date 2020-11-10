@@ -1,5 +1,4 @@
 using IGraphics;
-using IGraphics.Graphics.Graphics.Creators;
 using IHiddenLineGraphics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

@@ -10,7 +10,6 @@ canvas.addEventListener("mouseup", onMouseUp);
 var ctx = canvas.getContext("2d");
 getScenery();
 
-
 function Position(x, y) {
     this.x = x;
     this.y = y;
@@ -155,7 +154,7 @@ function postData(url, data) {
         else
             throw new Error('server can has not connected');
     }).catch(function (err) {
-            // Error
+        // Error
     });
     return result;
 }

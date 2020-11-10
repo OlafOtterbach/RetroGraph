@@ -1,17 +1,17 @@
-﻿using System.Linq;
-using IGraphics.Graphics;
+﻿using IGraphics.Graphics;
 using IGraphics.LogicViewing;
 using IGraphics.Mathmatics;
 using RetroGraph.Models;
 using RetroGraph.Models.Extensions;
+using System.Linq;
 
 namespace IHiddenLineGraphics
 {
     public class LogicHiddenLineViewService
     {
-        IHiddenLineService _hiddenLineService;
-        ILogicView _view;
-        Scene _scene;
+        private IHiddenLineService _hiddenLineService;
+        private ILogicView _view;
+        private Scene _scene;
 
         public LogicHiddenLineViewService(IHiddenLineService hiddenLineService, ILogicView view, Scene scene)
         {
@@ -38,7 +38,7 @@ namespace IHiddenLineGraphics
             return graphics;
         }
 
-        public GraphicsDto Orbit( double deltaX,  double deltaY,  int canvasWidth,  int canvasHeight, Camera camera)
+        public GraphicsDto Orbit(double deltaX, double deltaY, int canvasWidth, int canvasHeight, Camera camera)
         {
             var rotatedCamera = _view.Orbit(deltaX, deltaY, camera);
             var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, rotatedCamera, canvasWidth, canvasHeight).ToArray();
