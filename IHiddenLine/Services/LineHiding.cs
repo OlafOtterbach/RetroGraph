@@ -1,8 +1,10 @@
 ﻿using IGraphics.Mathmatics;
 using IGraphics.Mathmatics.Extensions;
 using IHiddenLineGraphics.Model;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace IHiddenLineGraphics.Services
 {
@@ -10,8 +12,9 @@ namespace IHiddenLineGraphics.Services
     {
         public static IEnumerable<LineHL> FilterOutHiddenLines(this IEnumerable<LineHL> lines, SceneHL scene)
         {
+            var nearPlaneDistance = scene.NearPlaneDistance;
             var triangles = scene.Triangles;
-            var visibleLines = lines.Where(line => IsLineVisible(line, scene.NearPlaneDistance, triangles)).ToList();
+            var visibleLines = lines.AsParallel().Where(line => IsLineVisible(line, scene.NearPlaneDistance, triangles)).ToList();
             return visibleLines;
         }
 

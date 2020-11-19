@@ -31,10 +31,10 @@ namespace IGraphics.Graphics.Creators
                 new [] { 1.0, 10.0, 4.0, 20.0, 0, 20}
             };
             var rotationBody = RotationBody.Create(16, segments);
-            rotationBody.Frame = Matrix44D.CreateTranslation(new Vector3D(20, 00, 0));
+            rotationBody.Frame = Matrix44D.CreateTranslation(new Vector3D(30, -30, 0));
             scene.Bodies.Add(rotationBody);
 
-            var sphere = Sphere.Create(16, 10);
+            var sphere = Sphere.Create(16, 8);
             sphere.Frame = Matrix44D.CreateTranslation(new Vector3D(-30, 30, 10));
             scene.Bodies.Add(sphere);
 
