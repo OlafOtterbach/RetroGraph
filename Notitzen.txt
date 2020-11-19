@@ -1,0 +1,2 @@
+Linienanzahl: 674
+Ausfilter von Linien, deren Dreicke nicht sichtbar sind: 370

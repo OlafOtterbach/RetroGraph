@@ -19,10 +19,13 @@ namespace IHiddenLineGraphics
             // Project 3D lines on Nearplane to 2D lines
             var planeLines = clippedEdges.ProjectToCameraPlane(sceneHL.NearPlaneDistance);
 
+            // Filter lines with at least one visible triangle
+            var visiblePlaneLines = planeLines.FilterLinesOfVisibleTriangles();
+
             // Clipp lines at the projected screen limits
             var (left, bottom) = Projection.ProjectCanvasToCameraPlane(0, canvasHeight, canvasWidth, canvasHeight);
             var (right, top) = Projection.ProjectCanvasToCameraPlane(canvasWidth, 0, canvasWidth, canvasHeight);
-            var clippedLines = planeLines.Clipp(left, right, bottom, top);
+            var clippedLines = visiblePlaneLines.Clipp(left, right, bottom, top);
 
             // Cut 2D lines in uncutted 2D lines
             var cuttedLines = clippedLines.CutLines();

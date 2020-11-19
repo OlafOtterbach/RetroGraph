@@ -98,7 +98,7 @@ namespace IGraphics.Graphics.Creators.Creator
 
                 bool xxx = edge.First.ParentTriangle.ParentFace == edge.Second.ParentTriangle.ParentFace;
 
-                var canBeVisible = has_same_coedges && parent_face_has_border
+                var canBeVisible =    has_same_coedges && parent_face_has_border
                                    || !has_same_coedges && triangle_normals_are_different
                                    || triangles_have_different_face && parent_face_has_border;
 
