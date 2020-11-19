@@ -1,6 +1,6 @@
 ﻿using IGraphics.Mathmatics;
 
-namespace IGraphics.Graphics.Graphics.Creators
+namespace IGraphics.Graphics.Creators
 {
     public static class SeedScene
     {
@@ -22,6 +22,21 @@ namespace IGraphics.Graphics.Graphics.Creators
 
             var floor = Floor.Create(4, 20);
             scene.Bodies.Add(floor);
+
+
+            double[][] segments = new double[][]
+            {
+                new [] { 0.0, 0.0, 4.0, 0.0 },
+                new [] { 4.0, 0.0, 1.0, 10.0 },
+                new [] { 1.0, 10.0, 4.0, 20.0, 0, 20}
+            };
+            var rotationBody = RotationBody.Create(16, segments);
+            rotationBody.Frame = Matrix44D.CreateTranslation(new Vector3D(20, 00, 0));
+            scene.Bodies.Add(rotationBody);
+
+            var sphere = Sphere.Create(16, 10);
+            sphere.Frame = Matrix44D.CreateTranslation(new Vector3D(-30, 30, 10));
+            scene.Bodies.Add(sphere);
 
             return scene;
         }

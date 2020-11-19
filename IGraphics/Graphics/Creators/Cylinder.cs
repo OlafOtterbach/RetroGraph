@@ -2,7 +2,7 @@
 using IGraphics.Mathmatics;
 using System;
 
-namespace IGraphics.Graphics.Graphics.Creators
+namespace IGraphics.Graphics.Creators
 {
     public static class Cylinder
     {

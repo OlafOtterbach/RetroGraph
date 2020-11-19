@@ -3,7 +3,7 @@ using IGraphics.Mathmatics;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IGraphics.Graphics.Graphics.Creators
+namespace IGraphics.Graphics.Creators
 {
     public static class Floor
     {

@@ -1,7 +1,7 @@
 ﻿using IGraphics.Graphics.Creators.Creator;
 using IGraphics.Mathmatics;
 
-namespace IGraphics.Graphics.Graphics.Creators
+namespace IGraphics.Graphics.Creators
 {
     public static class Cube
     {

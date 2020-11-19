@@ -1,4 +1,4 @@
-﻿using IGraphics.Graphics.Graphics.Creators;
+﻿using IGraphics.Graphics.Creators;
 using IGraphics.LogicViewing;
 using Microsoft.Extensions.DependencyInjection;
 
