@@ -1,4 +1,4 @@
-﻿using IGraphics.Graphics.Creators.Builder;
+﻿using IGraphics.Graphics.Creators.Creator;
 using IGraphics.Mathmatics;
 using System;
 
@@ -8,12 +8,14 @@ namespace IGraphics.Graphics.Graphics.Creators
     {
         public static Body Create(int segments, double radius, double height)
         {
+            var creator = new GraphicsCreator();
+
             double alpha = 2.0 * Math.PI / segments;
             double half = height / 2.0;
             double z0 = -half;
             double z1 = half;
 
-            var builder = GraphicsBuilder.Definition.BeginBody.BeginFace as GraphicsBuilder;
+            creator.AddFace(false);
             for (int i = 0; i < segments; i++)
             {
                 double x0 = (Math.Sin(i * alpha) * radius);
@@ -24,20 +26,11 @@ namespace IGraphics.Graphics.Graphics.Creators
                 var p2 = new Position3D(x0, y0, z1);
                 var p3 = new Position3D(x1, y1, z0);
                 var p4 = new Position3D(x1, y1, z1);
-                builder = builder
-                    .BeginTriangle
-                            .P1(p1)
-                            .P2(p2)
-                            .P3(p3)
-                    .EndTriangle
-                    .BeginTriangle
-                            .P1(p3)
-                            .P2(p2)
-                            .P3(p4)
-                    .EndTriangle as GraphicsBuilder;
+                creator.AddTriangle(p1, p2, p3);
+                creator.AddTriangle(p3, p2, p4);
             }
-            builder = builder.EndFace.BeginFace.HasBorder as GraphicsBuilder;
 
+            creator.AddFace(true);
             for (int i = 0; i < segments; i++)
             {
                 double x0 = (Math.Sin(i * alpha) * radius);
@@ -49,15 +42,10 @@ namespace IGraphics.Graphics.Graphics.Creators
                 var p1 = new Position3D(x0, y0, z1);
                 var p2 = new Position3D(x1, y1, z1);
                 var p3 = new Position3D(x2, y2, z1);
-                builder = builder
-                    .BeginTriangle
-                            .P1(p1)
-                            .P2(p3)
-                            .P3(p2)
-                    .EndTriangle as GraphicsBuilder;
+                creator.AddTriangle(p1, p3, p2);
             }
-            builder = builder.EndFace.BeginFace.HasBorder as GraphicsBuilder;
 
+            creator.AddFace(true);
             for (int i = 0; i < segments; i++)
             {
                 double x0 = (Math.Sin(i * alpha) * radius);
@@ -69,15 +57,10 @@ namespace IGraphics.Graphics.Graphics.Creators
                 var p1 = new Position3D(x0, y0, z0);
                 var p2 = new Position3D(x1, y1, z0);
                 var p3 = new Position3D(x2, y2, z0);
-                builder = builder
-                    .BeginTriangle
-                            .P1(p1)
-                            .P2(p2)
-                            .P3(p3)
-                    .EndTriangle as GraphicsBuilder;
+                creator.AddTriangle(p1, p2, p3);
             }
 
-            var body = builder.EndFace.EndBody.CreateBody();
+            var body = creator.CreateBody();
             return body;
         }
     }

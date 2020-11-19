@@ -1,4 +1,4 @@
-﻿using IGraphics.Graphics.Creators.Builder;
+﻿using IGraphics.Graphics.Creators.Creator;
 using IGraphics.Mathmatics;
 
 namespace IGraphics.Graphics.Graphics.Creators
@@ -19,95 +19,39 @@ namespace IGraphics.Graphics.Graphics.Creators
             var p7 = new Position3D(size, size, size);
             var p8 = new Position3D(-size, size, size);
 
-            var body = GraphicsBuilder
-                .Definition
-                    .BeginBody
-                    .BeginFace
-                        .HasBorder
-                        // South
-                        .BeginTriangle
-                            .P1(p1)
-                            .P2(p2)
-                            .P3(p3)
-                        .EndTriangle
-                        .BeginTriangle
-                            .P1(p3)
-                            .P2(p4)
-                            .P3(p1)
-                        .EndTriangle
-                    .EndFace
-                    .BeginFace
-                        .HasBorder
-                        // East
-                        .BeginTriangle
-                            .P1(p2)
-                            .P2(p6)
-                            .P3(p7)
-                        .EndTriangle
-                        .BeginTriangle
-                            .P1(p7)
-                            .P2(p3)
-                            .P3(p2)
-                        .EndTriangle
-                    .EndFace
-                    .BeginFace
-                        .HasBorder
-                        // North
-                        .BeginTriangle
-                            .P1(p6)
-                            .P2(p5)
-                            .P3(p8)
-                        .EndTriangle
-                        .BeginTriangle
-                            .P1(p8)
-                            .P2(p7)
-                            .P3(p6)
-                        .EndTriangle
-                    .EndFace
-                    .BeginFace
-                        .HasBorder
-                        // West
-                        .BeginTriangle
-                            .P1(p5)
-                            .P2(p1)
-                            .P3(p4)
-                        .EndTriangle
-                        .BeginTriangle
-                            .P1(p4)
-                            .P2(p8)
-                            .P3(p5)
-                        .EndTriangle
-                    .EndFace
-                    .BeginFace
-                        .HasBorder
-                        // Top
-                        .BeginTriangle
-                           .P1(p4)
-                           .P2(p3)
-                           .P3(p7)
-                        .EndTriangle
-                        .BeginTriangle
-                           .P1(p7)
-                           .P2(p8)
-                           .P3(p4)
-                        .EndTriangle
-                    .EndFace
-                    .BeginFace
-                        .HasBorder
-                        // Bottom
-                        .BeginTriangle
-                           .P1(p2)
-                           .P2(p1)
-                           .P3(p5)
-                        .EndTriangle
-                        .BeginTriangle
-                           .P1(p5)
-                           .P2(p6)
-                           .P3(p2)
-                        .EndTriangle
-                    .EndFace
-                .EndBody
-                .CreateBody();
+            var creator = new GraphicsCreator();
+
+            // South
+            creator.AddFace(true);
+            creator.AddTriangle(p1, p2, p3);
+            creator.AddTriangle(p3, p4, p1);
+
+            // East
+            creator.AddFace(true);
+            creator.AddTriangle(p2, p6, p7);
+            creator.AddTriangle(p7, p3, p2);
+
+            // North
+            creator.AddFace(true);
+            creator.AddTriangle(p6, p5, p8);
+            creator.AddTriangle(p8, p7, p6);
+
+            // West
+            creator.AddFace(true);
+            creator.AddTriangle(p5, p1, p4);
+            creator.AddTriangle(p4, p8, p5);
+
+            // Top
+            creator.AddFace(true);
+            creator.AddTriangle(p4, p3, p7);
+            creator.AddTriangle(p7, p8, p4);
+
+            // Bottom
+            creator.AddFace(true);
+            creator.AddTriangle(p2, p1, p5);
+            creator.AddTriangle(p5, p6, p2);
+
+            var body = creator.CreateBody();
 
             return body;
         }

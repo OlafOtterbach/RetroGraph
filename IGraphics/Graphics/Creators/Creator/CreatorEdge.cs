@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace IGraphics.Graphics.Creators.Builder
+namespace IGraphics.Graphics.Creators.Creator
 {
-    public struct BuilderEdge : IEquatable<BuilderEdge>
+    public struct CreatorEdge : IEquatable<CreatorEdge>
     {
         private int _hashCode;
 
-        public BuilderEdge(BuilderVertex start, BuilderVertex end)
+        public CreatorEdge(CreatorVertex start, CreatorVertex end)
         {
             Start = start;
             End = end;
@@ -19,18 +19,18 @@ namespace IGraphics.Graphics.Creators.Builder
             _hashCode = n * (n + 1) / 2 + x;
         }
 
-        public BuilderVertex Start { get; }
+        public CreatorVertex Start { get; }
 
-        public BuilderVertex End { get; }
+        public CreatorVertex End { get; }
 
-        public override bool Equals(Object obj) => (obj is BuilderEdge) && (this.Equals((BuilderEdge)obj));
+        public override bool Equals(Object obj) => (obj is CreatorEdge) && (this.Equals((CreatorEdge)obj));
 
-        public bool Equals(BuilderEdge other) => GetHashCode() == other.GetHashCode();
+        public bool Equals(CreatorEdge other) => GetHashCode() == other.GetHashCode();
 
         public override int GetHashCode() => _hashCode;
 
-        public static bool operator ==(BuilderEdge first, BuilderEdge second) => first.Equals(second);
+        public static bool operator ==(CreatorEdge first, CreatorEdge second) => first.Equals(second);
 
-        public static bool operator !=(BuilderEdge first, BuilderEdge second) => !first.Equals(second);
+        public static bool operator !=(CreatorEdge first, CreatorEdge second) => !first.Equals(second);
     }
 }

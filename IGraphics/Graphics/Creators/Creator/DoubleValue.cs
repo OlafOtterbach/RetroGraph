@@ -1,7 +1,7 @@
 ﻿using IGraphics.Mathmatics;
 using System;
 
-namespace IGraphics.Graphics.Creators.Builder
+namespace IGraphics.Graphics.Creators.Creator
 {
     public struct DoubleValue : IEquatable<DoubleValue>
     {

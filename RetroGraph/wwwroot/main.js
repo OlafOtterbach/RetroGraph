@@ -1,4 +1,6 @@
-﻿let currentCamera;
+﻿let id = 1;
+let lock = false;
+let currentCamera;
 let mouseMoved = false;
 let currentPosition;
 let backgroundColor = "black";
@@ -13,6 +15,10 @@ getScenery();
 function Position(x, y) {
     this.x = x;
     this.y = y;
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function onMouseDown(event) {
@@ -68,27 +74,46 @@ function getPosition(event, canvas) {
 }
 
 async function getScenery() {
+    lock = true;
     let url = encodeURI("http://localhost:5000/initial-graphics?canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
     let graphics = await fetchData(url);
+    lock = false;
     drawScene(graphics);
 }
 
 async function select(x, y, camera) {
+    lock = true;
+    camera.Id = id++;
     let url = encodeURI("http://localhost:5000/select?canvasX=" + x + "&canvasY=" + y + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
     let graphics = await postData(url, camera);
+    lock = false;
+    console.log(graphics.Camera.Id);
     drawScene(graphics);
 }
 
 async function orbit(deltaX, deltaY, camera) {
-    let url = encodeURI("http://localhost:5000/orbit?deltaX=" + deltaX + " &deltaY=" + deltaY + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
-    let graphics = await postData(url, camera);
-    drawScene(graphics);
+    sleep(50);
+    if (!lock) {
+        lock = true;
+        camera.Id = id++;
+        let url = encodeURI("http://localhost:5000/orbit?deltaX=" + deltaX + " &deltaY=" + deltaY + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
+        let graphics = await postData(url, camera);
+        lock = false;
+        drawScene(graphics);
+    }
 }
 
 async function zoom(delta, camera) {
-    let url = encodeURI("http://localhost:5000/zoom?delta=" + delta + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
-    let graphics = await postData(url, camera);
-    drawScene(graphics);
+    sleep(50);
+    if (!lock) {
+        lock = true;
+        camera.Id = id++;
+        let url = encodeURI("http://localhost:5000/zoom?delta=" + delta + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
+        let graphics = await postData(url, camera);
+        lock = false;
+        console.log(graphics.Camera.Id);
+        drawScene(graphics);
+    }
 }
 
 function drawScene(graphics) {
@@ -100,7 +125,7 @@ function drawScene(graphics) {
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = foregroundColor;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.lineCap = "round";
         ctx.setLineDash([]);
 
@@ -113,8 +138,8 @@ function drawScene(graphics) {
             let y2 = lines[i + 3];
             drawLine(x1, y1, x2, y2);
         }
+        ctx.closePath();
         ctx.stroke();
-        ctx.endPath();
     }
 }
 

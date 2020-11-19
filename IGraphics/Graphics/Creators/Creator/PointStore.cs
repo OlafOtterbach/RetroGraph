@@ -1,7 +1,7 @@
 ﻿using IGraphics.Mathmatics;
 using System.Collections.Generic;
 
-namespace IGraphics.Graphics.Creators.Builder
+namespace IGraphics.Graphics.Creators.Creator
 {
     public class PointStore
     {

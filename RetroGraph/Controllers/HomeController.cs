@@ -45,6 +45,7 @@ namespace RetroGraph.Controllers
         public ActionResult Orbit([FromQuery] double deltaX, [FromQuery] double deltaY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
             var graphics = _logicView.Orbit(deltaX, deltaY, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            graphics.Camera.Id = cameraDto.Id;
             return Ok(graphics);
         }
 
@@ -52,6 +53,7 @@ namespace RetroGraph.Controllers
         public ActionResult Zoom([FromQuery] double delta, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
             var graphics = _logicView.Zoom(delta, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            graphics.Camera.Id = cameraDto.Id;
             return Ok(graphics);
         }
 
@@ -59,6 +61,7 @@ namespace RetroGraph.Controllers
         public ActionResult Select(double canvasX, [FromQuery] double canvasY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
             var graphics = _logicView.Select(canvasX, canvasY, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            graphics.Camera.Id = cameraDto.Id;
             return Ok(graphics);
         }
     }

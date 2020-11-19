@@ -4,20 +4,20 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IGraphics.Graphics.Creators.Builder
+namespace IGraphics.Graphics.Creators.Creator
 {
     public static class FaceConverter
     {
-        public static IEnumerable<Face> Convert(this IEnumerable<BuilderFace> builderFaces)
+        public static IEnumerable<Face> Convert(this IEnumerable<CreatorFace> CreatorFaces)
         {
-            var faces = builderFaces.Select(bf => Convert(bf));
+            var faces = CreatorFaces.Select(bf => Convert(bf));
             return faces;
         }
 
-        private static Face Convert(BuilderFace builderFace)
+        private static Face Convert(CreatorFace CreatorFace)
         {
-            var builderTriangles = builderFace.Triangles.ToList();
-            var vertices = builderTriangles.SelectMany(GetTrianglesVertices).ToList();
+            var CreatorTriangles = CreatorFace.Triangles.ToList();
+            var vertices = CreatorTriangles.SelectMany(GetTrianglesVertices).ToList();
             var dict = new ConcurrentDictionary<Point3D, HashSet<Vector3D>>();
             vertices.AsParallel()
                     .ToList()
@@ -28,9 +28,9 @@ namespace IGraphics.Graphics.Creators.Builder
                                                   )
                             );
             var vertexDict = dict.ToDictionary(p => p.Key, p => Aggregate(p.Value));
-            var triangles = builderTriangles.Select(bt => ConvertToTriangle(bt, vertexDict)).ToArray();
+            var triangles = CreatorTriangles.Select(bt => ConvertToTriangle(bt, vertexDict)).ToArray();
 
-            var face = new Face() { Triangles = triangles, HasBorder = builderFace.HasBorder };
+            var face = new Face() { Triangles = triangles, HasBorder = CreatorFace.HasBorder };
 
             triangles.ForEach(triangle => triangle.ParentFace = face);
 
@@ -56,7 +56,7 @@ namespace IGraphics.Graphics.Creators.Builder
             return hashset;
         }
 
-        private static IEnumerable<BuilderVertex> GetTrianglesVertices(BuilderTriangle triangle)
+        private static IEnumerable<CreatorVertex> GetTrianglesVertices(CreatorTriangle triangle)
         {
             yield return triangle.P1;
             yield return triangle.P2;
@@ -64,25 +64,25 @@ namespace IGraphics.Graphics.Creators.Builder
         }
 
         private static Triangle ConvertToTriangle(
-            BuilderTriangle builderTriangle,
+            CreatorTriangle CreatorTriangle,
             Dictionary<Point3D, Vector3D> verticesAndNormals)
         {
             var p1 = new Vertex()
             {
-                Point = builderTriangle.P1.Point,
-                Normal = verticesAndNormals[builderTriangle.P1.Point]
+                Point = CreatorTriangle.P1.Point,
+                Normal = verticesAndNormals[CreatorTriangle.P1.Point]
             };
 
             var p2 = new Vertex()
             {
-                Point = builderTriangle.P2.Point,
-                Normal = verticesAndNormals[builderTriangle.P2.Point]
+                Point = CreatorTriangle.P2.Point,
+                Normal = verticesAndNormals[CreatorTriangle.P2.Point]
             };
 
             var p3 = new Vertex()
             {
-                Point = builderTriangle.P3.Point,
-                Normal = verticesAndNormals[builderTriangle.P3.Point]
+                Point = CreatorTriangle.P3.Point,
+                Normal = verticesAndNormals[CreatorTriangle.P3.Point]
             };
 
             var coEdges = new CoEdge[3];
@@ -95,7 +95,7 @@ namespace IGraphics.Graphics.Creators.Builder
                 P1 = p1,
                 P2 = p2,
                 P3 = p3,
-                Normal = builderTriangle.Normal,
+                Normal = CreatorTriangle.Normal,
                 CoEdges = coEdges
             };
 
