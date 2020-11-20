@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroGraph", ".\RetroGraph\RetroGraph.csproj", "{71E0BE92-D5FF-4EA6-B2C3-9D821C599509}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroGraph", "RetroGraph\RetroGraph.csproj", "{71E0BE92-D5FF-4EA6-B2C3-9D821C599509}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGraphics", ".\IGraphics\IGraphics.csproj", "{E1919850-8FA1-40B8-83AF-94D2B5EAF2BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IGraphics", "IGraphics\IGraphics.csproj", "{E1919850-8FA1-40B8-83AF-94D2B5EAF2BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IHiddenLineGraphics", ".\IHiddenLine\IHiddenLineGraphics.csproj", "{0E00990D-C952-4319-AAB2-6F4A90F57301}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IHiddenLineGraphics", "IHiddenLine\IHiddenLineGraphics.csproj", "{0E00990D-C952-4319-AAB2-6F4A90F57301}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGraphics.Tests", "IGraphics.Tests\IGraphics.Tests.csproj", "{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,18 @@ Global
 		{0E00990D-C952-4319-AAB2-6F4A90F57301}.Release|x64.Build.0 = Release|Any CPU
 		{0E00990D-C952-4319-AAB2-6F4A90F57301}.Release|x86.ActiveCfg = Release|Any CPU
 		{0E00990D-C952-4319-AAB2-6F4A90F57301}.Release|x86.Build.0 = Release|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Debug|x64.Build.0 = Debug|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Debug|x86.Build.0 = Debug|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Release|x64.ActiveCfg = Release|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Release|x64.Build.0 = Release|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Release|x86.ActiveCfg = Release|Any CPU
+		{CEE29AC9-5E1F-4CF6-AD6B-BCBDD7C5614D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

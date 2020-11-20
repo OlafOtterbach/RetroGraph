@@ -20,18 +20,33 @@ namespace IHiddenLineGraphics.Services
                 while (source.Count > 0)
                 {
                     var second = source.Pop();
-                    var (hasIntersection, x, y) = IntersectionMath.Check2DLineWithLine(first.Start.X, first.Start.Y, first.End.X, first.End.Y, second.Start.X, second.Start.Y, second.End.X, second.End.Y);
-                    if (hasIntersection)
+                    var x1 = first.Start.X;
+                    var y1 = first.Start.Y;
+                    var x2 = first.End.X;
+                    var y2 = first.End.Y;
+                    var x3 = second.Start.X;
+                    var y3 = second.Start.Y;
+                    var x4 = second.End.X;
+                    var y4 = second.End.Y;
+                    if (IntersectionMath.AreLinesBoundedBoxesOverlapped(x1, y1,x2,y2,x3,y3,x4,y4))
                     {
-                        var intersection = new PointHL(x, y);
-                        var first1 = new LineHL { Start = first.Start, End = intersection, Edge = first.Edge };
-                        var first2 = new LineHL { Start = intersection, End = first.End, Edge = first.Edge };
-                        var second1 = new LineHL { Start = second.Start, End = intersection, Edge = second.Edge };
-                        var second2 = new LineHL { Start = intersection, End = second.End, Edge = second.Edge };
-                        target.Push(first2);
-                        target.Push(second1);
-                        target.Push(second2);
-                        first = first1;
+                        var (hasIntersection, x, y) = IntersectionMath.Check2DLineWithLine(x1, y1, x2, y2, x3, y3, x4, y4);
+                        if (hasIntersection)
+                        {
+                            var intersection = new PointHL(x, y);
+                            var first1 = new LineHL { Start = first.Start, End = intersection, Edge = first.Edge };
+                            var first2 = new LineHL { Start = intersection, End = first.End, Edge = first.Edge };
+                            var second1 = new LineHL { Start = second.Start, End = intersection, Edge = second.Edge };
+                            var second2 = new LineHL { Start = intersection, End = second.End, Edge = second.Edge };
+                            target.Push(first2);
+                            target.Push(second1);
+                            target.Push(second2);
+                            first = first1;
+                        }
+                        else
+                        {
+                            target.Push(second);
+                        }
                     }
                     else
                     {

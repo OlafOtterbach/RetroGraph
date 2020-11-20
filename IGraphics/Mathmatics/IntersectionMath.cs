@@ -5,6 +5,22 @@ namespace IGraphics.Mathmatics
 {
     public static class IntersectionMath
     {
+        public static bool AreLinesBoundedBoxesOverlapped(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
+        {
+            if (x2 < x1) (x1, x2) = Swap(x1, x2);
+            if (y2 < y1) (y1, y2) = Swap(y1, y2);
+            if (x4 < x3) (x3, x4) = Swap(x3, x4);
+            if (y4 < y3) (y3, y4) = Swap(y3, y4);
+
+            var xOverlapped = (x1 > x3 && x1 < x4) || (x2 > x3 && x2 < x4) || (x3 > x1 && x3 < x2) || (x4 > x1 && x4 < x2) || x1.EqualsTo(x3) || x2.EqualsTo(x4);
+            var yOverlapped = (y1 > y3 && y1 < y4) || (y2 > y3 && y2 < y4) || (y3 > y1 && y3 < y2) || (y4 > y1 && y4 < y2) || y1.EqualsTo(y3) || y2.EqualsTo(y4);
+            var areOverlapped = xOverlapped && yOverlapped;
+
+            return areOverlapped;
+        }
+
+        private static (double, double) Swap(double first, double second) => (second, first);
+
         public static (bool, double, double) Check2DLineWithLine(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
         {
             // Calculating intersection between p1p2 and p3p4
