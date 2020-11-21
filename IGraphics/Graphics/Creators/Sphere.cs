@@ -22,8 +22,10 @@ namespace IGraphics.Graphics.Creators
             {
                 segment.ToArray()
             };
+            var borderFlags = new bool[] { true };
+            var facetsFlags = new bool[] { true };
 
-            var body = RotationBody.Create(circleSegments, segments);
+            var body = RotationBody.Create(circleSegments, segments, borderFlags, facetsFlags);
 
             return body;
         }

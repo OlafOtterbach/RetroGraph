@@ -10,6 +10,8 @@ namespace IGraphics.Graphics.Creators.Creator
 
         public bool HasBorder { get; set; }
 
+        public bool HasFacets { get; set; }
+
         public void AddTriangle(CreatorTriangle triangle)
         {
             _triangles.Add(triangle);

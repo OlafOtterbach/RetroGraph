@@ -15,7 +15,7 @@ namespace IGraphics.Graphics.Creators
             double z0 = -half;
             double z1 = half;
 
-            creator.AddFace(false);
+            creator.AddFace(false, false);
             for (int i = 0; i < segments; i++)
             {
                 double x0 = (Math.Sin(i * alpha) * radius);
@@ -30,7 +30,7 @@ namespace IGraphics.Graphics.Creators
                 creator.AddTriangle(p3, p2, p4);
             }
 
-            creator.AddFace(true);
+            creator.AddFace(true, false);
             for (int i = 0; i < segments; i++)
             {
                 double x0 = (Math.Sin(i * alpha) * radius);
@@ -45,7 +45,7 @@ namespace IGraphics.Graphics.Creators
                 creator.AddTriangle(p1, p3, p2);
             }
 
-            creator.AddFace(true);
+            creator.AddFace(true, false);
             for (int i = 0; i < segments; i++)
             {
                 double x0 = (Math.Sin(i * alpha) * radius);

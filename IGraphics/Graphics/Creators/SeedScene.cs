@@ -1,4 +1,6 @@
 ﻿using IGraphics.Mathmatics;
+using System;
+using System.Linq;
 
 namespace IGraphics.Graphics.Creators
 {
@@ -28,9 +30,13 @@ namespace IGraphics.Graphics.Creators
             {
                 new [] { 0.0, 0.0, 4.0, 0.0 },
                 new [] { 4.0, 0.0, 1.0, 10.0 },
-                new [] { 1.0, 10.0, 4.0, 20.0, 0, 20}
+                new [] { 1.0, 10.0, 4.0, 20.0 },
+                new [] { 4.0, 20.0, 0, 20},
             };
-            var rotationBody = RotationBody.Create(16, segments);
+            bool[] borderFlags = new bool[] { true, false, false, true };
+            bool[] facetsFlags = new bool[] { false, false, false, false };
+
+            var rotationBody = RotationBody.Create(16, segments, borderFlags, facetsFlags);
             rotationBody.Frame = Matrix44D.CreateTranslation(new Vector3D(30, -30, 0));
             scene.Bodies.Add(rotationBody);
 

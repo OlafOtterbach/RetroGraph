@@ -20,7 +20,7 @@ namespace IGraphics.Graphics.Creators
                     var p2 = positions[x][y + 1];
                     var p3 = positions[x + 1][y + 1];
                     var p4 = positions[x + 1][y];
-                    creator.AddFace(true);
+                    creator.AddFace(true, false);
                     creator.AddTriangle(p1, p2, p4);
                     creator.AddTriangle(p3, p4, p2);
                 }

@@ -40,5 +40,31 @@ namespace IGraphics.Tests
         {
             Assert.False(IntersectionMath.AreLinesBoundedBoxesOverlapped(1, 1, 10, 10, 1, 20, 10, 10));
         }
+
+        [Fact]
+        public void Check2DLineWithLineTest1()
+        {
+            var (hasIntersection, ix, iy) = IntersectionMath.Check2DLineWithLine(0, 0, 10, 10, 0, 10, 10, 0);
+
+            Assert.True(hasIntersection);
+            Assert.Equal(5.0, ix, 2);
+            Assert.Equal(5.0, iy, 2);
+        }
+
+        [Fact]
+        public void Check2DLineWithLineTest2()
+        {
+            var (hasIntersection, ix, iy) = IntersectionMath.Check2DLineWithLine(0, 0, 10, 10, 0, 10, 4, 6);
+
+            Assert.False(hasIntersection);
+        }
+
+        [Fact]
+        public void Check2DLineWithLineTest3()
+        {
+            var (hasIntersection, ix, iy) = IntersectionMath.Check2DLineWithLine(0, 0, 10, 10, 0, 10, 5, 5);
+
+            Assert.False(hasIntersection);
+        }
     }
 }

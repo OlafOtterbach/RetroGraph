@@ -22,32 +22,32 @@ namespace IGraphics.Graphics.Creators
             var creator = new GraphicsCreator();
 
             // South
-            creator.AddFace(true);
+            creator.AddFace(true, false);
             creator.AddTriangle(p1, p2, p3);
             creator.AddTriangle(p3, p4, p1);
 
             // East
-            creator.AddFace(true);
+            creator.AddFace(true, false);
             creator.AddTriangle(p2, p6, p7);
             creator.AddTriangle(p7, p3, p2);
 
             // North
-            creator.AddFace(true);
+            creator.AddFace(true, false);
             creator.AddTriangle(p6, p5, p8);
             creator.AddTriangle(p8, p7, p6);
 
             // West
-            creator.AddFace(true);
+            creator.AddFace(true, false);
             creator.AddTriangle(p5, p1, p4);
             creator.AddTriangle(p4, p8, p5);
 
             // Top
-            creator.AddFace(true);
+            creator.AddFace(true, false);
             creator.AddTriangle(p4, p3, p7);
             creator.AddTriangle(p7, p8, p4);
 
             // Bottom
-            creator.AddFace(true);
+            creator.AddFace(true, false);
             creator.AddTriangle(p2, p1, p5);
             creator.AddTriangle(p5, p6, p2);
 

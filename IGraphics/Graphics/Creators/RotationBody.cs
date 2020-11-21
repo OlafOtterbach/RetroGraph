@@ -6,28 +6,31 @@ namespace IGraphics.Graphics.Creators
 {
     public static class RotationBody
     {
-        public static Body Create(int circleSegments, double[][] shapeSections)
+        public static Body Create(int circleSegments, double[][] shapeSections, bool[] borderFlags, bool[] facetsFlags)
         {
-            var creator = CreateGraphics(circleSegments, shapeSections);
+            var creator = CreateGraphics(circleSegments, shapeSections, borderFlags, facetsFlags);
             var body = creator.CreateBody();
             return body;
         }
 
-        public static GraphicsCreator CreateGraphics(int circleSegments, double[][] shapeSections)
+        public static GraphicsCreator CreateGraphics(int circleSegments, double[][] shapeSections, bool[] borderFlags, bool[] facetsFlags)
         {
             var creator = new GraphicsCreator();
 
-            foreach (var section in shapeSections)
+            for(var i = 0; i< shapeSections.Length; i++)
             {
-                CreateSection(creator, circleSegments, section);
+                var section = shapeSections[i];
+                var hasBorder = borderFlags[i];
+                var hasFacets = facetsFlags[i];
+                CreateSection(creator, circleSegments, section, hasBorder, hasFacets);
             }
 
             return creator;
         }
 
-        private static void CreateSection(GraphicsCreator creator, int circleSegments, double[] section)
+        private static void CreateSection(GraphicsCreator creator, int circleSegments, double[] section, bool hasBorder, bool hasFacets)
         {
-            creator.AddFace(true);
+            creator.AddFace(hasBorder, hasFacets);
 
             double alpha = 2.0 * Math.PI / circleSegments;
             var n = section.Length - 2;

@@ -23,9 +23,9 @@ namespace IGraphics.Graphics.Creators.Creator
         private List<CreatorFace> Faces { get; set;  } = new List<CreatorFace>();
         private CreatorFace CurrentFace => Faces.Last();
 
-        public void AddFace(bool hasBorder)
+        public void AddFace(bool hasBorder, bool hasFacets)
         {
-            Faces.Add(new CreatorFace() { HasBorder = hasBorder });
+            Faces.Add(new CreatorFace() { HasBorder = hasBorder, HasFacets = hasFacets });
         }
 
 
