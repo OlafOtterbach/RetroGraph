@@ -20,7 +20,7 @@ namespace IHiddenLineGraphics.Services
             var isSecondTriangleVisible = IsTriangleVisible(secondTriangle);
             if (isFirstTriangleVisible != isSecondTriangleVisible) return true;
 
-            if (((firstTriangle.Face.HasBorder || secondTriangle.Face.HasBorder) && firstTriangle.Face != secondTriangle.Face)
+            if (((firstTriangle.Face.HasBorder || secondTriangle.Face.HasBorder) && (firstTriangle.Face != secondTriangle.Face || firstTriangle == secondTriangle))
                 || (firstTriangle.Face.HasFacets || secondTriangle.Face.HasFacets))
             {
                 return true;
