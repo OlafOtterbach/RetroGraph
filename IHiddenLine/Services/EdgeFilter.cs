@@ -16,14 +16,17 @@ namespace IHiddenLineGraphics.Services
             var firstTriangle = edge.First;
             var secondTriangle = edge.Second;
 
-            if (firstTriangle.HasParentFaceBorder || secondTriangle.HasParentFaceBorder)
-                return true;
-
             var isFirstTriangleVisible = IsTriangleVisible(firstTriangle);
             var isSecondTriangleVisible = IsTriangleVisible(secondTriangle);
-            var isLineBorderEdge = isFirstTriangleVisible != isSecondTriangleVisible;
+            if (isFirstTriangleVisible != isSecondTriangleVisible) return true;
 
-            return isLineBorderEdge;
+            if (((firstTriangle.Face.HasBorder || secondTriangle.Face.HasBorder) && firstTriangle.Face != secondTriangle.Face)
+                || (firstTriangle.Face.HasFacets || secondTriangle.Face.HasFacets))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private static bool IsTriangleVisible(TriangleHL triangle)

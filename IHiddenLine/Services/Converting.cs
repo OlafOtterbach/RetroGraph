@@ -53,12 +53,18 @@ namespace IHiddenLineGraphics.Services
         {
             var cameraBodyFrame = cameraFrame * body.Frame;
 
-            var triangles = body.Faces.SelectMany(face => face.Triangles);
-            var bodyDict = triangles.ToDictionary(triangle => triangle, triangle => ConvertTriangle(triangle, cameraBodyFrame, nearPlane));
-            bodyDict.ToList().ForEach(pair => dict.Add(pair.Key, pair.Value));
+            var trianglePairs = body.Faces.Select(face => ConvertFace(face, cameraBodyFrame, nearPlane)).SelectMany(d => d.ToList());
+            trianglePairs.ToList().ForEach(pair => dict.Add(pair.Key, pair.Value));
         }
 
-        private static TriangleHL ConvertTriangle(Triangle triangle, Matrix44D cameraBodyFrame, double nearPlane)
+        private static Dictionary<Triangle, TriangleHL> ConvertFace(Face face, Matrix44D cameraBodyFrame, double nearPlane)
+        {
+            var faceHL = new FaceHL() { HasBorder = face.HasBorder, HasFacets = face.HasFacets };
+            var triangleDict = face.Triangles.ToDictionary(t => t, t => ConvertTriangle(t, faceHL, cameraBodyFrame, nearPlane));
+            return triangleDict;
+        }
+
+        private static TriangleHL ConvertTriangle(Triangle triangle, FaceHL face, Matrix44D cameraBodyFrame, double nearPlane)
         {
             // var normal = cameraBodyFrame * triangle.Normal;
             var p1 = cameraBodyFrame * triangle.P1.Point.Position;
@@ -75,7 +81,7 @@ namespace IHiddenLineGraphics.Services
                 P1 = p1,
                 P2 = p2,
                 P3 = p3,
-                HasParentFaceBorder = triangle.ParentFace.HasBorder,
+                Face = face,
                 Spin = DetermineTriangleSpin(p1, p2, p3, nearPlane),
                 Triangle = triangle
             };

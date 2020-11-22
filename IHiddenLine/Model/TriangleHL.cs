@@ -11,7 +11,7 @@ namespace IHiddenLineGraphics.Model
         public Position3D P3 { get; set; }
         public TriangleSpin Spin { get; set; }
 
-        public bool HasParentFaceBorder { get; set; }
+        public FaceHL Face { get; set; }
 
         public Triangle Triangle { get; set; }
     }
