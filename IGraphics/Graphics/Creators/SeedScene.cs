@@ -27,12 +27,15 @@ namespace IGraphics.Graphics.Creators
             double[][] segments = new double[][]
             {
                 new [] { 0.0, 0.0, 4.0, 0.0 },
-                new [] { 4.0, 0.0, 1.0, 10.0 },
-                new [] { 1.0, 10.0, 4.0, 20.0 },
-                new [] { 4.0, 20.0, 0, 20},
+                new [] { 4.0, 0.0, 4.0, 1.0 },
+                new [] { 4.0, 1.0, 1.0, 5.0 },
+                new [] { 1.0, 5.0, 1.0, 6.0 },
+                new [] { 1.0, 6.0, 4.0, 10.0},
+                new [] { 4.0, 10.0, 4.0, 11.0},
+                new [] { 4.0, 11.0, 0.0, 11.0},
             };
-            bool[] borderFlags = new bool[] { true, true, true, true };
-            bool[] facetsFlags = new bool[] { false, false, false, false };
+            bool[] borderFlags = new bool[] { true, true, true, true, true, true, true };
+            bool[] facetsFlags = new bool[] { false, false, false, false, false, false, false };
 
             var rotationBody = RotationBody.Create(16, segments, borderFlags, facetsFlags);
             rotationBody.Frame = Matrix44D.CreateTranslation(new Vector3D(30, -30, 0));
