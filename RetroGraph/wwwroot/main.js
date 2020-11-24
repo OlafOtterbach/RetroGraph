@@ -3,8 +3,8 @@ let lock = false;
 let currentCamera;
 let mouseMoved = false;
 let currentPosition;
-let backgroundColor = "black";
-let foregroundColor = "lightgreen"
+let backgroundColor = "white";
+let foregroundColor = "black"
 
 let canvas = document.querySelector("canvas");
 canvas.addEventListener("mousedown", onMouseDown);
@@ -125,7 +125,7 @@ function drawScene(graphics) {
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = foregroundColor;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.lineCap = "round";
         ctx.setLineDash([]);
 
