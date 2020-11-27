@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using IGraphics.Extensions;
 using IGraphics.Mathmatics;
 
 namespace IGraphics.Graphics.Creators.Creator

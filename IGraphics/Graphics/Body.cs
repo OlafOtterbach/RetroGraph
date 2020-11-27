@@ -14,6 +14,8 @@ namespace IGraphics.Graphics
         public Guid Id { get; }
 
         public Matrix44D Frame { get; set; }
+        
+        public ISensor Sensor { get; set; }
 
         public Point3D[] Points { get; set; }
         public Face[] Faces { get; set; }

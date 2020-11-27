@@ -51,11 +51,14 @@ function onMouseMoved(event) {
         if (event.buttons === 1 || event.buttons === 2) {
             mouseMoved = true;
             let movedPosition = getPosition(event, canvas)
-            let xdelta = movedPosition.x - currentPosition.x;
-            let ydelta = movedPosition.y - currentPosition.y;
             if (event.buttons === 1) {
-                orbit(xdelta, ydelta, currentCamera);
+                let startX = currentPosition.x;
+                let startY = currentPosition.y;
+                let endX = movedPosition.x;
+                let endY = movedPosition.y;
+                move(startX, startY, endX, endY, currentCamera);
             } else {
+                let ydelta = movedPosition.y - currentPosition.y;
                 zoom(ydelta, currentCamera);
             }
             currentPosition = movedPosition;
@@ -91,12 +94,13 @@ async function select(x, y, camera) {
     drawScene(graphics);
 }
 
-async function orbit(deltaX, deltaY, camera) {
+
+async function move(startX, startY, endX, endY, camera) {
     sleep(50);
     if (!lock) {
         lock = true;
         camera.Id = id++;
-        let url = encodeURI("http://localhost:5000/orbit?deltaX=" + deltaX + " &deltaY=" + deltaY + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
+        let url = encodeURI("http://localhost:5000/move?startX=" + startX + " &startY=" + startY + "&endX=" + endX + " &endY=" + endY + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
         let graphics = await postData(url, camera);
         lock = false;
         drawScene(graphics);
@@ -125,7 +129,7 @@ function drawScene(graphics) {
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = foregroundColor;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.lineCap = "round";
         ctx.setLineDash([]);
 

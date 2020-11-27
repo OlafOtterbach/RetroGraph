@@ -13,6 +13,7 @@ namespace IGraphics.Graphics.Creators
             scene.Bodies.Add(cube);
 
             var cube2 = Cube.Create(10.0);
+            cube2.Sensor = new CylinderSensor(new Vector3D(0, 0, 1));
             cube2.Frame = Matrix44D.CreateTranslation(new Vector3D(0, 0, 15)) * Matrix44D.CreateRotation(new Vector3D(0, 0, 1), 45.0.DegToRad()); ;
             scene.Bodies.Add(cube2);
 
@@ -26,13 +27,13 @@ namespace IGraphics.Graphics.Creators
 
             double[][] segments = new double[][]
             {
-                new [] { 0.0, 0.0, 4.0, 0.0 },
-                new [] { 4.0, 0.0, 4.0, 1.0 },
-                new [] { 4.0, 1.0, 1.0, 5.0 },
-                new [] { 1.0, 5.0, 1.0, 6.0 },
-                new [] { 1.0, 6.0, 4.0, 10.0},
-                new [] { 4.0, 10.0, 4.0, 11.0},
-                new [] { 4.0, 11.0, 0.0, 11.0},
+                new [] { 0.0,  0.0, 5.0, 0.0 },
+                new [] { 5.0,  0.0, 5.0, 1.0 },
+                new [] { 5.0,  1.0, 1.0, 5.0 },
+                new [] { 1.0,  5.0, 1.0, 7.0 },
+                new [] { 1.0,  7.0, 5.0, 11.0},
+                new [] { 5.0, 11.0, 5.0, 12.0},
+                new [] { 5.0, 12.0, 0.0, 12.0},
             };
             bool[] borderFlags = new bool[] { true, true, true, true, true, true, true };
             bool[] facetsFlags = new bool[] { false, false, false, false, false, false, false };
@@ -42,6 +43,7 @@ namespace IGraphics.Graphics.Creators
             scene.Bodies.Add(rotationBody);
 
             var sphere = Sphere.Create(16, 8);
+            sphere.Sensor = new SphereSensor();
             sphere.Frame = Matrix44D.CreateTranslation(new Vector3D(-30, 30, 10));
             scene.Bodies.Add(sphere);
 

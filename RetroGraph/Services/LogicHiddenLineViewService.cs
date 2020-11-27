@@ -38,9 +38,22 @@ namespace IHiddenLineGraphics
             return graphics;
         }
 
-        public GraphicsDto Orbit(double deltaX, double deltaY, int canvasWidth, int canvasHeight, Camera camera)
+        public GraphicsDto Select(double canvasX, double canvasY, int canvasWidth, int canvasHeight, Camera camera)
         {
-            var rotatedCamera = _view.Orbit(deltaX, deltaY, camera);
+            var movedCamera = _view.Select(canvasX, canvasY, canvasWidth, canvasHeight, camera);
+            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, movedCamera, canvasWidth, canvasHeight).ToArray();
+            var graphics = new GraphicsDto()
+            {
+                Camera = movedCamera.ToCameraDto(),
+                DrawLines = lines
+            };
+
+            return graphics;
+        }
+
+        public GraphicsDto Move(double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
+        {
+            var rotatedCamera = _view.Move(startX, startY, endX, endY, canvasWidth, canvasHeight, camera);
             var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, rotatedCamera, canvasWidth, canvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {
@@ -58,19 +71,6 @@ namespace IHiddenLineGraphics
             var graphics = new GraphicsDto()
             {
                 Camera = zoomedCamera.ToCameraDto(),
-                DrawLines = lines
-            };
-
-            return graphics;
-        }
-
-        public GraphicsDto Select(double canvasX, double canvasY, int canvasWidth, int canvasHeight, Camera camera)
-        {
-            var movedCamera = _view.Select(canvasX, canvasY, canvasWidth, canvasHeight, camera);
-            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, movedCamera, canvasWidth, canvasHeight).ToArray();
-            var graphics = new GraphicsDto()
-            {
-                Camera = movedCamera.ToCameraDto(),
                 DrawLines = lines
             };
 

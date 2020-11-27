@@ -4,12 +4,12 @@ namespace IGraphics.LogicViewing
 {
     public interface ILogicView
     {
-        public Scene Scene { get; }
+        Scene Scene { get; }
 
-        public Camera Select(double canvasX, double canvasY, double canvasWidth, double canvasHeight, Camera camera);
+        Camera Select(double canvasX, double canvasY, double canvasWidth, double canvasHeight, Camera camera);
 
-        public Camera Orbit(double pixelDeltaX, double pixelDeltaY, Camera camera);
+        Camera Move(double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera);
 
-        public Camera Zoom(double pixelDeltaY, Camera camera);
+        Camera Zoom(double pixelDeltaY, Camera camera);
     }
 }

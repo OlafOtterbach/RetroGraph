@@ -22,7 +22,7 @@ namespace IGraphics.LogicViewing
             var rayOffset = camera.Frame.Offset;
             var rayDirection = posScene - rayOffset;
 
-            var (isintersected, intersection) = Scene.GetIntersectionOfRayAndScene(rayOffset, rayDirection);
+            var (isintersected, intersection, body) = Scene.GetIntersectionOfRayAndScene(rayOffset, rayDirection);
             if (isintersected)
             {
                 camera.MoveTargetTo(intersection);
@@ -31,7 +31,21 @@ namespace IGraphics.LogicViewing
             return camera;
         }
 
-        public Camera Orbit(double pixelDeltaX, double pixelDeltaY, Camera camera)
+        public Camera Move(double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
+        {
+            var deltaX = endX - startX;
+            var deltaY = endY - startY;
+            return Orbit(deltaX, deltaY, camera);
+        }
+
+        public Camera Zoom(double pixelDeltaY, Camera camera)
+        {
+            var dy = pixelDeltaY * 1.0;
+            camera.Zoom(dy);
+            return camera;
+        }
+
+        private Camera Orbit(double pixelDeltaX, double pixelDeltaY, Camera camera)
         {
             var horicontalPixelFor360Degree = 600;
             var verticalPixelFor360Degree = 400;
@@ -39,13 +53,6 @@ namespace IGraphics.LogicViewing
             var beta = -(360.0 * pixelDeltaY / verticalPixelFor360Degree).DegToRad();
             camera.OrbitXY(alpha);
             camera.OrbitYZ(beta);
-            return camera;
-        }
-
-        public Camera Zoom(double pixelDeltaY, Camera camera)
-        {
-            var dy = pixelDeltaY * 1.0;
-            camera.Zoom(dy);
             return camera;
         }
     }

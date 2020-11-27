@@ -41,10 +41,10 @@ namespace RetroGraph.Controllers
             return Ok(_logicView.GetScene(canvasWidth, canvasHeight));
         }
 
-        [HttpPost("orbit")]
-        public ActionResult Orbit([FromQuery] double deltaX, [FromQuery] double deltaY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        [HttpPost("move")]
+        public ActionResult Move([FromQuery] double startX, [FromQuery] double startY, [FromQuery] double endX, [FromQuery] double endY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
-            var graphics = _logicView.Orbit(deltaX, deltaY, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            var graphics = _logicView.Move(startX, startY, endX, endY, canvasWidth, canvasHeight, cameraDto.ToCamera());
             graphics.Camera.Id = cameraDto.Id;
             return Ok(graphics);
         }
