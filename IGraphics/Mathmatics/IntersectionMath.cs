@@ -160,6 +160,9 @@ namespace IGraphics.Mathmatics
             var (hasIntersection, intersection) = IntersectionMath.Intersect(p1, normal, rayOffset, rayDirection);
             if (hasIntersection)
             {
+                var intersectDirection = (intersection - rayOffset).Normalize();
+                if(intersectDirection != rayDirection.Normalize()) return (false, -1.0);
+
                 var mat = Matrix44D.CreatePlaneCoordinateSystem(p1, normal).Inverse();
                 p1 = mat * p1;
                 p2 = mat * p2;
