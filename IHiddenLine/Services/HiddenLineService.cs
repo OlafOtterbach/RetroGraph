@@ -1,5 +1,6 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.LogicViewing;
+using IGraphics.Mathmatics;
 using IHiddenLineGraphics.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,8 @@ namespace IHiddenLineGraphics
             var visiblePlaneLines = planeLines.FilterLinesOfVisibleTriangles();
 
             // Clipp lines at the projected screen limits
-            var (left, bottom) = Projection.ProjectCanvasToCameraPlane(0, canvasHeight, canvasWidth, canvasHeight);
-            var (right, top) = Projection.ProjectCanvasToCameraPlane(canvasWidth, 0, canvasWidth, canvasHeight);
+            var (left, bottom) = ViewProjection.ProjectCanvasToCameraPlane(0, canvasHeight, canvasWidth, canvasHeight);
+            var (right, top) = ViewProjection.ProjectCanvasToCameraPlane(canvasWidth, 0, canvasWidth, canvasHeight);
             var clippedLines = visiblePlaneLines.Clipp(left, right, bottom, top);
 
             // Cut 2D lines in uncutted 2D lines

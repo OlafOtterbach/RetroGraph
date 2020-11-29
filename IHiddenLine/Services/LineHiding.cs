@@ -49,7 +49,7 @@ namespace IHiddenLineGraphics.Services
             var start = line.Start;
             var end = line.End;
             var centerViewLine = new PointHL((start.X + end.X) / 2.0, (start.Y + end.Y) / 2.0);
-            var centerCameraPlaneLine = Projection.ProjectCameraPlaneToCameraSystem(centerViewLine, nearPlaneDistance);
+            var centerCameraPlaneLine = ViewProjection.ProjectCameraPlaneToCameraSystem(centerViewLine.X, centerViewLine.Y, nearPlaneDistance);
             var rayOffset = new Position3D(0.0, 0.0, 0.0);
             var rayDirection = centerCameraPlaneLine - rayOffset;
             return (rayOffset, rayDirection);

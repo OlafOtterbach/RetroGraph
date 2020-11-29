@@ -91,15 +91,9 @@ namespace IHiddenLineGraphics.Services
 
         private static TriangleSpin DetermineTriangleSpin(Position3D p1, Position3D p2, Position3D p3, double nearPlane)
         {
-            var pos1 = Projection.ProjectCameraSystemToCameraPlane(p1, nearPlane);
-            var pos2 = Projection.ProjectCameraSystemToCameraPlane(p2, nearPlane);
-            var pos3 = Projection.ProjectCameraSystemToCameraPlane(p3, nearPlane);
-            var x1 = pos1.X;
-            var y1 = pos1.Y;
-            var x2 = pos2.X;
-            var y2 = pos2.Y;
-            var x3 = pos3.X;
-            var y3 = pos3.Y;
+            var (x1, y1) = ViewProjection.ProjectCameraSystemToCameraPlane(p1, nearPlane);
+            var (x2, y2) = ViewProjection.ProjectCameraSystemToCameraPlane(p2, nearPlane);
+            var (x3, y3) = ViewProjection.ProjectCameraSystemToCameraPlane(p3, nearPlane);
             var area = 0.5 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
             var result = area > 0.0 ? TriangleSpin.counter_clockwise : area < 0.0 ? TriangleSpin.clockwise : TriangleSpin.no_clockwise;
             return result;

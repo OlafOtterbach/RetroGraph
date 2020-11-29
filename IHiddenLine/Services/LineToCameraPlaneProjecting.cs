@@ -1,4 +1,5 @@
-﻿using IHiddenLineGraphics.Model;
+﻿using IGraphics.Mathmatics;
+using IHiddenLineGraphics.Model;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,9 +14,9 @@ namespace IHiddenLineGraphics.Services
 
         private static LineHL ToLine2D(this EdgeHL edge, double nearPlaneDist)
         {
-            var start = edge.Start.ProjectCameraSystemToCameraPlane(nearPlaneDist);
-            var end = edge.End.ProjectCameraSystemToCameraPlane(nearPlaneDist);
-            var line2d = new LineHL { Start = start, End = end, Edge = edge };
+            var (x1, y1) = ViewProjection.ProjectCameraSystemToCameraPlane(edge.Start, nearPlaneDist);
+            var (x2, y2) = ViewProjection.ProjectCameraSystemToCameraPlane(edge.End, nearPlaneDist);
+            var line2d = new LineHL { Start = new PointHL(x1, y1), End = new PointHL(x2, y2), Edge = edge };
             return line2d;
         }
     }
