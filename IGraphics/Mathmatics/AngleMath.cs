@@ -26,10 +26,10 @@ namespace IGraphics.Mathmatics
             var signAlpha = (angle >= 0.0f);
 
             // Calculates modulo2Pi
-            if ((absAlpha > ConstantsMath.PI2) || (absAlpha.EqualsTo(ConstantsMath.PI2)))
+            if ((absAlpha > ConstantsMath.Pi2) || (absAlpha.EqualsTo(ConstantsMath.Pi2)))
             {
-                long count = (long)(absAlpha / ConstantsMath.PI2);
-                absAlpha = absAlpha - (count * ConstantsMath.PI2);
+                long count = (long)(absAlpha / ConstantsMath.Pi2);
+                absAlpha = absAlpha - (count * ConstantsMath.Pi2);
                 if (absAlpha < 0.0f)
                 {
                     absAlpha = 0.0f;
@@ -49,10 +49,58 @@ namespace IGraphics.Mathmatics
                 }
                 else
                 {
-                    alpha = ConstantsMath.PI2 - absAlpha;
+                    alpha = ConstantsMath.Pi2 - absAlpha;
                 }
             }
 
+            return alpha;
+        }
+
+        public static double VectorToAngle(double xpos, double ypos)
+        {
+            double alpha = 0.0;
+            if ((Math.Abs(xpos) > ConstantsMath.Epsilon)
+                || (Math.Abs(ypos) > ConstantsMath.Epsilon)
+               )
+            {
+                double a = 0.0;
+                if (xpos < 0.0)
+                {
+                    a = -xpos;
+                }
+                else
+                {
+                    a = xpos;
+                }
+                var cosAlpha = a / Math.Sqrt(xpos * xpos + ypos * ypos);
+                alpha = Math.Acos(cosAlpha);
+                if (xpos >= 0.0)
+                {
+                    if (ypos >= 0.0)
+                    {
+                        //alpha = alpha;
+                    }
+                    else
+                    {
+                        alpha = ConstantsMath.Pi2 - alpha; // 360° - m_alpha
+                    }
+                }
+                else
+                {
+                    if (ypos >= 0.0)
+                    {
+                        alpha = ConstantsMath.Pi - alpha;  // 180° - m_alpha
+                    }
+                    else
+                    {
+                        alpha = ConstantsMath.Pi + alpha; // 180° + m_alpha
+                    }
+                }
+            }
+            else
+            {
+                alpha = 0.0;
+            }
             return alpha;
         }
     }

@@ -1,4 +1,5 @@
 ﻿let id = 1;
+let bodyId;
 let lock = false;
 let currentCamera;
 let mouseMoved = false;
@@ -28,6 +29,7 @@ function onMouseDown(event) {
 
         mouseMoved = false;
         currentPosition = getPosition(event, canvas)
+        selectBody(currentPosition.x, currentPosition.y, currentCamera);
     }
 }
 
@@ -56,7 +58,7 @@ function onMouseMoved(event) {
                 let startY = currentPosition.y;
                 let endX = movedPosition.x;
                 let endY = movedPosition.y;
-                move(startX, startY, endX, endY, currentCamera);
+                move(bodyId, startX, startY, endX, endY, currentCamera);
             } else {
                 let ydelta = movedPosition.y - currentPosition.y;
                 zoom(ydelta, currentCamera);
@@ -84,6 +86,16 @@ async function getScenery() {
     drawScene(graphics);
 }
 
+async function selectBody(x, y, camera) {
+    lock = true;
+    camera.Id = id++;
+    let url = encodeURI("http://localhost:5000/select-body?canvasX=" + x + "&canvasY=" + y + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
+    let bodySelection = await postData(url, camera);
+    console.log(bodySelection.BodyId);
+    bodyId = bodySelection.BodyId;
+    lock = false;
+}
+
 async function select(x, y, camera) {
     lock = true;
     camera.Id = id++;
@@ -95,12 +107,12 @@ async function select(x, y, camera) {
 }
 
 
-async function move(startX, startY, endX, endY, camera) {
+async function move(bodyId, startX, startY, endX, endY, camera) {
     sleep(50);
     if (!lock) {
         lock = true;
         camera.Id = id++;
-        let url = encodeURI("http://localhost:5000/move?startX=" + startX + " &startY=" + startY + "&endX=" + endX + " &endY=" + endY + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
+        let url = encodeURI("http://localhost:5000/move?bodyId=" + bodyId + "&startX=" + startX + " &startY=" + startY + "&endX=" + endX + " &endY=" + endY + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
         let graphics = await postData(url, camera);
         lock = false;
         drawScene(graphics);

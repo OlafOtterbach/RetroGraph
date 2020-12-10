@@ -3,6 +3,7 @@ using IGraphics.LogicViewing;
 using IGraphics.Mathmatics;
 using RetroGraph.Models;
 using RetroGraph.Models.Extensions;
+using System;
 using System.Linq;
 
 namespace IHiddenLineGraphics
@@ -38,6 +39,13 @@ namespace IHiddenLineGraphics
             return graphics;
         }
 
+        public BodySelectionDto SelectBody(double canvasX, double canvasY, int canvasWidth, int canvasHeight, Camera camera)
+        {
+            var bodyId = _view.SelectBody(canvasX, canvasY, canvasWidth, canvasHeight, camera);
+            var selection = new BodySelectionDto(bodyId);
+            return selection;
+        }
+
         public GraphicsDto Select(double canvasX, double canvasY, int canvasWidth, int canvasHeight, Camera camera)
         {
             var movedCamera = _view.Select(canvasX, canvasY, canvasWidth, canvasHeight, camera);
@@ -51,9 +59,9 @@ namespace IHiddenLineGraphics
             return graphics;
         }
 
-        public GraphicsDto Move(double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
+        public GraphicsDto Move(Guid bodyId, double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
         {
-            var rotatedCamera = _view.Move(startX, startY, endX, endY, canvasWidth, canvasHeight, camera);
+            var rotatedCamera = _view.Move(bodyId, startX, startY, endX, endY, canvasWidth, canvasHeight, camera);
             var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, rotatedCamera, canvasWidth, canvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {

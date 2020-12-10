@@ -3,6 +3,7 @@ using IHiddenLineGraphics;
 using Microsoft.AspNetCore.Mvc;
 using RetroGraph.Models;
 using RetroGraph.Models.Extensions;
+using System;
 
 namespace RetroGraph.Controllers
 {
@@ -41,10 +42,25 @@ namespace RetroGraph.Controllers
             return Ok(_logicView.GetScene(canvasWidth, canvasHeight));
         }
 
-        [HttpPost("move")]
-        public ActionResult Move([FromQuery] double startX, [FromQuery] double startY, [FromQuery] double endX, [FromQuery] double endY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        [HttpPost("select-body")]
+        public ActionResult SelectBody(double canvasX, [FromQuery] double canvasY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
-            var graphics = _logicView.Move(startX, startY, endX, endY, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            var bodySelection = _logicView.SelectBody(canvasX, canvasY, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            return Ok(bodySelection);
+        }
+
+        [HttpPost("select")]
+        public ActionResult Select(double canvasX, [FromQuery] double canvasY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        {
+            var graphics = _logicView.Select(canvasX, canvasY, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            graphics.Camera.Id = cameraDto.Id;
+            return Ok(graphics);
+        }
+
+        [HttpPost("move")]
+        public ActionResult Move([FromQuery] Guid bodyId, [FromQuery] double startX, [FromQuery] double startY, [FromQuery] double endX, [FromQuery] double endY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        {
+            var graphics = _logicView.Move(bodyId, startX, startY, endX, endY, canvasWidth, canvasHeight, cameraDto.ToCamera());
             graphics.Camera.Id = cameraDto.Id;
             return Ok(graphics);
         }
@@ -53,14 +69,6 @@ namespace RetroGraph.Controllers
         public ActionResult Zoom([FromQuery] double delta, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
         {
             var graphics = _logicView.Zoom(delta, canvasWidth, canvasHeight, cameraDto.ToCamera());
-            graphics.Camera.Id = cameraDto.Id;
-            return Ok(graphics);
-        }
-
-        [HttpPost("select")]
-        public ActionResult Select(double canvasX, [FromQuery] double canvasY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
-        {
-            var graphics = _logicView.Select(canvasX, canvasY, canvasWidth, canvasHeight, cameraDto.ToCamera());
             graphics.Camera.Id = cameraDto.Id;
             return Ok(graphics);
         }

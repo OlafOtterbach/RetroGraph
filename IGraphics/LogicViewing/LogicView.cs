@@ -1,6 +1,7 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.Graphics.Services;
 using IGraphics.Mathmatics;
+using System;
 
 namespace IGraphics.LogicViewing
 {
@@ -12,6 +13,19 @@ namespace IGraphics.LogicViewing
         }
 
         public Scene Scene { get; }
+
+        public Guid SelectBody(double canvasX, double canvasY, int canvasWidth, int canvasHeight, Camera camera)
+        {
+            var (x, y) = ViewProjection.ProjectCanvasToCameraPlane(canvasX, canvasY, canvasWidth, canvasHeight);
+            var posCameraSystem = ViewProjection.ProjectCameraPlaneToCameraSystem(x, y, camera.NearPlane);
+            var posScene = ViewProjection.ProjectCameraSystemToSceneSystem(posCameraSystem, camera.Frame);
+
+            var rayOffset = camera.Frame.Offset;
+            var rayDirection = posScene - rayOffset;
+            var (isintersected, intersection, body) = Scene.GetIntersectionOfRayAndScene(rayOffset, rayDirection);
+
+            return body != null ? body.Id : Guid.Empty;
+        }
 
         public Camera Select(double canvasX, double canvasY, double canvasWidth, double canvasHeight, Camera camera)
         {
@@ -31,7 +45,43 @@ namespace IGraphics.LogicViewing
             return camera;
         }
 
-        public Camera Move(double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
+        public Camera Move(Guid bodyId, double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
+        {
+            var startOffset = ViewProjection.ProjectCanvasToSceneSystem(startX, startY, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
+            var endOffset = ViewProjection.ProjectCanvasToSceneSystem(endX, endY, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
+            var offset = camera.Frame.Offset;
+            var startDirection = startOffset - offset;
+            var endDirection = endOffset - offset;
+
+            var body = Scene.GetBody(bodyId);
+            if (body?.Sensor is CylinderSensor cylinderSensor)
+            {
+                cylinderSensor.Process(
+                    body,
+                    startX,
+                    startY,
+                    startOffset,
+                    startDirection,
+                    endX,
+                    endY,
+                    endOffset,
+                    endDirection,
+                    canvasWidth,
+                    canvasHeight, 
+                    camera.NearPlane,
+                    camera.Frame);
+            }
+            else
+            {
+                var deltaX = endX - startX;
+                var deltaY = endY - startY;
+                return Orbit(deltaX, deltaY, camera);
+            }
+
+            return camera;
+        }
+
+        public Camera Move2(Guid bodyId, double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
         {
             var deltaX = endX - startX;
             var deltaY = endY - startY;
