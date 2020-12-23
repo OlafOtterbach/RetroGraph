@@ -58,6 +58,8 @@ function onMouseMoved(event) {
                 let startY = currentPosition.y;
                 let endX = movedPosition.x;
                 let endY = movedPosition.y;
+                //let delta = Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
+                //console.log(delta);
                 move(bodyId, startX, startY, endX, endY, currentCamera);
             } else {
                 let ydelta = movedPosition.y - currentPosition.y;

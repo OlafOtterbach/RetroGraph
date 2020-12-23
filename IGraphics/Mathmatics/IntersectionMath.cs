@@ -205,9 +205,9 @@ namespace IGraphics.Mathmatics
 
         private static bool IsPositionInsideTriangle(double x, double y, double x1, double y1, double x2, double y2, double x3, double y3)
         {
-            var res1 = IsCounterClockwise(x1, y1, x2, y2, x, y);
-            var res2 = IsCounterClockwise(x2, y2, x3, y3, x, y);
-            var res3 = IsCounterClockwise(x3, y3, x1, y1, x, y);
+            var res1 = TriangleMath.IsCounterClockwise(x1, y1, x2, y2, x, y);
+            var res2 = TriangleMath.IsCounterClockwise(x2, y2, x3, y3, x, y);
+            var res3 = TriangleMath.IsCounterClockwise(x3, y3, x1, y1, x, y);
 
             var isInside = res1 == res2 && res2 == res3;
 
@@ -219,19 +219,6 @@ namespace IGraphics.Mathmatics
             no_clockwise = 0,
             clockwise = -1,
             counter_clockwise = 1,
-        }
-
-        private static bool IsCounterClockwise(double x1, double y1, double x2, double y2, double x3, double y3)
-        {
-            return GetTriangleSpin(x1, y1, x2, y2, x3, y3) != TriangleSpin.clockwise;
-        }
-
-        private static TriangleSpin GetTriangleSpin(double x1, double y1, double x2, double y2, double x3, double y3)
-        {
-            var area = 0.5 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
-            if (area < ConstantsMath.Epsilon && area > -ConstantsMath.Epsilon) return TriangleSpin.no_clockwise;
-            if (area > 0.0) return TriangleSpin.counter_clockwise;
-            return TriangleSpin.clockwise;
         }
     }
 }

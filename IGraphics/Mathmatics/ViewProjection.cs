@@ -1,5 +1,4 @@
-﻿using IGraphics.Mathmatics;
-using System;
+﻿using System;
 
 namespace IGraphics.Mathmatics
 {
@@ -21,8 +20,6 @@ namespace IGraphics.Mathmatics
             return (canvasX, canvasY);
         }
 
-
-
         public static Position3D ProjectCameraSystemToSceneSystem(this Position3D position, Matrix44D cameraFrame)
         {
             var scenePosition = cameraFrame * position;
@@ -34,8 +31,6 @@ namespace IGraphics.Mathmatics
             var cameraPosition = cameraFrame.Inverse() * position;
             return cameraPosition;
         }
-
-
 
         public static Position3D ProjectCameraPlaneToCameraSystem(double cameraPlaneX, double cameraPlaneY, double nearPlaneDist)
         {
@@ -49,7 +44,6 @@ namespace IGraphics.Mathmatics
             double cameraPlaneY = (nearPlaneDist / position.Y) * position.Z;
             return (cameraPlaneX, cameraPlaneY);
         }
-
 
         public static (double, double) ProjectCanvasToCameraPlane(double canvasX, double canvasY, double canvasWidth, double canvasHeight)
         {

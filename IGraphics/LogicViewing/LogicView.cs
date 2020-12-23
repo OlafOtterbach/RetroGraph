@@ -75,7 +75,7 @@ namespace IGraphics.LogicViewing
             {
                 var deltaX = endX - startX;
                 var deltaY = endY - startY;
-                return Orbit(deltaX, deltaY, camera);
+                return Orbit(deltaX, deltaY, canvasWidth, canvasHeight, camera);
             }
 
             return camera;
@@ -85,7 +85,7 @@ namespace IGraphics.LogicViewing
         {
             var deltaX = endX - startX;
             var deltaY = endY - startY;
-            return Orbit(deltaX, deltaY, camera);
+            return Orbit(deltaX, deltaY, canvasWidth, canvasHeight,camera);
         }
 
         public Camera Zoom(double pixelDeltaY, Camera camera)
@@ -95,10 +95,10 @@ namespace IGraphics.LogicViewing
             return camera;
         }
 
-        private Camera Orbit(double pixelDeltaX, double pixelDeltaY, Camera camera)
+        private Camera Orbit(double pixelDeltaX, double pixelDeltaY, int canvasWidth, int canvasHeight, Camera camera)
         {
-            var horicontalPixelFor360Degree = 600;
-            var verticalPixelFor360Degree = 400;
+            var horicontalPixelFor360Degree = canvasWidth;
+            var verticalPixelFor360Degree = canvasHeight;
             var alpha = -(360.0 * pixelDeltaX / horicontalPixelFor360Degree).DegToRad();
             var beta = -(360.0 * pixelDeltaY / verticalPixelFor360Degree).DegToRad();
             camera.OrbitXY(alpha);
