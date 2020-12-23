@@ -5,14 +5,14 @@ using System;
 
 namespace IGraphics.LogicViewing
 {
-    public static class PlaneMoveSensorExtension
+    public static class PlaneSensorExtension
     {
         /// <summary>
         /// Processes the event.
         /// </summary>
         /// <param name="inputEvent">Event, that is processed</param>
         /// <returns>bool  true=event is used, false=not used</returns>
-        public static void Process(this PlaneMoveSensor planeSensor,
+        public static void Process(this PlaneSensor planeSensor,
             Body body,
             Position3D startOffset,
             Vector3D startDirection,
@@ -28,7 +28,7 @@ namespace IGraphics.LogicViewing
 
         private static Vector3D CalculateMove(Body body, Vector3D normal, Position3D startOffset, Vector3D startDirection, Position3D endOffset, Vector3D endDirection)
         {
-            var planeOffset = new Position3D();
+            var planeOffset = body.Frame.Offset;
             var planeNormal = body.Frame * normal;
 
             var (startIsIntersecting, startIntersection) = IntersectionMath.Intersect(planeOffset, planeNormal, startOffset, startDirection);

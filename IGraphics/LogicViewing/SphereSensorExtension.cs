@@ -5,14 +5,14 @@ using System;
 
 namespace IGraphics.LogicViewing
 {
-    public static class CylinderSensorExtension
+    public static class SphereSensorExtension
     {
         /// <summary>
         /// Processes the event.
         /// </summary>
         /// <param name="inputEvent">Event, that is processed</param>
         /// <returns>bool  true=event is used, false=not used</returns>
-        public static void Process(this CylinderSensor cylinderSensor,
+        public static void Process(this SphereSensor sphereSensor,
             Body body,
             double startX,
             double startY,
@@ -29,10 +29,25 @@ namespace IGraphics.LogicViewing
         {
             if (startX.EqualsTo(endX) && startY.EqualsTo(endY)) return;
 
-            var axisFrame = body.Frame * Matrix44D.CreateRotation(cylinderSensor.Axis, 0.0);
-            double sign = CalculateAngleSign(axisFrame, startOffset, endOffset);
-            double angle = sign * 2.0 * CalculateAngle(startX, startY, endX, endY, canvasWidth, canvasHeight);
-            Rotate(body, cylinderSensor.Axis, angle);
+            var canvasOrigin = ViewProjection.ProjectCanvasToSceneSystem(0.0, 0.0, canvasWidth, canvasHeight, nearPlaneDist, cameraFrame);
+            var canvasExPos = ViewProjection.ProjectCanvasToSceneSystem(1.0, 0.0, canvasWidth, canvasHeight, nearPlaneDist, cameraFrame);
+            var canvasEyPos = ViewProjection.ProjectCanvasToSceneSystem(0.0, 1.0, canvasWidth, canvasHeight, nearPlaneDist, cameraFrame);
+            var exAxis = canvasExPos - canvasOrigin;
+            var eyAxis = canvasEyPos - canvasOrigin;
+
+            var offsetFrame = Matrix44D.CreateCoordinateSystem(body.Frame.Offset, new Vector3D(1, 0, 0), new Vector3D(0, 0, 1));
+            var exAxisFrame = offsetFrame * Matrix44D.CreateRotation(exAxis, 0.0);
+            var eyAxisFrame = offsetFrame * Matrix44D.CreateRotation(eyAxis, 0.0);
+
+            double exSign = CalculateAngleSign(exAxisFrame, startOffset, endOffset);
+            double exAngle = exSign * 2.0 * CalculateAngle(startY, endY, canvasWidth, canvasHeight);
+            double eySign = CalculateAngleSign(eyAxisFrame, startOffset, endOffset);
+            double eyAngle = eySign * 2.0 * CalculateAngle(startX, endX, canvasWidth, canvasHeight);
+
+            var rotationEx = Matrix44D.CreateRotation(body.Frame.Offset, exAxis, exAngle);
+            var rotationEy = Matrix44D.CreateRotation(body.Frame.Offset, eyAxis, eyAngle);
+
+            body.Frame = rotationEx * rotationEy * body.Frame;
         }
 
         private static double CalculateAngleSign(Matrix44D axisFrame, Position3D start, Position3D end)
@@ -53,23 +68,15 @@ namespace IGraphics.LogicViewing
         }
 
         private static double CalculateAngle(
-            double startX,
-            double startY,
-            double endX,
-            double endY,
+            double start,
+            double end,
             double canvasWidth,
             double canvasHeight)
         {
             var min = Math.Min(canvasWidth, canvasHeight);
-            var delta = Vector2DMath.Length(startX, startY, endX, endY);
+            var delta = Math.Abs(end - start);
             var angle = (360.0 * delta / min).DegToRad();
             return angle;
-        }
-
-        private static void Rotate(Body body, Vector3D axis, double angle)
-        {
-            var rotation = Matrix44D.CreateRotation(body.Frame.Offset, axis, angle);
-            body.Frame = rotation * body.Frame;
         }
     }
 }

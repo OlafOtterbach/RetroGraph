@@ -39,13 +39,14 @@ namespace IGraphics.Graphics.Creators
             bool[] facetsFlags = new bool[] { false, false, false, false, false, false, false };
 
             var rotationBody = RotationBody.Create(16, segments, borderFlags, facetsFlags);
-            rotationBody.Sensor = new PlaneMoveSensor(new Vector3D(0, 0, 1));
+            rotationBody.Sensor = new PlaneSensor(new Vector3D(0, 0, 1));
             rotationBody.Frame = Matrix44D.CreateTranslation(new Vector3D(30, -30, 0));
             scene.Bodies.Add(rotationBody);
 
             var sphere = Sphere.Create(16, 8);
             sphere.Sensor = new SphereSensor();
             sphere.Frame = Matrix44D.CreateTranslation(new Vector3D(-30, 30, 10));
+            sphere.Sensor = new SphereSensor();
             scene.Bodies.Add(sphere);
 
             return scene;

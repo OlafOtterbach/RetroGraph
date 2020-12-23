@@ -2,9 +2,9 @@
 
 namespace IGraphics.Graphics
 {
-    public class PlaneMoveSensor : ISensor
+    public class PlaneSensor : ISensor
     {
-        public PlaneMoveSensor(Vector3D planeNormal)
+        public PlaneSensor(Vector3D planeNormal)
         {
             PlaneNormal = planeNormal;
         }

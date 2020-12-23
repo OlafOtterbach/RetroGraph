@@ -71,7 +71,24 @@ namespace IGraphics.LogicViewing
                     camera.NearPlane,
                     camera.Frame);
             }
-            else if (body?.Sensor is PlaneMoveSensor planarMoveSensor)
+            else if (body?.Sensor is SphereSensor sphereSensor)
+            {
+                sphereSensor.Process(
+                    body,
+                    startX,
+                    startY,
+                    startOffset,
+                    startDirection,
+                    endX,
+                    endY,
+                    endOffset,
+                    endDirection,
+                    canvasWidth,
+                    canvasHeight,
+                    camera.NearPlane,
+                    camera.Frame);
+            }
+            else if (body?.Sensor is PlaneSensor planarMoveSensor)
             {
                 planarMoveSensor.Process(body, startOffset, startDirection, endOffset, endDirection);
             }
