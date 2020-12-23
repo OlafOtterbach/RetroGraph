@@ -54,18 +54,10 @@ function onMouseMoved(event) {
             mouseMoved = true;
             let movedPosition = getPosition(event, canvas)
             if (event.buttons === 1) {
-                let startX = currentPosition.x;
-                let startY = currentPosition.y;
-                let endX = movedPosition.x;
-                let endY = movedPosition.y;
-                //let delta = Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
-                //console.log(delta);
-                move(bodyId, startX, startY, endX, endY, currentCamera);
+                move(bodyId, currentPosition, movedPosition, currentCamera);
             } else {
-                let ydelta = movedPosition.y - currentPosition.y;
-                zoom(ydelta, currentCamera);
+                zoom(currentPosition, movedPosition, currentCamera);
             }
-            currentPosition = movedPosition;
         }
     }
 }
@@ -109,28 +101,34 @@ async function select(x, y, camera) {
 }
 
 
-async function move(bodyId, startX, startY, endX, endY, camera) {
+async function move(bodyId, start, end, camera) {
     sleep(50);
     if (!lock) {
         lock = true;
         camera.Id = id++;
+        let startX = start.x;
+        let startY = start.y;
+        let endX = end.x;
+        let endY = end.y;
         let url = encodeURI("http://localhost:5000/move?bodyId=" + bodyId + "&startX=" + startX + " &startY=" + startY + "&endX=" + endX + " &endY=" + endY + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
         let graphics = await postData(url, camera);
-        lock = false;
         drawScene(graphics);
+        currentPosition = end;
+        lock = false;
     }
 }
 
-async function zoom(delta, camera) {
+async function zoom(start, end, camera) {
     sleep(50);
     if (!lock) {
         lock = true;
         camera.Id = id++;
+        let delta = end.y - start.y;
         let url = encodeURI("http://localhost:5000/zoom?delta=" + delta + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
         let graphics = await postData(url, camera);
-        lock = false;
-        console.log(graphics.Camera.Id);
         drawScene(graphics);
+        currentPosition = end;
+        lock = false;
     }
 }
 

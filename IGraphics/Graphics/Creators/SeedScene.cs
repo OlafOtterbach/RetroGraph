@@ -40,12 +40,12 @@ namespace IGraphics.Graphics.Creators
 
             var rotationBody = RotationBody.Create(16, segments, borderFlags, facetsFlags);
             rotationBody.Frame = Matrix44D.CreateTranslation(new Vector3D(30, -30, 0));
-            //scene.Bodies.Add(rotationBody);
+            scene.Bodies.Add(rotationBody);
 
             var sphere = Sphere.Create(16, 8);
             sphere.Sensor = new SphereSensor();
             sphere.Frame = Matrix44D.CreateTranslation(new Vector3D(-30, 30, 10));
-            //scene.Bodies.Add(sphere);
+            scene.Bodies.Add(sphere);
 
             return scene;
         }
