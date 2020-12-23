@@ -67,9 +67,13 @@ namespace IGraphics.LogicViewing
                     endOffset,
                     endDirection,
                     canvasWidth,
-                    canvasHeight, 
+                    canvasHeight,
                     camera.NearPlane,
                     camera.Frame);
+            }
+            else if (body?.Sensor is PlaneMoveSensor planarMoveSensor)
+            {
+                planarMoveSensor.Process(body, startOffset, startDirection, endOffset, endDirection);
             }
             else
             {

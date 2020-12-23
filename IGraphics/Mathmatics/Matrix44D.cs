@@ -211,6 +211,11 @@ namespace IGraphics.Mathmatics
             return CreateCoordinateSystem(new Position3D(), ex, ez);
         }
 
+        public static Matrix44D CreatePlaneCoordinateSystem(Vector3D normal)
+        {
+            return CreatePlaneCoordinateSystem(new Position3D(0.0, 0.0, 0.0), normal);
+        }
+
         public static Matrix44D CreatePlaneCoordinateSystem(Position3D offset, Vector3D normal)
         {
             normal = normal.Normalize();
