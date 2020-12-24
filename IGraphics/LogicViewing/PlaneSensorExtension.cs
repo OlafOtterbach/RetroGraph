@@ -7,11 +7,6 @@ namespace IGraphics.LogicViewing
 {
     public static class PlaneSensorExtension
     {
-        /// <summary>
-        /// Processes the event.
-        /// </summary>
-        /// <param name="inputEvent">Event, that is processed</param>
-        /// <returns>bool  true=event is used, false=not used</returns>
         public static void Process(this PlaneSensor planeSensor,
             Body body,
             Position3D startOffset,

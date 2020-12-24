@@ -7,25 +7,16 @@ namespace IGraphics.LogicViewing
 {
     public static class CylinderSensorExtension
     {
-        /// <summary>
-        /// Processes the event.
-        /// </summary>
-        /// <param name="inputEvent">Event, that is processed</param>
-        /// <returns>bool  true=event is used, false=not used</returns>
         public static void Process(this CylinderSensor cylinderSensor,
             Body body,
             double startX,
             double startY,
             Position3D startOffset,
-            Vector3D startDirection,
             double endX,
             double endY,
             Position3D endOffset,
-            Vector3D endDirection,
             double canvasWidth,
-            double canvasHeight,
-            double nearPlaneDist,
-            Matrix44D cameraFrame)
+            double canvasHeight)
         {
             if (startX.EqualsTo(endX) && startY.EqualsTo(endY)) return;
 

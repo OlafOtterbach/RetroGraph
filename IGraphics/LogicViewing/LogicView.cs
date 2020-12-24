@@ -61,15 +61,11 @@ namespace IGraphics.LogicViewing
                     startX,
                     startY,
                     startOffset,
-                    startDirection,
                     endX,
                     endY,
                     endOffset,
-                    endDirection,
                     canvasWidth,
-                    canvasHeight,
-                    camera.NearPlane,
-                    camera.Frame);
+                    canvasHeight);
             }
             else if (body?.Sensor is SphereSensor sphereSensor)
             {
@@ -77,12 +73,8 @@ namespace IGraphics.LogicViewing
                     body,
                     startX,
                     startY,
-                    startOffset,
-                    startDirection,
                     endX,
                     endY,
-                    endOffset,
-                    endDirection,
                     canvasWidth,
                     canvasHeight,
                     camera.NearPlane,
