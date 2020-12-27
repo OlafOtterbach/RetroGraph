@@ -25,7 +25,7 @@ namespace IGraphics.LogicViewing
 
             var axisFrame = body.Frame * Matrix44D.CreateRotation(cylinderSensor.Axis, 0.0);
 
-            var angle = 0.0;
+            double angle;
             if (IsAxisIsInCameraPlane(axisFrame, camera))
             {
                 angle = CalculateAngleForAxisLieingInCanvas(startX, startY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight, camera);
