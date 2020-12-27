@@ -10,10 +10,12 @@ namespace IGraphics.Graphics.Creators
 
             var cube = Cube.Create(10.0);
             cube.Frame = Matrix44D.CreateTranslation(new Vector3D(0, 0, 5));
+//            cube.Frame = Matrix44D.CreateTranslation(new Vector3D(-10, 10, 5));
             scene.Bodies.Add(cube);
 
             var cube2 = Cube.Create(10.0);
             cube2.Sensor = new CylinderSensor(new Vector3D(0, 0, 1));
+//            cube2.Frame = Matrix44D.CreateTranslation(new Vector3D(-10, 10, 15)) * Matrix44D.CreateRotation(new Vector3D(0, 0, 1), 45.0.DegToRad()); ;
             cube2.Frame = Matrix44D.CreateTranslation(new Vector3D(0, 0, 15)) * Matrix44D.CreateRotation(new Vector3D(0, 0, 1), 45.0.DegToRad()); ;
             scene.Bodies.Add(cube2);
 

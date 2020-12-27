@@ -61,11 +61,14 @@ namespace IGraphics.LogicViewing
                     startX,
                     startY,
                     startOffset,
+                    startDirection,
                     endX,
                     endY,
                     endOffset,
+                    endDirection,
                     canvasWidth,
-                    canvasHeight);
+                    canvasHeight,
+                    camera);
             }
             else if (body?.Sensor is SphereSensor sphereSensor)
             {

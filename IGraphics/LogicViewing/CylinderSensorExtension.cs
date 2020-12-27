@@ -12,18 +12,104 @@ namespace IGraphics.LogicViewing
             double startX,
             double startY,
             Position3D startOffset,
+            Vector3D startDirection,
             double endX,
             double endY,
             Position3D endOffset,
+            Vector3D endDirection,
             double canvasWidth,
-            double canvasHeight)
+            double canvasHeight,
+            Camera camera)
         {
             if (startX.EqualsTo(endX) && startY.EqualsTo(endY)) return;
 
             var axisFrame = body.Frame * Matrix44D.CreateRotation(cylinderSensor.Axis, 0.0);
-            double sign = CalculateAngleSign(axisFrame, startOffset, endOffset);
-            double angle = sign * 2.0 * CalculateAngle(startX, startY, endX, endY, canvasWidth, canvasHeight);
+
+            var angle = 0.0;
+            if (IsAxisIsInCameraPlane(axisFrame, camera))
+            {
+                angle = CalculateAngleForAxisLieingInCanvas(startX, startY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight, camera);
+            }
+            else
+            {
+                angle = CalculateAngleForAxisNotLieingInCanvas(startX, startY, startOffset, startDirection, endX, endY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight);
+            }
             Rotate(body, cylinderSensor.Axis, angle);
+        }
+
+        private static bool IsAxisIsInCameraPlane(Matrix44D axisFrame, Camera camera)
+        {
+            var axis = axisFrame.Ez;
+            var cameraDirection = camera.Frame.Ey;
+
+            double limitAngle = 25.0;
+            double alpha = axis.CounterClockwiseAngleWith(cameraDirection);
+            alpha = alpha.Modulo2Pi();
+            alpha = alpha.RadToDeg();
+            var result = !((Math.Abs(alpha) < limitAngle) || (Math.Abs(alpha) > (180.0 - limitAngle)));
+
+            return result;
+        }
+
+        private static double CalculateAngleForAxisLieingInCanvas(
+            double startX,
+            double startY,
+            Position3D endOffset,
+            Vector3D endDirection,
+            Matrix44D axisFrame,
+            double canvasWidth,
+            double canvasHeight,
+            Camera camera
+        )
+        {
+            var angle = 0.0;
+            var axis = axisFrame.Ez;
+            var cameraDirection = camera.Frame.Ey;
+
+            var direction = (cameraDirection & axis).Normalize() * 10000.0;
+            var offset = ViewProjection.ProjectCanvasToSceneSystem(startX, startY, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
+            var p1 = offset - direction;
+            var p2 = offset + direction;
+            var (success, plump) = IntersectionMath.CalculatePerpendicularPoint(p1, p2 - p1, endOffset, endDirection);
+            if (success)
+            {
+                var sign = (plump - p1).Length < (plump - p2).Length ? -1.0 : 1.0;
+
+                var (endX, endY) = ViewProjection.ProjectSceneSystemToCanvas(plump, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
+                double delta = Math.Sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
+                angle = sign * delta.DegToRad();
+            }
+
+            return angle;
+        }
+
+        private static double CalculateAngleForAxisNotLieingInCanvas(
+            double startX,
+            double startY,
+            Position3D startOffset,
+            Vector3D startDirection,
+            double endX,
+            double endY,
+            Position3D endOffset,
+            Vector3D endDirection,
+            Matrix44D axisFrame,
+            double canvasWidth,
+            double canvasHeight)
+        {
+            startOffset = GetPosition(startOffset, startDirection, axisFrame);
+            endOffset = GetPosition(endOffset, endDirection, axisFrame);
+
+            double sign = CalculateAngleSign(axisFrame, startOffset, endOffset);
+            var angle = sign * 1.0 * CalculateAngle(startX, startY, endX, endY, canvasWidth, canvasHeight);
+
+            return angle;
+        }
+
+        private static Position3D GetPosition(Position3D offset, Vector3D direction, Matrix44D axisFrame)
+        {
+            var (success, position) = IntersectionMath.Intersect(axisFrame.Offset, axisFrame.Ez, offset, direction);
+            var result = success ? position : offset;
+            return result;
         }
 
         private static double CalculateAngleSign(Matrix44D axisFrame, Position3D start, Position3D end)
