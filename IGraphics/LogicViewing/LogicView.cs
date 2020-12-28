@@ -87,6 +87,10 @@ namespace IGraphics.LogicViewing
             {
                 planarMoveSensor.Process(body, startOffset, startDirection, endOffset, endDirection);
             }
+            else if (body?.Sensor is LinearSensor linearMoveSensor)
+            {
+                linearMoveSensor.Process(body, startOffset, startDirection, endOffset, endDirection);
+            }
             else
             {
                 var deltaX = endX - startX;

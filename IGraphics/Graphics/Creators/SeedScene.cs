@@ -19,6 +19,7 @@ namespace IGraphics.Graphics.Creators
 
             var cylinder = Cylinder.Create(16, 4.0, 10.0);
             cylinder.Frame = Matrix44D.CreateTranslation(new Vector3D(10, 10, 5));
+            cylinder.Sensor = new LinearSensor(new Vector3D(0, 1, 0));
             scene.Bodies.Add(cylinder);
 
             var floor = Floor.Create(4, 20);

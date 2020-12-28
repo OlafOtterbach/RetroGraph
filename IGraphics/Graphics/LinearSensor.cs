@@ -2,9 +2,9 @@
 
 namespace IGraphics.Graphics
 {
-    public class LinearMoveSensor : ISensor
+    public class LinearSensor : ISensor
     {
-        public LinearMoveSensor(Vector3D axis)
+        public LinearSensor(Vector3D axis)
         {
             Axis = axis;
         }
