@@ -4,8 +4,9 @@ let lock = false;
 let currentCamera;
 let mouseMoved = false;
 let currentPosition;
-let backgroundColor = "white";
-let foregroundColor = "black"
+let lineWidth =  1.0;
+let backgroundColor = "#FFFFFF";
+let foregroundColor = "#000000"
 
 let canvas = document.querySelector("canvas");
 canvas.addEventListener("mousedown", onMouseDown);
@@ -16,6 +17,17 @@ getScenery();
 function Position(x, y) {
     this.x = x;
     this.y = y;
+}
+
+function MoveStateDto() {
+    this.bodyId = "00000000-0000-0000-0000-000000000000";
+    this.startX = 0.0;
+    this.startY = 0.0;
+    this.endX = 0.0;
+    this.endY = 0.0;
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+    this.camera = null;
 }
 
 function sleep(ms) {
@@ -100,18 +112,24 @@ async function select(x, y, camera) {
     drawScene(graphics);
 }
 
-
 async function move(bodyId, start, end, camera) {
     sleep(50);
     if (!lock) {
         lock = true;
+
+        var moveState = new MoveStateDto();
         camera.Id = id++;
-        let startX = start.x;
-        let startY = start.y;
-        let endX = end.x;
-        let endY = end.y;
-        let url = encodeURI("http://localhost:5000/move?bodyId=" + bodyId + "&startX=" + startX + " &startY=" + startY + "&endX=" + endX + " &endY=" + endY + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
-        let graphics = await postData(url, camera);
+        moveState.camera = camera;
+        moveState.bodyId = bodyId;
+        moveState.startX = start.x;
+        moveState.startY = start.y;
+        moveState.endX = end.x;
+        moveState.endY = end.y;
+        moveState.canvasWidth = canvas.width;
+        moveState.canvasHeight = canvas.height;
+
+        let url = encodeURI("http://localhost:5000/move");
+        let graphics = await postData(url, moveState);
         drawScene(graphics);
         currentPosition = end;
         lock = false;
@@ -141,7 +159,7 @@ function drawScene(graphics) {
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = foregroundColor;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = lineWidth;
         ctx.lineCap = "round";
         ctx.setLineDash([]);
 

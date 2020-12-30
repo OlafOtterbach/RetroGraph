@@ -50,12 +50,10 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("move")]
-        public ActionResult Move([FromQuery] Guid bodyId, [FromQuery] double startX, [FromQuery] double startY, [FromQuery] double endX, [FromQuery] double endY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        public ActionResult Move([FromBody] MoveStateDto moveState)
         {
-            var delta = Vector2DMath.Length(startX, startY, endX, endY);
-
-            var graphics = _logicView.Move(bodyId, startX, startY, endX, endY, canvasWidth, canvasHeight, cameraDto.ToCamera());
-            graphics.Camera.Id = cameraDto.Id;
+            var graphics = _logicView.Move(moveState.bodyId, moveState.startX, moveState.startY, moveState.endX, moveState.endY, moveState.canvasWidth, moveState.canvasHeight, moveState.camera.ToCamera());
+            graphics.Camera.Id = moveState.camera.Id;
             return Ok(graphics);
         }
 
