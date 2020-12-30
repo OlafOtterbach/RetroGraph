@@ -20,14 +20,29 @@ function Position(x, y) {
 }
 
 function MoveStateDto() {
-    this.bodyId = "00000000-0000-0000-0000-000000000000";
-    this.startX = 0.0;
-    this.startY = 0.0;
-    this.endX = 0.0;
-    this.endY = 0.0;
-    this.canvasWidth = 0;
-    this.canvasHeight = 0;
-    this.camera = null;
+    bodyId = "00000000-0000-0000-0000-000000000000";
+    startX = 0.0;
+    startY = 0.0;
+    endX = 0.0;
+    endY = 0.0;
+    canvasWidth = 0;
+    canvasHeight = 0;
+    camera = null;
+}
+
+function SelectStateDto() {
+    selectPositionX = 0.0;
+    selectPositionY = 0.0;
+    canvasWidth = 0;
+    canvasHeight = 0;
+    camera = null;
+}
+
+function ZoomStateDto() {
+    delta = 0.0;
+    canvasWidth = 0;
+    canvasHeight = 0;
+    camera = null;
 }
 
 function sleep(ms) {
@@ -95,9 +110,14 @@ async function getScenery() {
 async function selectBody(x, y, camera) {
     lock = true;
     camera.Id = id++;
-    let url = encodeURI("http://localhost:5000/select-body?canvasX=" + x + "&canvasY=" + y + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
-    let bodySelection = await postData(url, camera);
-    console.log(bodySelection.BodyId);
+    let selectState = new SelectStateDto();
+    selectState.camera = camera;
+    selectState.selectPositionX = x;
+    selectState.selectPositionY = y;
+    selectState.canvasWidth = canvas.width;
+    selectState.canvasHeight = canvas.height;
+    let url = encodeURI("http://localhost:5000/select-body");
+    let bodySelection = await postData(url, selectState);
     bodyId = bodySelection.BodyId;
     lock = false;
 }
@@ -105,10 +125,15 @@ async function selectBody(x, y, camera) {
 async function select(x, y, camera) {
     lock = true;
     camera.Id = id++;
-    let url = encodeURI("http://localhost:5000/select?canvasX=" + x + "&canvasY=" + y + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
-    let graphics = await postData(url, camera);
+    let selectState = new SelectStateDto();
+    selectState.camera = camera;
+    selectState.selectPositionX = x;
+    selectState.selectPositionY = y;
+    selectState.canvasWidth = canvas.width;
+    selectState.canvasHeight = canvas.height;
+    let url = encodeURI("http://localhost:5000/select");
+    let graphics = await postData(url, selectState);
     lock = false;
-    console.log(graphics.Camera.Id);
     drawScene(graphics);
 }
 
@@ -116,9 +141,8 @@ async function move(bodyId, start, end, camera) {
     sleep(50);
     if (!lock) {
         lock = true;
-
-        var moveState = new MoveStateDto();
         camera.Id = id++;
+        let moveState = new MoveStateDto();
         moveState.camera = camera;
         moveState.bodyId = bodyId;
         moveState.startX = start.x;
@@ -127,7 +151,6 @@ async function move(bodyId, start, end, camera) {
         moveState.endY = end.y;
         moveState.canvasWidth = canvas.width;
         moveState.canvasHeight = canvas.height;
-
         let url = encodeURI("http://localhost:5000/move");
         let graphics = await postData(url, moveState);
         drawScene(graphics);
@@ -142,8 +165,13 @@ async function zoom(start, end, camera) {
         lock = true;
         camera.Id = id++;
         let delta = end.y - start.y;
-        let url = encodeURI("http://localhost:5000/zoom?delta=" + delta + "&canvasWidth=" + canvas.width + "&canvasHeight=" + canvas.height);
-        let graphics = await postData(url, camera);
+        let zoomState = new ZoomStateDto();
+        zoomState.camera = camera;
+        zoomState.delta = delta;
+        zoomState.canvasWidth = canvas.width;
+        zoomState.canvasHeight = canvas.height;
+        let url = encodeURI("http://localhost:5000/zoom");
+        let graphics = await postData(url, zoomState);
         drawScene(graphics);
         currentPosition = end;
         lock = false;

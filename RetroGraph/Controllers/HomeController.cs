@@ -35,17 +35,17 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("select-body")]
-        public ActionResult SelectBody(double canvasX, [FromQuery] double canvasY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        public ActionResult SelectBody([FromBody] SelectStateDto selectState)
         {
-            var bodySelection = _logicView.SelectBody(canvasX, canvasY, canvasWidth, canvasHeight, cameraDto.ToCamera());
+            var bodySelection = _logicView.SelectBody(selectState.selectPositionX, selectState.selectPositionY, selectState.canvasWidth, selectState.canvasHeight, selectState.camera.ToCamera());
             return Ok(bodySelection);
         }
 
         [HttpPost("select")]
-        public ActionResult Select(double canvasX, [FromQuery] double canvasY, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        public ActionResult Select([FromBody] SelectStateDto selectState)
         {
-            var graphics = _logicView.Select(canvasX, canvasY, canvasWidth, canvasHeight, cameraDto.ToCamera());
-            graphics.Camera.Id = cameraDto.Id;
+            var graphics = _logicView.Select(selectState.selectPositionX, selectState.selectPositionY, selectState.canvasWidth, selectState.canvasHeight, selectState.camera.ToCamera());
+            graphics.Camera.Id = selectState.camera.Id;
             return Ok(graphics);
         }
 
@@ -58,10 +58,10 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("zoom")]
-        public ActionResult Zoom([FromQuery] double delta, [FromQuery] int canvasWidth, [FromQuery] int canvasHeight, [FromBody] CameraDto cameraDto)
+        public ActionResult Zoom([FromBody] ZoomStateDto zoomState)
         {
-            var graphics = _logicView.Zoom(delta, canvasWidth, canvasHeight, cameraDto.ToCamera());
-            graphics.Camera.Id = cameraDto.Id;
+            var graphics = _logicView.Zoom(zoomState.delta, zoomState.canvasWidth, zoomState.canvasHeight, zoomState.camera.ToCamera());
+            graphics.Camera.Id = zoomState.camera.Id;
             return Ok(graphics);
         }
     }
