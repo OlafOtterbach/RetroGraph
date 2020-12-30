@@ -1,16 +1,28 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.Mathmatics;
 
-namespace IGraphics.LogicViewing
+namespace IGraphics.LogicViewing.Services
 {
-    public static class LinearSensorExtension
+    public class LinearSensorService : IMoveSensorService
     {
-        public static void Process(this LinearSensor linearSensor,
-            Body body,
-            Position3D startOffset,
-            Vector3D startDirection,
-            Position3D endOffset,
-            Vector3D endDirection)
+        public bool CanProcess(ISensor sensor) => sensor is LinearSensor;
+
+        public void Process(ISensor sensor, MoveState moveState)
+        {
+            Process(sensor as LinearSensor,
+                moveState.SelectedBody,
+                moveState.StartMoveOffset,
+                moveState.StartMoveDirection,
+                moveState.EndMoveOffset,
+                moveState.EndMoveDirection);
+        }
+
+        private static void Process(LinearSensor linearSensor,
+             Body body,
+             Position3D startOffset,
+             Vector3D startDirection,
+             Position3D endOffset,
+             Vector3D endDirection)
         {
             if (startOffset == endOffset) return;
             var moveVector = CalculateMove(body, linearSensor.Axis, startOffset, startDirection, endOffset, endDirection);
@@ -31,3 +43,4 @@ namespace IGraphics.LogicViewing
         }
     }
 }
+

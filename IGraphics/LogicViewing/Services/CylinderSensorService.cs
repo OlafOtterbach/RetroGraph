@@ -3,11 +3,30 @@ using IGraphics.Mathmatics;
 using IGraphics.Mathmatics.Extensions;
 using System;
 
-namespace IGraphics.LogicViewing
+namespace IGraphics.LogicViewing.Services
 {
-    public static class CylinderSensorExtension
+    public class CylinderSensorService : IMoveSensorService
     {
-        public static void Process(this CylinderSensor cylinderSensor,
+        public bool CanProcess(ISensor sensor) => sensor is CylinderSensor;
+
+        public void Process(ISensor sensor, MoveState moveState)
+        {
+            Process(sensor as CylinderSensor,
+                    moveState.SelectedBody,
+                    moveState.StartMoveX,
+                    moveState.StartMoveY,
+                    moveState.StartMoveOffset,
+                    moveState.StartMoveDirection,
+                    moveState.EndMoveX,
+                    moveState.EndMoveY,
+                    moveState.EndMoveOffset,
+                    moveState.EndMoveDirection,
+                    moveState.CanvasWidth,
+                    moveState.CanvasHeight,
+                    moveState.Camera);
+        }
+
+        private static void Process(CylinderSensor cylinderSensor,
             Body body,
             double startX,
             double startY,

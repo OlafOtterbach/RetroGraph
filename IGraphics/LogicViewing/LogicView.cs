@@ -1,5 +1,6 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.Graphics.Services;
+using IGraphics.LogicViewing.Services;
 using IGraphics.Mathmatics;
 using System;
 
@@ -7,9 +8,12 @@ namespace IGraphics.LogicViewing
 {
     public class LogicView : ILogicView
     {
-        public LogicView(Scene scene)
+        private IMoveSensorProcessor _moveSensorProcessors;
+
+        public LogicView(Scene scene, IMoveSensorProcessor moveSensorProcessor)
         {
             Scene = scene;
+            _moveSensorProcessors = moveSensorProcessor;
         }
 
         public Scene Scene { get; }
@@ -52,46 +56,25 @@ namespace IGraphics.LogicViewing
             var offset = camera.Frame.Offset;
             var startDirection = startOffset - offset;
             var endDirection = endOffset - offset;
-
             var body = Scene.GetBody(bodyId);
-            if (body?.Sensor is CylinderSensor cylinderSensor)
+
+            var moveState = new MoveState()
             {
-                cylinderSensor.Process(
-                    body,
-                    startX,
-                    startY,
-                    startOffset,
-                    startDirection,
-                    endX,
-                    endY,
-                    endOffset,
-                    endDirection,
-                    canvasWidth,
-                    canvasHeight,
-                    camera);
-            }
-            else if (body?.Sensor is SphereSensor sphereSensor)
-            {
-                sphereSensor.Process(
-                    body,
-                    startX,
-                    startY,
-                    endX,
-                    endY,
-                    canvasWidth,
-                    canvasHeight,
-                    camera.NearPlane,
-                    camera.Frame);
-            }
-            else if (body?.Sensor is PlaneSensor planarMoveSensor)
-            {
-                planarMoveSensor.Process(body, startOffset, startDirection, endOffset, endDirection);
-            }
-            else if (body?.Sensor is LinearSensor linearMoveSensor)
-            {
-                linearMoveSensor.Process(body, startOffset, startDirection, endOffset, endDirection);
-            }
-            else
+                SelectedBody = body,
+                StartMoveX = startX,
+                StartMoveY = startY,
+                StartMoveOffset = startOffset,
+                StartMoveDirection = startDirection,
+                EndMoveX = endX,
+                EndMoveY = endY,
+                EndMoveOffset = endOffset,
+                EndMoveDirection = endDirection,
+                CanvasWidth = canvasWidth,
+                CanvasHeight = canvasHeight,
+                Camera = camera
+            };
+
+            if (!_moveSensorProcessors.Process(body?.Sensor, moveState))
             {
                 var deltaX = endX - startX;
                 var deltaY = endY - startY;
@@ -99,13 +82,6 @@ namespace IGraphics.LogicViewing
             }
 
             return camera;
-        }
-
-        public Camera Move2(Guid bodyId, double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
-        {
-            var deltaX = endX - startX;
-            var deltaY = endY - startY;
-            return Orbit(deltaX, deltaY, canvasWidth, canvasHeight,camera);
         }
 
         public Camera Zoom(double pixelDeltaY, Camera camera)

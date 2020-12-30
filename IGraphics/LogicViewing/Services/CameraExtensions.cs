@@ -1,7 +1,7 @@
 ﻿using IGraphics.Mathmatics;
 using IGraphics.Mathmatics.Extensions;
 
-namespace IGraphics.LogicViewing
+namespace IGraphics.LogicViewing.Services
 {
     public static class CameraExtensions
     {

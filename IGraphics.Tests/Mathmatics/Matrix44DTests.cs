@@ -13,7 +13,7 @@ namespace IGraphics.Tests
         private Random _rand;
 
         
-        public void Init()
+        public Matrix44DTests()
         {
             _rand = new Random();
         }

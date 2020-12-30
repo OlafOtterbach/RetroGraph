@@ -1,13 +1,23 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.Mathmatics;
-using IGraphics.Mathmatics.Extensions;
-using System;
 
-namespace IGraphics.LogicViewing
+namespace IGraphics.LogicViewing.Services
 {
-    public static class PlaneSensorExtension
+    public class PlaneSensorService : IMoveSensorService
     {
-        public static void Process(this PlaneSensor planeSensor,
+        public bool CanProcess(ISensor sensor) => sensor is PlaneSensor;
+
+        public void Process(ISensor sensor, MoveState moveState)
+        {
+            Process(sensor as PlaneSensor,
+                moveState.SelectedBody,
+                moveState.StartMoveOffset,
+                moveState.StartMoveDirection,
+                moveState.EndMoveOffset,
+                moveState.EndMoveDirection);
+        }
+
+        private static void Process(PlaneSensor planeSensor,
             Body body,
             Position3D startOffset,
             Vector3D startDirection,

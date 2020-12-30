@@ -2,11 +2,27 @@
 using IGraphics.Mathmatics;
 using IGraphics.Mathmatics.Extensions;
 
-namespace IGraphics.LogicViewing
+namespace IGraphics.LogicViewing.Services
 {
-    public static class SphereSensorExtension
+    public class SphereSensorService : IMoveSensorService
     {
-        public static void Process(this SphereSensor sphereSensor,
+        public bool CanProcess(ISensor sensor) => sensor is SphereSensor;
+
+        public void Process(ISensor sensor, MoveState moveState)
+        {
+            Process(sensor as SphereSensor,
+                moveState.SelectedBody,
+                moveState.StartMoveX,
+                moveState.StartMoveY,
+                moveState.EndMoveX,
+                moveState.EndMoveY,
+                moveState.CanvasWidth,
+                moveState.CanvasHeight,
+                moveState.Camera.NearPlane,
+                moveState.Camera.Frame);
+        }
+
+        private static void Process(SphereSensor sphereSensor,
             Body body,
             double startX,
             double startY,
