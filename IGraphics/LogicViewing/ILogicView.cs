@@ -11,7 +11,7 @@ namespace IGraphics.LogicViewing
 
         Camera Select(double canvasX, double canvasY, double canvasWidth, double canvasHeight, Camera camera);
 
-        Camera Move(Guid bodyId, double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera);
+        Camera Move(MoveState moveState);
 
         Camera Zoom(double pixelDeltaY, Camera camera);
     }

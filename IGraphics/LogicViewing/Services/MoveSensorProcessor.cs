@@ -1,9 +1,6 @@
 ﻿using IGraphics.Graphics;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IGraphics.LogicViewing.Services
 {
@@ -16,12 +13,14 @@ namespace IGraphics.LogicViewing.Services
             _moveSensorServices = moveServices.ToArray();
         }
 
-        public bool Process(ISensor sensor, MoveState moveState)
+        public bool Process(MoveState moveState)
         {
+            ISensor sensor = moveState.SelectedBody?.Sensor;
+
             var eventIsProcessed = false;
 
             var services = _moveSensorServices.Where(s => s.CanProcess(sensor));
-            foreach(var sensorService in services)
+            foreach (var sensorService in services)
             {
                 sensorService.Process(sensor, moveState);
                 eventIsProcessed = true;

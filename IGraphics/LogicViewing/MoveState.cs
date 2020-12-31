@@ -5,7 +5,6 @@ namespace IGraphics.LogicViewing
 {
     public class MoveState
     {
-        public ILogicView View { get; set; } 
         public Body SelectedBody { get; set; }
 
         public double StartMoveX { get; set; }
@@ -19,7 +18,7 @@ namespace IGraphics.LogicViewing
         public Vector3D EndMoveDirection { get; set; }
  
         public Camera Camera { get; set; }
-        public double CanvasWidth { get; set; }
-        public double CanvasHeight { get; set; }
+        public int CanvasWidth { get; set; }
+        public int CanvasHeight { get; set; }
     }
 }

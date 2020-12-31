@@ -1,23 +1,23 @@
 ﻿using IGraphics.Graphics;
-using IGraphics.Mathmatics;
-using IHiddenLineGraphics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RetroGraph.Models;
 using RetroGraph.Models.Extensions;
-using System;
+using RetroGraph.Services;
 
 namespace RetroGraph.Controllers
 {
     public class HomeController : Controller
     {
         private LogicHiddenLineViewService _logicView;
-        ILogger<HomeController> _log;
+        private IConverterToMoveState _converterToMoveState;
+        private ILogger<HomeController> _log;
         private Scene _scene;
 
-        public HomeController(LogicHiddenLineViewService logicView, Scene scene, ILogger<HomeController> logger)
+        public HomeController(LogicHiddenLineViewService logicView, Scene scene, IConverterToMoveState converterToMoveState, ILogger<HomeController> logger)
         {
             _logicView = logicView;
+            _converterToMoveState = converterToMoveState;
             _log = logger;
             _scene = scene;
         }
@@ -50,10 +50,11 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("move")]
-        public ActionResult Move([FromBody] MoveStateDto moveState)
+        public ActionResult Move([FromBody] MoveStateDto moveStateDto)
         {
-            var graphics = _logicView.Move(moveState.bodyId, moveState.startX, moveState.startY, moveState.endX, moveState.endY, moveState.canvasWidth, moveState.canvasHeight, moveState.camera.ToCamera());
-            graphics.Camera.Id = moveState.camera.Id;
+            var moveState = _converterToMoveState.Convert(moveStateDto);
+            var graphics = _logicView.Move(moveState);
+            graphics.Camera.Id = moveStateDto.camera.Id;
             return Ok(graphics);
         }
 

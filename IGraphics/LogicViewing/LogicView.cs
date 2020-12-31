@@ -49,39 +49,16 @@ namespace IGraphics.LogicViewing
             return camera;
         }
 
-        public Camera Move(Guid bodyId, double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
+        public Camera Move(MoveState moveState)
         {
-            var startOffset = ViewProjection.ProjectCanvasToSceneSystem(startX, startY, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
-            var endOffset = ViewProjection.ProjectCanvasToSceneSystem(endX, endY, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
-            var offset = camera.Frame.Offset;
-            var startDirection = startOffset - offset;
-            var endDirection = endOffset - offset;
-            var body = Scene.GetBody(bodyId);
-
-            var moveState = new MoveState()
+            if (!_moveSensorProcessors.Process(moveState))
             {
-                SelectedBody = body,
-                StartMoveX = startX,
-                StartMoveY = startY,
-                StartMoveOffset = startOffset,
-                StartMoveDirection = startDirection,
-                EndMoveX = endX,
-                EndMoveY = endY,
-                EndMoveOffset = endOffset,
-                EndMoveDirection = endDirection,
-                CanvasWidth = canvasWidth,
-                CanvasHeight = canvasHeight,
-                Camera = camera
-            };
-
-            if (!_moveSensorProcessors.Process(body?.Sensor, moveState))
-            {
-                var deltaX = endX - startX;
-                var deltaY = endY - startY;
-                return Orbit(deltaX, deltaY, canvasWidth, canvasHeight, camera);
+                var deltaX = moveState.EndMoveX - moveState.StartMoveX;
+                var deltaY = moveState.EndMoveY - moveState.StartMoveY;
+                return Orbit(deltaX, deltaY, moveState.CanvasWidth, moveState.CanvasHeight, moveState.Camera);
             }
 
-            return camera;
+            return moveState.Camera;
         }
 
         public Camera Zoom(double pixelDeltaY, Camera camera)

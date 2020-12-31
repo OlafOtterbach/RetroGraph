@@ -1,12 +1,14 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.LogicViewing;
 using IGraphics.Mathmatics;
+using IHiddenLineGraphics;
 using RetroGraph.Models;
 using RetroGraph.Models.Extensions;
 using System;
 using System.Linq;
 
-namespace IHiddenLineGraphics
+namespace RetroGraph.Services
+
 {
     public class LogicHiddenLineViewService
     {
@@ -67,10 +69,10 @@ namespace IHiddenLineGraphics
             return graphics;
         }
 
-        public GraphicsDto Move(Guid bodyId, double startX, double startY, double endX, double endY, int canvasWidth, int canvasHeight, Camera camera)
+        public GraphicsDto Move(MoveState moveState)
         {
-            var rotatedCamera = _view.Move(bodyId, startX, startY, endX, endY, canvasWidth, canvasHeight, camera);
-            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, rotatedCamera, canvasWidth, canvasHeight).ToArray();
+            var rotatedCamera = _view.Move(moveState);
+            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, rotatedCamera, moveState.CanvasWidth, moveState.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {
                 Camera = rotatedCamera.ToCameraDto(),

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using RetroGraph.Services;
 
 namespace RetroGraph
 {
@@ -31,7 +32,7 @@ namespace RetroGraph
 
             ModuleIGraphics.Register(services);
             ModuleHiddenLineGraphics.Register(services);
-            services.AddSingleton(typeof(LogicHiddenLineViewService));
+            ModuleRetroGraph.Register(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
