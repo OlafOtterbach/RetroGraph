@@ -20,29 +20,29 @@ function Position(x, y) {
 }
 
 function MoveStateDto() {
-    bodyId = "00000000-0000-0000-0000-000000000000";
-    startX = 0.0;
-    startY = 0.0;
-    endX = 0.0;
-    endY = 0.0;
-    canvasWidth = 0;
-    canvasHeight = 0;
-    camera = null;
+    this.bodyId = "00000000-0000-0000-0000-000000000000";
+    this.startX = 0.0;
+    this.startY = 0.0;
+    this.endX = 0.0;
+    this.endY = 0.0;
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+    this.camera = null;
 }
 
 function SelectStateDto() {
-    selectPositionX = 0.0;
-    selectPositionY = 0.0;
-    canvasWidth = 0;
-    canvasHeight = 0;
-    camera = null;
+    this.selectPositionX = 0.0;
+    this.selectPositionY = 0.0;
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+    this.camera = null;
 }
 
 function ZoomStateDto() {
-    delta = 0.0;
-    canvasWidth = 0;
-    canvasHeight = 0;
-    camera = null;
+    this.delta = 0.0;
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+    this.camera = null;
 }
 
 function sleep(ms) {
