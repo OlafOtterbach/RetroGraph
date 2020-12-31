@@ -199,7 +199,7 @@ namespace IGraphics.Tests
       [Fact]
       public void MultiplicationOperatorTest_TwoOrthogonalVectors_Zero()
       {
-         Assert.Equal(new Vector3D(1, 0, 0) * new Vector3D(0, 1, 0), 0.0);
+         Assert.Equal(new Vector3D(1, 0, 0) * new Vector3D(0, 1, 0), 0.0, 2);
          Assert.Equal(new Vector3D(1, 0, 0) * new Vector3D(0, 0, 1), 0.0);
          Assert.Equal(new Vector3D(0, 1, 0) * new Vector3D(0, 0, 1), 0.0);
          Assert.Equal(new Vector3D(0, 1, 0) * new Vector3D(1, 0, 0), 0.0);
