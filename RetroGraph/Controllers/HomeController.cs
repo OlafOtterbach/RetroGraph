@@ -11,13 +11,22 @@ namespace RetroGraph.Controllers
     {
         private LogicHiddenLineViewService _logicView;
         private IConverterToMoveState _converterToMoveState;
+        private IConverterToSelectState _converterToSelectState;
+        private IConverterToZoomState _converterToZoomState;
         private ILogger<HomeController> _log;
         private Scene _scene;
 
-        public HomeController(LogicHiddenLineViewService logicView, Scene scene, IConverterToMoveState converterToMoveState, ILogger<HomeController> logger)
+        public HomeController(LogicHiddenLineViewService logicView,
+            Scene scene,
+            IConverterToMoveState converterToMoveState,
+            IConverterToSelectState converterToSelectState,
+            IConverterToZoomState converterToZoomState,
+            ILogger<HomeController> logger)
         {
             _logicView = logicView;
             _converterToMoveState = converterToMoveState;
+            _converterToSelectState = converterToSelectState;
+            _converterToZoomState = converterToZoomState;
             _log = logger;
             _scene = scene;
         }
@@ -35,17 +44,19 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("select-body")]
-        public ActionResult SelectBody([FromBody] SelectStateDto selectState)
+        public ActionResult SelectBody([FromBody] SelectStateDto selectStateDto)
         {
-            var bodySelection = _logicView.SelectBody(selectState.selectPositionX, selectState.selectPositionY, selectState.canvasWidth, selectState.canvasHeight, selectState.camera.ToCamera());
+            var selectState = _converterToSelectState.Convert(selectStateDto);
+            var bodySelection = _logicView.SelectBody(selectState);
             return Ok(bodySelection);
         }
 
         [HttpPost("select")]
-        public ActionResult Select([FromBody] SelectStateDto selectState)
+        public ActionResult Select([FromBody] SelectStateDto selectStateDto)
         {
-            var graphics = _logicView.Select(selectState.selectPositionX, selectState.selectPositionY, selectState.canvasWidth, selectState.canvasHeight, selectState.camera.ToCamera());
-            graphics.Camera.Id = selectState.camera.Id;
+            var selectState = _converterToSelectState.Convert(selectStateDto);
+            var graphics = _logicView.Select(selectState);
+            graphics.Camera.Id = selectStateDto.camera.Id;
             return Ok(graphics);
         }
 
@@ -59,10 +70,11 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("zoom")]
-        public ActionResult Zoom([FromBody] ZoomStateDto zoomState)
+        public ActionResult Zoom([FromBody] ZoomStateDto zoomStateDto)
         {
-            var graphics = _logicView.Zoom(zoomState.delta, zoomState.canvasWidth, zoomState.canvasHeight, zoomState.camera.ToCamera());
-            graphics.Camera.Id = zoomState.camera.Id;
+            var zoomState = _converterToZoomState.Convert(zoomStateDto);
+            var graphics = _logicView.Zoom(zoomState);
+            graphics.Camera.Id = zoomStateDto.camera.Id;
             return Ok(graphics);
         }
     }

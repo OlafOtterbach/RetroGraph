@@ -7,12 +7,12 @@ namespace IGraphics.LogicViewing
     {
         Scene Scene { get; }
 
-        Guid SelectBody(double canvasX, double canvasY, int canvasWidth, int canvasHeight, Camera camera);
+        Body SelectBody(SelectState selectState);
 
-        Camera Select(double canvasX, double canvasY, double canvasWidth, double canvasHeight, Camera camera);
+        Camera Select(SelectState selectState);
 
         Camera Move(MoveState moveState);
 
-        Camera Zoom(double pixelDeltaY, Camera camera);
+        Camera Zoom(ZoomState zoomState);
     }
 }

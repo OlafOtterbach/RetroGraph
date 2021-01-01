@@ -49,20 +49,21 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public BodySelectionDto SelectBody(double canvasX, double canvasY, int canvasWidth, int canvasHeight, Camera camera)
+        public BodySelectionDto SelectBody(SelectState selectState)
         {
-            var bodyId = _view.SelectBody(canvasX, canvasY, canvasWidth, canvasHeight, camera);
+            var body = _view.SelectBody(selectState);
+            var bodyId = body != null ? body.Id : Guid.Empty;
             var selection = new BodySelectionDto(bodyId);
             return selection;
         }
 
-        public GraphicsDto Select(double canvasX, double canvasY, int canvasWidth, int canvasHeight, Camera camera)
+        public GraphicsDto Select(SelectState selectState)
         {
-            var movedCamera = _view.Select(canvasX, canvasY, canvasWidth, canvasHeight, camera);
-            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, movedCamera, canvasWidth, canvasHeight).ToArray();
+            var selectedPositionedCamera = _view.Select(selectState);
+            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, selectedPositionedCamera, selectState.CanvasWidth, selectState.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {
-                Camera = movedCamera.ToCameraDto(),
+                Camera = selectedPositionedCamera.ToCameraDto(),
                 DrawLines = lines
             };
 
@@ -82,10 +83,10 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public GraphicsDto Zoom(double delta, int canvasWidth, int canvasHeight, Camera camera)
+        public GraphicsDto Zoom(ZoomState zoomState)
         {
-            var zoomedCamera = _view.Zoom(delta, camera);
-            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, zoomedCamera, canvasWidth, canvasHeight).ToArray();
+            var zoomedCamera = _view.Zoom(zoomState);
+            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, zoomedCamera, zoomState.CanvasWidth, zoomState.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {
                 Camera = zoomedCamera.ToCameraDto(),
