@@ -20,10 +20,7 @@ namespace IGraphics.LogicViewing
 
         public Body SelectBody(SelectState selectState)
         {
-            var (x, y) = ViewProjection.ProjectCanvasToCameraPlane(selectState.selectPositionX, selectState.selectPositionY, selectState.CanvasWidth, selectState.CanvasHeight);
-            var posCameraSystem = ViewProjection.ProjectCameraPlaneToCameraSystem(x, y, selectState.Camera.NearPlane);
-            var posScene = ViewProjection.ProjectCameraSystemToSceneSystem(posCameraSystem, selectState.Camera.Frame);
-
+            var posScene = ViewProjection.ProjectCanvasToSceneSystem(selectState.selectPositionX, selectState.selectPositionY, selectState.CanvasWidth, selectState.CanvasHeight, selectState.Camera.NearPlane, selectState.Camera.Frame);
             var rayOffset = selectState.Camera.Frame.Offset;
             var rayDirection = posScene - rayOffset;
             var (isintersected, intersection, body) = Scene.GetIntersectionOfRayAndScene(rayOffset, rayDirection);
@@ -33,10 +30,7 @@ namespace IGraphics.LogicViewing
 
         public Camera Select(SelectState selectState)
         {
-            var (x, y) = ViewProjection.ProjectCanvasToCameraPlane(selectState.selectPositionX, selectState.selectPositionY, selectState.CanvasWidth, selectState.CanvasHeight);
-            var posCameraSystem = ViewProjection.ProjectCameraPlaneToCameraSystem(x, y, selectState.Camera.NearPlane);
-            var posScene = ViewProjection.ProjectCameraSystemToSceneSystem(posCameraSystem, selectState.Camera.Frame);
-
+            var posScene = ViewProjection.ProjectCanvasToSceneSystem(selectState.selectPositionX, selectState.selectPositionY, selectState.CanvasWidth, selectState.CanvasHeight, selectState.Camera.NearPlane, selectState.Camera.Frame);
             var rayOffset = selectState.Camera.Frame.Offset;
             var rayDirection = posScene - rayOffset;
 
