@@ -2,7 +2,7 @@
 
 namespace RetroGraph.Models.Extensions
 {
-    public static class IntersectionDtoExtension
+    public static class PositionDtoExtension
     {
         public static Position3D ToPosition3D(this PositionDto positionDto)
         {
