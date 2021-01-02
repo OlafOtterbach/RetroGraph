@@ -9,8 +9,6 @@ namespace RetroGraph
         {
             services.AddSingleton<LogicHiddenLineViewService>();
             services.AddSingleton<IConverterToMoveState, ConverterToMoveState>();
-            services.AddSingleton<IConverterToSelectState, ConverterToSelectState>();
-            services.AddSingleton<IConverterToZoomState, ConverterToZoomState>();
         }
     }
 }

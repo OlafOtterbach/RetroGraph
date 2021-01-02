@@ -1,14 +1,12 @@
 ﻿using IGraphics.LogicViewing;
-using RetroGraph.Models;
-using RetroGraph.Models.Extensions;
 
-namespace RetroGraph.Services
+namespace RetroGraph.Models.Extensions
 {
-    public class ConverterToSelectState : IConverterToSelectState
+    public static class SelectStateDtoExtension
     {
-        public SelectState Convert(SelectStateDto selectStateDto)
+        public static SelectState ToSelectState(this SelectStateDto selectStateDto)
         {
-            var selectState = new SelectState()
+            var selectState = new SelectState
             {
                 selectPositionX = selectStateDto.selectPositionX,
                 selectPositionY = selectStateDto.selectPositionY,

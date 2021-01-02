@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RetroGraph.Models;
-using RetroGraph.Models.Extensions;
 using RetroGraph.Services;
 
 namespace RetroGraph.Controllers
@@ -11,24 +10,16 @@ namespace RetroGraph.Controllers
     {
         private LogicHiddenLineViewService _logicView;
         private IConverterToMoveState _converterToMoveState;
-        private IConverterToSelectState _converterToSelectState;
-        private IConverterToZoomState _converterToZoomState;
         private ILogger<HomeController> _log;
-        private Scene _scene;
 
         public HomeController(LogicHiddenLineViewService logicView,
             Scene scene,
             IConverterToMoveState converterToMoveState,
-            IConverterToSelectState converterToSelectState,
-            IConverterToZoomState converterToZoomState,
             ILogger<HomeController> logger)
         {
             _logicView = logicView;
             _converterToMoveState = converterToMoveState;
-            _converterToSelectState = converterToSelectState;
-            _converterToZoomState = converterToZoomState;
             _log = logger;
-            _scene = scene;
         }
 
         // GET: HomeController
@@ -46,9 +37,8 @@ namespace RetroGraph.Controllers
         [HttpPost("select")]
         public ActionResult<SelectedBodyStateDto> Select([FromBody] SelectStateDto selectStateDto)
         {
-            var selectState = _converterToSelectState.Convert(selectStateDto);
-            var bodySelection = _logicView.SelectBody(selectState);
-            return Ok(bodySelection);
+            var selection = _logicView.SelectBody(selectStateDto);
+            return Ok(selection);
         }
 
         [HttpPost("touch")]
@@ -71,8 +61,7 @@ namespace RetroGraph.Controllers
         [HttpPost("zoom")]
         public ActionResult<GraphicsDto> Zoom([FromBody] ZoomStateDto zoomStateDto)
         {
-            var zoomState = _converterToZoomState.Convert(zoomStateDto);
-            var graphics = _logicView.Zoom(zoomState);
+            var graphics = _logicView.Zoom(zoomStateDto);
             graphics.Camera.Id = zoomStateDto.camera.Id;
             return Ok(graphics);
         }

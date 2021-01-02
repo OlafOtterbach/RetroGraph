@@ -1,14 +1,12 @@
 ﻿using IGraphics.LogicViewing;
-using RetroGraph.Models;
-using RetroGraph.Models.Extensions;
 
-namespace RetroGraph.Services
+namespace RetroGraph.Models.Extensions
 {
-    public class ConverterToZoomState : IConverterToZoomState
+    public static class ZoomStateDtoExtension
     {
-        public ZoomState Convert(ZoomStateDto zoomStateDto)
+        public static ZoomState ToZoomState(this ZoomStateDto zoomStateDto)
         {
-            var zoomState = new ZoomState()
+            var zoomState = new ZoomState
             {
                 Delta = zoomStateDto.delta,
                 Camera = zoomStateDto.camera.ToCamera(),

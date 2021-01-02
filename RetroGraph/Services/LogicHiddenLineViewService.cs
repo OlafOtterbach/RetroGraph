@@ -49,8 +49,9 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public SelectedBodyStateDto SelectBody(SelectState selectState)
+        public SelectedBodyStateDto SelectBody(SelectStateDto selectStateDto)
         {
+            var selectState = selectStateDto.ToSelectState();
             var selection = _view.SelectBody(selectState).ToBodySelectionDto();
             return selection;
         }
@@ -82,8 +83,9 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public GraphicsDto Zoom(ZoomState zoomState)
+        public GraphicsDto Zoom(ZoomStateDto zoomStateDto)
         {
+            var zoomState = zoomStateDto.ToZoomState();
             var zoomedCamera = _view.Zoom(zoomState);
             var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, zoomedCamera, zoomState.CanvasWidth, zoomState.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()
