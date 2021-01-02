@@ -9,16 +9,12 @@ namespace RetroGraph.Controllers
     public class HomeController : Controller
     {
         private LogicHiddenLineViewService _logicView;
-        private IConverterToMoveState _converterToMoveState;
         private ILogger<HomeController> _log;
 
         public HomeController(LogicHiddenLineViewService logicView,
-            Scene scene,
-            IConverterToMoveState converterToMoveState,
             ILogger<HomeController> logger)
         {
             _logicView = logicView;
-            _converterToMoveState = converterToMoveState;
             _log = logger;
         }
 
@@ -52,9 +48,8 @@ namespace RetroGraph.Controllers
         [HttpPost("move")]
         public ActionResult<GraphicsDto> Move([FromBody] MoveStateDto moveStateDto)
         {
-            var moveState = _converterToMoveState.Convert(moveStateDto);
-            var graphics = _logicView.Move(moveState);
-            graphics.Camera.Id = moveStateDto.camera.Id;
+            var graphics = _logicView.Move(moveStateDto);
+            graphics.Camera.Id = moveStateDto.Camera.Id;
             return Ok(graphics);
         }
 

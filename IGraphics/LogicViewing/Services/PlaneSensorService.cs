@@ -1,20 +1,35 @@
 ﻿using IGraphics.Graphics;
+using IGraphics.Graphics.Services;
 using IGraphics.Mathmatics;
 
 namespace IGraphics.LogicViewing.Services
 {
     public class PlaneSensorService : IMoveSensorService
     {
+        private Scene _scene;
+
+        public PlaneSensorService(Scene scene)
+        {
+            _scene = scene;
+        }
+
         public bool CanProcess(ISensor sensor) => sensor is PlaneSensor;
 
         public void Process(ISensor sensor, MoveState moveState)
         {
+            var startMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveState.StartMoveX, moveState.StartMoveY, moveState.CanvasWidth, moveState.CanvasHeight, moveState.Camera.NearPlane, moveState.Camera.Frame);
+            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveState.EndMoveX, moveState.EndMoveY, moveState.CanvasWidth, moveState.CanvasHeight, moveState.Camera.NearPlane, moveState.Camera.Frame);
+            var offset = moveState.Camera.Frame.Offset;
+            var startMoveDirection = startMoveOffset - offset;
+            var endMoveDirection = endMoveOffset - offset;
+            var body = _scene.GetBody(moveState.SelectedBodyId);
+
             Process(sensor as PlaneSensor,
-                moveState.SelectedBody,
-                moveState.StartMoveOffset,
-                moveState.StartMoveDirection,
-                moveState.EndMoveOffset,
-                moveState.EndMoveDirection);
+                body,
+                startMoveOffset,
+                startMoveDirection,
+                endMoveOffset,
+                endMoveDirection);
         }
 
         private static void Process(PlaneSensor planeSensor,

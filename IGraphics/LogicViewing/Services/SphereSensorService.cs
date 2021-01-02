@@ -1,4 +1,5 @@
 ﻿using IGraphics.Graphics;
+using IGraphics.Graphics.Services;
 using IGraphics.Mathmatics;
 using IGraphics.Mathmatics.Extensions;
 
@@ -6,12 +7,21 @@ namespace IGraphics.LogicViewing.Services
 {
     public class SphereSensorService : IMoveSensorService
     {
+        private Scene _scene;
+
+        public SphereSensorService(Scene scene)
+        {
+            _scene = scene;
+        }
+
         public bool CanProcess(ISensor sensor) => sensor is SphereSensor;
 
         public void Process(ISensor sensor, MoveState moveState)
         {
+            var body = _scene.GetBody(moveState.SelectedBodyId);
+
             Process(sensor as SphereSensor,
-                moveState.SelectedBody,
+                body,
                 moveState.StartMoveX,
                 moveState.StartMoveY,
                 moveState.EndMoveX,

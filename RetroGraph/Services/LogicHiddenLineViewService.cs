@@ -70,8 +70,9 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public GraphicsDto Move(MoveState moveState)
+        public GraphicsDto Move(MoveStateDto moveStateDto)
         {
+            var moveState = moveStateDto.ToMoveState();
             var rotatedCamera = _view.Move(moveState);
             var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, rotatedCamera, moveState.CanvasWidth, moveState.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()

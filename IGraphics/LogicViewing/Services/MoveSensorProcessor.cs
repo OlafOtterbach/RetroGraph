@@ -1,4 +1,5 @@
 ﻿using IGraphics.Graphics;
+using IGraphics.Graphics.Services;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,17 +7,19 @@ namespace IGraphics.LogicViewing.Services
 {
     public class MoveSensorProcessor : IMoveSensorProcessor
     {
+        private Scene _scene;
         private IMoveSensorService[] _moveSensorServices;
 
-        public MoveSensorProcessor(IEnumerable<IMoveSensorService> moveServices)
+        public MoveSensorProcessor(IEnumerable<IMoveSensorService> moveServices, Scene scene)
         {
+            _scene = scene;
             _moveSensorServices = moveServices.ToArray();
         }
 
         public bool Process(MoveState moveState)
         {
-            ISensor sensor = moveState.SelectedBody?.Sensor;
-
+            var body = _scene.GetBody(moveState.SelectedBodyId);
+            var sensor = body?.Sensor;
             var eventIsProcessed = false;
 
             var services = _moveSensorServices.Where(s => s.CanProcess(sensor));

@@ -8,7 +8,6 @@ namespace RetroGraph
         public static void Register(IServiceCollection services)
         {
             services.AddSingleton<LogicHiddenLineViewService>();
-            services.AddSingleton<IConverterToMoveState, ConverterToMoveState>();
         }
     }
 }

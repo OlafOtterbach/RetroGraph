@@ -1,4 +1,5 @@
 ﻿using IGraphics.Graphics;
+using IGraphics.Graphics.Services;
 using IGraphics.Mathmatics;
 using IGraphics.Mathmatics.Extensions;
 using System;
@@ -7,20 +8,34 @@ namespace IGraphics.LogicViewing.Services
 {
     public class CylinderSensorService : IMoveSensorService
     {
+        private Scene _scene;
+
+        public CylinderSensorService(Scene scene)
+        {
+            _scene = scene;
+        }
+
         public bool CanProcess(ISensor sensor) => sensor is CylinderSensor;
 
         public void Process(ISensor sensor, MoveState moveState)
         {
+            var startMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveState.StartMoveX, moveState.StartMoveY, moveState.CanvasWidth, moveState.CanvasHeight, moveState.Camera.NearPlane, moveState.Camera.Frame);
+            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveState.EndMoveX, moveState.EndMoveY, moveState.CanvasWidth, moveState.CanvasHeight, moveState.Camera.NearPlane, moveState.Camera.Frame);
+            var offset = moveState.Camera.Frame.Offset;
+            var startMoveDirection = startMoveOffset - offset;
+            var endMoveDirection = endMoveOffset - offset;
+            var body = _scene.GetBody(moveState.SelectedBodyId);
+
             Process(sensor as CylinderSensor,
-                    moveState.SelectedBody,
+                    body,
                     moveState.StartMoveX,
                     moveState.StartMoveY,
-                    moveState.StartMoveOffset,
-                    moveState.StartMoveDirection,
+                    startMoveOffset,
+                    startMoveDirection,
                     moveState.EndMoveX,
                     moveState.EndMoveY,
-                    moveState.EndMoveOffset,
-                    moveState.EndMoveDirection,
+                    endMoveOffset,
+                    endMoveDirection,
                     moveState.CanvasWidth,
                     moveState.CanvasHeight,
                     moveState.Camera);
