@@ -44,7 +44,7 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("select-body")]
-        public ActionResult SelectBody([FromBody] SelectStateDto selectStateDto)
+        public ActionResult<BodySelectionDto> SelectBody([FromBody] SelectStateDto selectStateDto)
         {
             var selectState = _converterToSelectState.Convert(selectStateDto);
             var bodySelection = _logicView.SelectBody(selectState);
@@ -52,7 +52,7 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("select")]
-        public ActionResult Select([FromBody] SelectStateDto selectStateDto)
+        public ActionResult<GraphicsDto> Select([FromBody] SelectStateDto selectStateDto)
         {
             var selectState = _converterToSelectState.Convert(selectStateDto);
             var graphics = _logicView.Select(selectState);
@@ -61,7 +61,7 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("move")]
-        public ActionResult Move([FromBody] MoveStateDto moveStateDto)
+        public ActionResult<GraphicsDto> Move([FromBody] MoveStateDto moveStateDto)
         {
             var moveState = _converterToMoveState.Convert(moveStateDto);
             var graphics = _logicView.Move(moveState);
@@ -70,7 +70,7 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("zoom")]
-        public ActionResult Zoom([FromBody] ZoomStateDto zoomStateDto)
+        public ActionResult<GraphicsDto> Zoom([FromBody] ZoomStateDto zoomStateDto)
         {
             var zoomState = _converterToZoomState.Convert(zoomStateDto);
             var graphics = _logicView.Zoom(zoomState);

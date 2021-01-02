@@ -1,5 +1,5 @@
 ﻿using IGraphics.Graphics;
-using System;
+using IGraphics.Mathmatics;
 
 namespace IGraphics.LogicViewing
 {
@@ -7,7 +7,7 @@ namespace IGraphics.LogicViewing
     {
         Scene Scene { get; }
 
-        Body SelectBody(SelectState selectState);
+        SelectedBodyState SelectBody(SelectState selectState);
 
         Camera Select(SelectState selectState);
 

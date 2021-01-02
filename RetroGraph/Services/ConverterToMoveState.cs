@@ -30,6 +30,7 @@ namespace RetroGraph.Services
             var moveState = new MoveState()
             {
                 SelectedBody = body,
+                BodyIntersection = new Position3D(moveStateDto.bodyIntersection.X, moveStateDto.bodyIntersection.Y, moveStateDto.bodyIntersection.Z),
                 StartMoveX = moveStateDto.startX,
                 StartMoveY = moveStateDto.startY,
                 StartMoveOffset = startOffset,

@@ -1,14 +1,14 @@
-﻿using System;
+﻿using IGraphics.Mathmatics;
+using System;
 
 namespace RetroGraph.Models
 {
     public class BodySelectionDto
     {
-        public BodySelectionDto(Guid bodyId)
-        {
-            BodyId = bodyId;
-        }
+        public bool IsBodyIntersected { get; set; }
 
-        public Guid BodyId { get; }
+        public Guid BodyId { get; set; }
+
+        public IntersectionDto BodyIntersection { get; set; }
     }
 }

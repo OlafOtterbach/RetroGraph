@@ -1,5 +1,6 @@
 ﻿let id = 1;
 let bodyId;
+let bodyIntersection;
 let lock = false;
 let currentCamera;
 let mouseMoved = false;
@@ -19,8 +20,15 @@ function Position(x, y) {
     this.y = y;
 }
 
+function Position3D(x, y, z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+}
+
 function MoveStateDto() {
     this.bodyId = "00000000-0000-0000-0000-000000000000";
+    this.bodyIntersection = new Position3D(0.0, 0.0, 0.0);
     this.startX = 0.0;
     this.startY = 0.0;
     this.endX = 0.0;
@@ -119,6 +127,7 @@ async function selectBody(x, y, camera) {
     let url = encodeURI("http://localhost:5000/select-body");
     let bodySelection = await postData(url, selectState);
     bodyId = bodySelection.BodyId;
+    bodyIntersection = bodySelection.BodyIntersection;
     lock = false;
 }
 
@@ -145,6 +154,7 @@ async function move(bodyId, start, end, camera) {
         let moveState = new MoveStateDto();
         moveState.camera = camera;
         moveState.bodyId = bodyId;
+        moveState.bodyIntersection = bodyIntersection;
         moveState.startX = start.x;
         moveState.startY = start.y;
         moveState.endX = end.x;

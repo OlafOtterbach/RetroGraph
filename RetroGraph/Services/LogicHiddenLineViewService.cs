@@ -51,9 +51,7 @@ namespace RetroGraph.Services
 
         public BodySelectionDto SelectBody(SelectState selectState)
         {
-            var body = _view.SelectBody(selectState);
-            var bodyId = body != null ? body.Id : Guid.Empty;
-            var selection = new BodySelectionDto(bodyId);
+            var selection = _view.SelectBody(selectState).ToBodySelectionDto();
             return selection;
         }
 

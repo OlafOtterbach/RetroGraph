@@ -18,14 +18,14 @@ namespace IGraphics.LogicViewing
 
         public Scene Scene { get; }
 
-        public Body SelectBody(SelectState selectState)
+        public SelectedBodyState SelectBody(SelectState selectState)
         {
             var posScene = ViewProjection.ProjectCanvasToSceneSystem(selectState.selectPositionX, selectState.selectPositionY, selectState.CanvasWidth, selectState.CanvasHeight, selectState.Camera.NearPlane, selectState.Camera.Frame);
             var rayOffset = selectState.Camera.Frame.Offset;
             var rayDirection = posScene - rayOffset;
-            var (isintersected, intersection, body) = Scene.GetIntersectionOfRayAndScene(rayOffset, rayDirection);
+            var (isIntersected, intersection, body) = Scene.GetIntersectionOfRayAndScene(rayOffset, rayDirection);
 
-            return body;
+            return new SelectedBodyState { SelectedBodyId = isIntersected ? body.Id : Guid.Empty, IsBodySelected = isIntersected, BodyIntersection = intersection };
         }
 
         public Camera Select(SelectState selectState)
