@@ -1,5 +1,4 @@
 ﻿using IGraphics.Graphics;
-using IGraphics.Mathmatics;
 
 namespace IGraphics.LogicViewing
 {
@@ -9,7 +8,7 @@ namespace IGraphics.LogicViewing
 
         SelectedBodyState SelectBody(SelectState selectState);
 
-        Camera Select(SelectState selectState);
+        Camera Touch(TouchState touchState);
 
         Camera Move(MoveState moveState);
 

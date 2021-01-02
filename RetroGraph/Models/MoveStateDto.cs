@@ -5,7 +5,7 @@ namespace RetroGraph.Models
     public class MoveStateDto
     {
         public Guid bodyId { get; set; }
-        public IntersectionDto bodyIntersection { get; set; }
+        public PositionDto bodyIntersection { get; set; }
         public double startX { get; set; }
         public double startY { get; set; }
         public double endX { get; set; }

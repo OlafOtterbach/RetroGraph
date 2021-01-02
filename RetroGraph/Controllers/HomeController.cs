@@ -43,20 +43,19 @@ namespace RetroGraph.Controllers
             return Ok(_logicView.GetScene(canvasWidth, canvasHeight));
         }
 
-        [HttpPost("select-body")]
-        public ActionResult<BodySelectionDto> SelectBody([FromBody] SelectStateDto selectStateDto)
+        [HttpPost("select")]
+        public ActionResult<SelectedBodyStateDto> Select([FromBody] SelectStateDto selectStateDto)
         {
             var selectState = _converterToSelectState.Convert(selectStateDto);
             var bodySelection = _logicView.SelectBody(selectState);
             return Ok(bodySelection);
         }
 
-        [HttpPost("select")]
-        public ActionResult<GraphicsDto> Select([FromBody] SelectStateDto selectStateDto)
+        [HttpPost("touch")]
+        public ActionResult<GraphicsDto> Touch([FromBody] TouchStateDto touchStateDto)
         {
-            var selectState = _converterToSelectState.Convert(selectStateDto);
-            var graphics = _logicView.Select(selectState);
-            graphics.Camera.Id = selectStateDto.camera.Id;
+            var graphics = _logicView.Touch(touchStateDto);
+            graphics.Camera.Id = touchStateDto.Camera.Id;
             return Ok(graphics);
         }
 

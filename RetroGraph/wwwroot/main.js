@@ -1,6 +1,7 @@
 ﻿let id = 1;
 let bodyId;
 let bodyIntersection;
+let isBodySelected = false;
 let lock = false;
 let currentCamera;
 let mouseMoved = false;
@@ -26,6 +27,23 @@ function Position3D(x, y, z) {
     this.z = z;
 }
 
+function SelectStateDto() {
+    this.selectPositionX = 0.0;
+    this.selectPositionY = 0.0;
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+    this.camera = null;
+}
+
+function TouchStateDto() {
+    this.isBodyTouched = false;
+    this.bodyId = "00000000-0000-0000-0000-000000000000";
+    this.touchPosition = new Position3D(0.0, 0.0, 0.0);
+    this.camera = null;
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+}
+
 function MoveStateDto() {
     this.bodyId = "00000000-0000-0000-0000-000000000000";
     this.bodyIntersection = new Position3D(0.0, 0.0, 0.0);
@@ -33,14 +51,6 @@ function MoveStateDto() {
     this.startY = 0.0;
     this.endX = 0.0;
     this.endY = 0.0;
-    this.canvasWidth = 0;
-    this.canvasHeight = 0;
-    this.camera = null;
-}
-
-function SelectStateDto() {
-    this.selectPositionX = 0.0;
-    this.selectPositionY = 0.0;
     this.canvasWidth = 0;
     this.canvasHeight = 0;
     this.camera = null;
@@ -64,7 +74,7 @@ function onMouseDown(event) {
 
         mouseMoved = false;
         currentPosition = getPosition(event, canvas)
-        selectBody(currentPosition.x, currentPosition.y, currentCamera);
+        select(currentPosition.x, currentPosition.y, currentCamera);
     }
 }
 
@@ -74,8 +84,7 @@ function onMouseUp(event) {
         canvas.removeEventListener("contextmenu", onContextMenu);
 
         if (!mouseMoved) {
-            currentPosition = getPosition(event, canvas)
-            select(currentPosition.x, currentPosition.y, currentCamera);
+            touch(currentCamera);
         }
         mouseMoved = false;
     }
@@ -115,22 +124,6 @@ async function getScenery() {
     drawScene(graphics);
 }
 
-async function selectBody(x, y, camera) {
-    lock = true;
-    camera.Id = id++;
-    let selectState = new SelectStateDto();
-    selectState.camera = camera;
-    selectState.selectPositionX = x;
-    selectState.selectPositionY = y;
-    selectState.canvasWidth = canvas.width;
-    selectState.canvasHeight = canvas.height;
-    let url = encodeURI("http://localhost:5000/select-body");
-    let bodySelection = await postData(url, selectState);
-    bodyId = bodySelection.BodyId;
-    bodyIntersection = bodySelection.BodyIntersection;
-    lock = false;
-}
-
 async function select(x, y, camera) {
     lock = true;
     camera.Id = id++;
@@ -141,7 +134,25 @@ async function select(x, y, camera) {
     selectState.canvasWidth = canvas.width;
     selectState.canvasHeight = canvas.height;
     let url = encodeURI("http://localhost:5000/select");
-    let graphics = await postData(url, selectState);
+    let bodySelection = await postData(url, selectState);
+    bodyId = bodySelection.BodyId;
+    bodyIntersection = bodySelection.BodyIntersection;
+    isBodySelected = bodySelection.IsBodyIntersected;
+    lock = false;
+}
+
+async function touch(camera) {
+    lock = true;
+    camera.Id = id++;
+    let touchState = new TouchStateDto();
+    touchState.bodyId = bodyId;
+    touchState.touchPosition = bodyIntersection;
+    touchState.isBodyTouched = isBodySelected;
+    touchState.camera = camera;
+    touchState.canvasWidth = canvas.width;
+    touchState.canvasHeight = canvas.height;
+    let url = encodeURI("http://localhost:5000/touch");
+    let graphics = await postData(url, touchState);
     lock = false;
     drawScene(graphics);
 }

@@ -28,6 +28,16 @@ namespace IGraphics.LogicViewing
             return new SelectedBodyState { SelectedBodyId = isIntersected ? body.Id : Guid.Empty, IsBodySelected = isIntersected, BodyIntersection = intersection };
         }
 
+        public Camera Touch(TouchState touchState)
+        {
+            if (touchState.IsBodyTouched)
+            {
+                touchState.Camera.MoveTargetTo(touchState.TouchPosition);
+            }
+
+            return touchState.Camera;
+        }
+
         public Camera Select(SelectState selectState)
         {
             var posScene = ViewProjection.ProjectCanvasToSceneSystem(selectState.selectPositionX, selectState.selectPositionY, selectState.CanvasWidth, selectState.CanvasHeight, selectState.Camera.NearPlane, selectState.Camera.Frame);

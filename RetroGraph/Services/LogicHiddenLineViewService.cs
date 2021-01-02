@@ -49,19 +49,20 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public BodySelectionDto SelectBody(SelectState selectState)
+        public SelectedBodyStateDto SelectBody(SelectState selectState)
         {
             var selection = _view.SelectBody(selectState).ToBodySelectionDto();
             return selection;
         }
 
-        public GraphicsDto Select(SelectState selectState)
+        public GraphicsDto Touch(TouchStateDto touchStateDto)
         {
-            var selectedPositionedCamera = _view.Select(selectState);
-            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, selectedPositionedCamera, selectState.CanvasWidth, selectState.CanvasHeight).ToArray();
+            var touchState = touchStateDto.ToTouchState();
+            var touchCamera = _view.Touch(touchState);
+            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, touchCamera, touchState.CanvasWidth, touchState.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {
-                Camera = selectedPositionedCamera.ToCameraDto(),
+                Camera = touchCamera.ToCameraDto(),
                 DrawLines = lines
             };
 
