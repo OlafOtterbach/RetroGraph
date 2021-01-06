@@ -52,6 +52,28 @@ namespace IGraphics.Mathmatics
             return (true, xi, yi);
         }
 
+        public static Position3D CalculatePerpendicularPoint(this Position3D position, Position3D offset, Vector3D direction)
+        {
+            var point = position;
+
+            var delta = position - offset;
+            var len = delta.Length;
+            if (!len.EqualsTo(0.0))
+            {
+                var normal = direction.Normalize();
+                double product = delta * normal;
+                double divProduct = direction * normal;
+                if (divProduct.Equals(0.0))
+                {
+                    divProduct = 0.01;
+                }
+                double lamda = -product / divProduct;
+                normal = normal * lamda;
+                point = offset + normal;
+            }
+            return point;
+        }
+
         public static (bool, Position3D) CalculatePerpendicularPoint(Position3D baseLineOffset, Vector3D baseLineDirection, Position3D neighbourOffset, Vector3D neighbourDirection)
         {
             // Lotpunkte ermittel, deren Lot gebildet aus deren Verbindungslinie

@@ -10,7 +10,7 @@ namespace RetroGraph.Models.Extensions
             var moveState = new MoveState()
             {
                 SelectedBodyId = moveStateDto.BodyId,
-                BodyIntersection = new Position3D(moveStateDto.BodyIntersection.X, moveStateDto.BodyIntersection.Y, moveStateDto.BodyIntersection.Z),
+                BodyTouchPosition = new Position3D(moveStateDto.BodyIntersection.X, moveStateDto.BodyIntersection.Y, moveStateDto.BodyIntersection.Z),
                 StartMoveX = moveStateDto.StartX,
                 StartMoveY = moveStateDto.StartY,
                 EndMoveX = moveStateDto.EndX,

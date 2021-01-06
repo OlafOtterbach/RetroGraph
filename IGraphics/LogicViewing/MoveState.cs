@@ -6,7 +6,7 @@ namespace IGraphics.LogicViewing
     public class MoveState
     {
         public Guid SelectedBodyId { get; set; }
-        public Position3D BodyIntersection { get; set; }
+        public Position3D BodyTouchPosition { get; set; }
 
         public double StartMoveX { get; set; }
         public double StartMoveY { get; set; }

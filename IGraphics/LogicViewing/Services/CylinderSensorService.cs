@@ -28,6 +28,7 @@ namespace IGraphics.LogicViewing.Services
 
             Process(sensor as CylinderSensor,
                     body,
+                    moveState.BodyTouchPosition,
                     moveState.StartMoveX,
                     moveState.StartMoveY,
                     startMoveOffset,
@@ -43,6 +44,7 @@ namespace IGraphics.LogicViewing.Services
 
         private static void Process(CylinderSensor cylinderSensor,
             Body body,
+            Position3D bodyTouchPosition,
             double startX,
             double startY,
             Position3D startOffset,
@@ -62,12 +64,13 @@ namespace IGraphics.LogicViewing.Services
             double angle;
             if (IsAxisIsInCameraPlane(axisFrame, camera))
             {
-                angle = CalculateAngleForAxisLieingInCanvas(startX, startY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight, camera);
+                angle = CalculateAngleForAxisLieingInCanvas(bodyTouchPosition ,startX, startY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight, camera);
             }
             else
             {
                 angle = CalculateAngleForAxisNotLieingInCanvas(startX, startY, startOffset, startDirection, endX, endY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight);
             }
+
             Rotate(body, cylinderSensor.Axis, angle);
         }
 
@@ -75,7 +78,6 @@ namespace IGraphics.LogicViewing.Services
         {
             var axis = axisFrame.Ez;
             var cameraDirection = camera.Frame.Ey;
-
             double limitAngle = 25.0;
             double alpha = axis.CounterClockwiseAngleWith(cameraDirection);
             alpha = alpha.Modulo2Pi();
@@ -86,6 +88,7 @@ namespace IGraphics.LogicViewing.Services
         }
 
         private static double CalculateAngleForAxisLieingInCanvas(
+            Position3D bodyTouchPosition,
             double startX,
             double startY,
             Position3D endOffset,
@@ -107,11 +110,31 @@ namespace IGraphics.LogicViewing.Services
             var (success, plump) = IntersectionMath.CalculatePerpendicularPoint(p1, p2 - p1, endOffset, endDirection);
             if (success)
             {
+                // Ermitteln des Vorzeichens für Drehung
                 var sign = (plump - p1).Length < (plump - p2).Length ? -1.0 : 1.0;
 
+                // Ermitteln der Länge der Mausbewegung in Richtung senkrecht zur Rotationsachse
                 var (endX, endY) = ViewProjection.ProjectSceneSystemToCanvas(plump, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
-                double delta = Math.Sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
-                angle = sign * delta.DegToRad();
+                double delta = Vector2DMath.Length(startX, startY, endX, endY);
+
+                // Projektion Berührungspunkt auf Rotationsachse.
+                // Ermittel Scheitelpunkte der Rotation auf Achse senkrecht zur Kamera und Rotationsachse.
+                // Projektion der Scheitelpunkte auf Canvas.
+                // Abstand Scheitelpunkte auf Achse ist die Mausbewegung für 180°.
+                // Winkel ist Verhältnis Länge Mausbewegung zur Länge für 180°.
+                var axisOffset = axisFrame.Offset;
+                var plumpPoint = IntersectionMath.CalculatePerpendicularPoint(bodyTouchPosition, axisOffset, axis);
+                var distance = (bodyTouchPosition - plumpPoint).Length;
+                direction = direction.Normalize() * distance;
+                var startPosition = axisOffset - direction;
+                var endPosition = axisOffset + direction;
+                (startX, startY) = ViewProjection.ProjectSceneSystemToCanvas(startPosition, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
+                (endX, endY) = ViewProjection.ProjectSceneSystemToCanvas(endPosition, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
+                var lengthOfHalfRotation = Vector2DMath.Length(startX, startY, endX, endY);
+
+                var angleInDegree = 180.0 * delta / lengthOfHalfRotation;
+
+                angle = sign * angleInDegree.DegToRad();
             }
 
             return angle;
