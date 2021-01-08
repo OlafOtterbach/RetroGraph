@@ -1,9 +1,8 @@
 ﻿namespace IGraphics.LogicViewing
 {
-    public class SelectState
+    public class ZoomEvent
     {
-        public double selectPositionX { get; set; }
-        public double selectPositionY { get; set; }
+        public double Delta { get; set; }
         public Camera Camera { get; set; }
         public int CanvasWidth { get; set; }
         public int CanvasHeight { get; set; }

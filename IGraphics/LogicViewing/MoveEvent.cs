@@ -3,7 +3,7 @@ using System;
 
 namespace IGraphics.LogicViewing
 {
-    public class MoveState
+    public class MoveEvent
     {
         public Guid SelectedBodyId { get; set; }
         public Position3D BodyTouchPosition { get; set; }

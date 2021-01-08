@@ -16,20 +16,20 @@ namespace IGraphics.LogicViewing.Services
 
         public bool CanProcess(ISensor sensor) => sensor is SphereSensor;
 
-        public void Process(ISensor sensor, MoveState moveState)
+        public void Process(ISensor sensor, MoveEvent moveEvent)
         {
-            var body = _scene.GetBody(moveState.SelectedBodyId);
+            var body = _scene.GetBody(moveEvent.SelectedBodyId);
 
             Process(sensor as SphereSensor,
                 body,
-                moveState.StartMoveX,
-                moveState.StartMoveY,
-                moveState.EndMoveX,
-                moveState.EndMoveY,
-                moveState.CanvasWidth,
-                moveState.CanvasHeight,
-                moveState.Camera.NearPlane,
-                moveState.Camera.Frame);
+                moveEvent.StartMoveX,
+                moveEvent.StartMoveY,
+                moveEvent.EndMoveX,
+                moveEvent.EndMoveY,
+                moveEvent.CanvasWidth,
+                moveEvent.CanvasHeight,
+                moveEvent.Camera.NearPlane,
+                moveEvent.Camera.Frame);
         }
 
         private static void Process(SphereSensor sphereSensor,

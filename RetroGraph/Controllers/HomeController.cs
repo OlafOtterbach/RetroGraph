@@ -31,9 +31,9 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("select")]
-        public ActionResult<SelectedBodyStateDto> Select([FromBody] SelectStateDto selectStateDto)
+        public ActionResult<SelectedBodyStateDto> Select([FromBody] SelectEventDto selectEventDto)
         {
-            var selection = _logicView.SelectBody(selectStateDto);
+            var selection = _logicView.SelectBody(selectEventDto);
             return Ok(selection);
         }
 
@@ -46,18 +46,18 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("move")]
-        public ActionResult<GraphicsDto> Move([FromBody] MoveStateDto moveStateDto)
+        public ActionResult<GraphicsDto> Move([FromBody] MoveEventDto moveEventDto)
         {
-            var graphics = _logicView.Move(moveStateDto);
-            graphics.Camera.Id = moveStateDto.Camera.Id;
+            var graphics = _logicView.Move(moveEventDto);
+            graphics.Camera.Id = moveEventDto.Camera.Id;
             return Ok(graphics);
         }
 
         [HttpPost("zoom")]
-        public ActionResult<GraphicsDto> Zoom([FromBody] ZoomStateDto zoomStateDto)
+        public ActionResult<GraphicsDto> Zoom([FromBody] ZoomEventDto zoomEventDto)
         {
-            var graphics = _logicView.Zoom(zoomStateDto);
-            graphics.Camera.Id = zoomStateDto.camera.Id;
+            var graphics = _logicView.Zoom(zoomEventDto);
+            graphics.Camera.Id = zoomEventDto.camera.Id;
             return Ok(graphics);
         }
     }

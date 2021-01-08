@@ -1,9 +1,8 @@
 ﻿namespace RetroGraph.Models
 {
-    public class SelectStateDto
+    public class ZoomEventDto
     {
-        public double selectPositionX { get; set; }
-        public double selectPositionY { get; set; }
+        public double delta { get; set; }
         public int canvasWidth { get; set; }
         public int canvasHeight { get; set; }
         public CameraDto camera { get; set; }

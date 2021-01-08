@@ -16,16 +16,16 @@ namespace IGraphics.LogicViewing.Services
             _moveSensorServices = moveServices.ToArray();
         }
 
-        public bool Process(MoveState moveState)
+        public bool Process(MoveEvent moveEvent)
         {
-            var body = _scene.GetBody(moveState.SelectedBodyId);
+            var body = _scene.GetBody(moveEvent.SelectedBodyId);
             var sensor = body?.Sensor;
             var eventIsProcessed = false;
 
             var services = _moveSensorServices.Where(s => s.CanProcess(sensor));
             foreach (var sensorService in services)
             {
-                sensorService.Process(sensor, moveState);
+                sensorService.Process(sensor, moveEvent);
                 eventIsProcessed = true;
             }
 

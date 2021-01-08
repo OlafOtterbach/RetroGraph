@@ -2,7 +2,7 @@
 
 namespace RetroGraph.Models
 {
-    public class MoveStateDto
+    public class MoveEventDto
     {
         public Guid BodyId { get; set; }
         public PositionDto BodyIntersection { get; set; }

@@ -6,12 +6,12 @@ namespace IGraphics.LogicViewing
     {
         Scene Scene { get; }
 
-        SelectedBodyState SelectBody(SelectState selectState);
+        SelectedBodyState SelectBody(SelectEvent selectEvent);
 
         Camera Touch(TouchState touchState);
 
-        Camera Move(MoveState moveState);
+        Camera Move(MoveEvent moveEvent);
 
-        Camera Zoom(ZoomState zoomState);
+        Camera Zoom(ZoomEvent zoomEvent);
     }
 }

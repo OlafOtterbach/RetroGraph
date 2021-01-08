@@ -27,7 +27,7 @@ function Position3D(x, y, z) {
     this.z = z;
 }
 
-function SelectStateDto() {
+function SelectEventDto() {
     this.selectPositionX = 0.0;
     this.selectPositionY = 0.0;
     this.canvasWidth = 0;
@@ -44,7 +44,7 @@ function TouchStateDto() {
     this.canvasHeight = 0;
 }
 
-function MoveStateDto() {
+function MoveEventDto() {
     this.bodyId = "00000000-0000-0000-0000-000000000000";
     this.bodyIntersection = new Position3D(0.0, 0.0, 0.0);
     this.startX = 0.0;
@@ -56,7 +56,7 @@ function MoveStateDto() {
     this.camera = null;
 }
 
-function ZoomStateDto() {
+function ZoomEventDto() {
     this.delta = 0.0;
     this.canvasWidth = 0;
     this.canvasHeight = 0;
@@ -127,7 +127,7 @@ async function getScenery() {
 async function select(x, y, camera) {
     lock = true;
     camera.Id = id++;
-    let selectState = new SelectStateDto();
+    let selectState = new SelectEventDto();
     selectState.camera = camera;
     selectState.selectPositionX = x;
     selectState.selectPositionY = y;
@@ -162,7 +162,7 @@ async function move(bodyId, start, end, camera) {
     if (!lock) {
         lock = true;
         camera.Id = id++;
-        let moveState = new MoveStateDto();
+        let moveState = new MoveEventDto();
         moveState.camera = camera;
         moveState.bodyId = bodyId;
         moveState.bodyIntersection = bodyIntersection;
@@ -186,7 +186,7 @@ async function zoom(start, end, camera) {
         lock = true;
         camera.Id = id++;
         let delta = end.y - start.y;
-        let zoomState = new ZoomStateDto();
+        let zoomState = new ZoomEventDto();
         zoomState.camera = camera;
         zoomState.delta = delta;
         zoomState.canvasWidth = canvas.width;

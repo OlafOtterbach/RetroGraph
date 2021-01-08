@@ -2,6 +2,6 @@
 {
     public interface IMoveSensorProcessor
     {
-        bool Process(MoveState moveState);
+        bool Process(MoveEvent moveEvent);
     }
 }

@@ -18,10 +18,10 @@ namespace IGraphics.LogicViewing
 
         public Scene Scene { get; }
 
-        public SelectedBodyState SelectBody(SelectState selectState)
+        public SelectedBodyState SelectBody(SelectEvent selectEvent)
         {
-            var posScene = ViewProjection.ProjectCanvasToSceneSystem(selectState.selectPositionX, selectState.selectPositionY, selectState.CanvasWidth, selectState.CanvasHeight, selectState.Camera.NearPlane, selectState.Camera.Frame);
-            var rayOffset = selectState.Camera.Frame.Offset;
+            var posScene = ViewProjection.ProjectCanvasToSceneSystem(selectEvent.selectPositionX, selectEvent.selectPositionY, selectEvent.CanvasWidth, selectEvent.CanvasHeight, selectEvent.Camera.NearPlane, selectEvent.Camera.Frame);
+            var rayOffset = selectEvent.Camera.Frame.Offset;
             var rayDirection = posScene - rayOffset;
             var (isIntersected, intersection, body) = Scene.GetIntersectionOfRayAndScene(rayOffset, rayDirection);
 
@@ -38,38 +38,38 @@ namespace IGraphics.LogicViewing
             return touchState.Camera;
         }
 
-        public Camera Select(SelectState selectState)
+        public Camera Select(SelectEvent selectEvent)
         {
-            var posScene = ViewProjection.ProjectCanvasToSceneSystem(selectState.selectPositionX, selectState.selectPositionY, selectState.CanvasWidth, selectState.CanvasHeight, selectState.Camera.NearPlane, selectState.Camera.Frame);
-            var rayOffset = selectState.Camera.Frame.Offset;
+            var posScene = ViewProjection.ProjectCanvasToSceneSystem(selectEvent.selectPositionX, selectEvent.selectPositionY, selectEvent.CanvasWidth, selectEvent.CanvasHeight, selectEvent.Camera.NearPlane, selectEvent.Camera.Frame);
+            var rayOffset = selectEvent.Camera.Frame.Offset;
             var rayDirection = posScene - rayOffset;
 
             var (isintersected, intersection, body) = Scene.GetIntersectionOfRayAndScene(rayOffset, rayDirection);
             if (isintersected)
             {
-                selectState.Camera.MoveTargetTo(intersection);
+                selectEvent.Camera.MoveTargetTo(intersection);
             }
 
-            return selectState.Camera;
+            return selectEvent.Camera;
         }
 
-        public Camera Move(MoveState moveState)
+        public Camera Move(MoveEvent moveEvent)
         {
-            if (!_moveSensorProcessors.Process(moveState))
+            if (!_moveSensorProcessors.Process(moveEvent))
             {
-                var deltaX = moveState.EndMoveX - moveState.StartMoveX;
-                var deltaY = moveState.EndMoveY - moveState.StartMoveY;
-                return Orbit(deltaX, deltaY, moveState.CanvasWidth, moveState.CanvasHeight, moveState.Camera);
+                var deltaX = moveEvent.EndMoveX - moveEvent.StartMoveX;
+                var deltaY = moveEvent.EndMoveY - moveEvent.StartMoveY;
+                return Orbit(deltaX, deltaY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera);
             }
 
-            return moveState.Camera;
+            return moveEvent.Camera;
         }
 
-        public Camera Zoom(ZoomState zoomState)
+        public Camera Zoom(ZoomEvent zoomEvent)
         {
-            var dy = zoomState.Delta * 1.0;
-            zoomState.Camera.Zoom(dy);
-            return zoomState.Camera;
+            var dy = zoomEvent.Delta * 1.0;
+            zoomEvent.Camera.Zoom(dy);
+            return zoomEvent.Camera;
         }
 
         private Camera Orbit(double pixelDeltaX, double pixelDeltaY, int canvasWidth, int canvasHeight, Camera camera)

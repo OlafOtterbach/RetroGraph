@@ -49,10 +49,10 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public SelectedBodyStateDto SelectBody(SelectStateDto selectStateDto)
+        public SelectedBodyStateDto SelectBody(SelectEventDto selectEventDto)
         {
-            var selectState = selectStateDto.ToSelectState();
-            var selection = _view.SelectBody(selectState).ToBodySelectionDto();
+            var selectEvent = selectEventDto.ToSelectEvent();
+            var selection = _view.SelectBody(selectEvent).ToBodySelectionDto();
             return selection;
         }
 
@@ -70,11 +70,11 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public GraphicsDto Move(MoveStateDto moveStateDto)
+        public GraphicsDto Move(MoveEventDto moveEventDto)
         {
-            var moveState = moveStateDto.ToMoveState();
-            var rotatedCamera = _view.Move(moveState);
-            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, rotatedCamera, moveState.CanvasWidth, moveState.CanvasHeight).ToArray();
+            var moveEvent = moveEventDto.ToMoveEvent();
+            var rotatedCamera = _view.Move(moveEvent);
+            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, rotatedCamera, moveEvent.CanvasWidth, moveEvent.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {
                 Camera = rotatedCamera.ToCameraDto(),
@@ -84,11 +84,11 @@ namespace RetroGraph.Services
             return graphics;
         }
 
-        public GraphicsDto Zoom(ZoomStateDto zoomStateDto)
+        public GraphicsDto Zoom(ZoomEventDto zoomEventDto)
         {
-            var zoomState = zoomStateDto.ToZoomState();
-            var zoomedCamera = _view.Zoom(zoomState);
-            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, zoomedCamera, zoomState.CanvasWidth, zoomState.CanvasHeight).ToArray();
+            var zoomEvent = zoomEventDto.ToZoomEvent();
+            var zoomedCamera = _view.Zoom(zoomEvent);
+            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, zoomedCamera, zoomEvent.CanvasWidth, zoomEvent.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {
                 Camera = zoomedCamera.ToCameraDto(),

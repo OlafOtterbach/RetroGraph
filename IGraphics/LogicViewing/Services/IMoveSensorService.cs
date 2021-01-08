@@ -6,7 +6,7 @@ namespace IGraphics.LogicViewing.Services
     {
         bool CanProcess(ISensor sensor);
 
-        void Process(ISensor sensor, MoveState moveState);
+        void Process(ISensor sensor, MoveEvent moveEvent);
 
     }
 }

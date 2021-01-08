@@ -15,14 +15,14 @@ namespace IGraphics.LogicViewing.Services
 
         public bool CanProcess(ISensor sensor) => sensor is LinearSensor;
 
-        public void Process(ISensor sensor, MoveState moveState)
+        public void Process(ISensor sensor, MoveEvent moveEvent)
         {
-            var startMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveState.StartMoveX, moveState.StartMoveY, moveState.CanvasWidth, moveState.CanvasHeight, moveState.Camera.NearPlane, moveState.Camera.Frame);
-            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveState.EndMoveX, moveState.EndMoveY, moveState.CanvasWidth, moveState.CanvasHeight, moveState.Camera.NearPlane, moveState.Camera.Frame);
-            var offset = moveState.Camera.Frame.Offset;
+            var startMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.StartMoveX, moveEvent.StartMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
+            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.EndMoveX, moveEvent.EndMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
+            var offset = moveEvent.Camera.Frame.Offset;
             var startMoveDirection = startMoveOffset - offset;
             var endMoveDirection = endMoveOffset - offset;
-            var body = _scene.GetBody(moveState.SelectedBodyId);
+            var body = _scene.GetBody(moveEvent.SelectedBodyId);
 
 
             Process(sensor as LinearSensor,
