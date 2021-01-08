@@ -38,10 +38,10 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("touch")]
-        public ActionResult<GraphicsDto> Touch([FromBody] TouchStateDto touchStateDto)
+        public ActionResult<GraphicsDto> Touch([FromBody] TouchEventDto touchEventDto)
         {
-            var graphics = _logicView.Touch(touchStateDto);
-            graphics.Camera.Id = touchStateDto.Camera.Id;
+            var graphics = _logicView.Touch(touchEventDto);
+            graphics.Camera.Id = touchEventDto.Camera.Id;
             return Ok(graphics);
         }
 

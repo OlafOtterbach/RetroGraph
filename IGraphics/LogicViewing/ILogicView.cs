@@ -8,7 +8,7 @@ namespace IGraphics.LogicViewing
 
         SelectedBodyState SelectBody(SelectEvent selectEvent);
 
-        Camera Touch(TouchState touchState);
+        Camera Touch(TouchEvent touchEvent);
 
         Camera Move(MoveEvent moveEvent);
 

@@ -28,14 +28,14 @@ namespace IGraphics.LogicViewing
             return new SelectedBodyState { SelectedBodyId = isIntersected ? body.Id : Guid.Empty, IsBodySelected = isIntersected, BodyIntersection = intersection };
         }
 
-        public Camera Touch(TouchState touchState)
+        public Camera Touch(TouchEvent touchEvent)
         {
-            if (touchState.IsBodyTouched)
+            if (touchEvent.IsBodyTouched)
             {
-                touchState.Camera.MoveTargetTo(touchState.TouchPosition);
+                touchEvent.Camera.MoveTargetTo(touchEvent.TouchPosition);
             }
 
-            return touchState.Camera;
+            return touchEvent.Camera;
         }
 
         public Camera Select(SelectEvent selectEvent)

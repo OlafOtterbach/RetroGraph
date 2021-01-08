@@ -35,7 +35,7 @@ function SelectEventDto() {
     this.camera = null;
 }
 
-function TouchStateDto() {
+function TouchEventDto() {
     this.isBodyTouched = false;
     this.bodyId = "00000000-0000-0000-0000-000000000000";
     this.touchPosition = new Position3D(0.0, 0.0, 0.0);
@@ -127,14 +127,14 @@ async function getScenery() {
 async function select(x, y, camera) {
     lock = true;
     camera.Id = id++;
-    let selectState = new SelectEventDto();
-    selectState.camera = camera;
-    selectState.selectPositionX = x;
-    selectState.selectPositionY = y;
-    selectState.canvasWidth = canvas.width;
-    selectState.canvasHeight = canvas.height;
+    let selectEvent = new SelectEventDto();
+    selectEvent.camera = camera;
+    selectEvent.selectPositionX = x;
+    selectEvent.selectPositionY = y;
+    selectEvent.canvasWidth = canvas.width;
+    selectEvent.canvasHeight = canvas.height;
     let url = encodeURI("http://localhost:5000/select");
-    let bodySelection = await postData(url, selectState);
+    let bodySelection = await postData(url, selectEvent);
     bodyId = bodySelection.BodyId;
     bodyIntersection = bodySelection.BodyIntersection;
     isBodySelected = bodySelection.IsBodyIntersected;
@@ -144,15 +144,15 @@ async function select(x, y, camera) {
 async function touch(camera) {
     lock = true;
     camera.Id = id++;
-    let touchState = new TouchStateDto();
-    touchState.bodyId = bodyId;
-    touchState.touchPosition = bodyIntersection;
-    touchState.isBodyTouched = isBodySelected;
-    touchState.camera = camera;
-    touchState.canvasWidth = canvas.width;
-    touchState.canvasHeight = canvas.height;
+    let touchEvent = new TouchEventDto();
+    touchEvent.bodyId = bodyId;
+    touchEvent.touchPosition = bodyIntersection;
+    touchEvent.isBodyTouched = isBodySelected;
+    touchEvent.camera = camera;
+    touchEvent.canvasWidth = canvas.width;
+    touchEvent.canvasHeight = canvas.height;
     let url = encodeURI("http://localhost:5000/touch");
-    let graphics = await postData(url, touchState);
+    let graphics = await postData(url, touchEvent);
     lock = false;
     drawScene(graphics);
 }
@@ -162,18 +162,18 @@ async function move(bodyId, start, end, camera) {
     if (!lock) {
         lock = true;
         camera.Id = id++;
-        let moveState = new MoveEventDto();
-        moveState.camera = camera;
-        moveState.bodyId = bodyId;
-        moveState.bodyIntersection = bodyIntersection;
-        moveState.startX = start.x;
-        moveState.startY = start.y;
-        moveState.endX = end.x;
-        moveState.endY = end.y;
-        moveState.canvasWidth = canvas.width;
-        moveState.canvasHeight = canvas.height;
+        let moveEvent = new MoveEventDto();
+        moveEvent.camera = camera;
+        moveEvent.bodyId = bodyId;
+        moveEvent.bodyIntersection = bodyIntersection;
+        moveEvent.startX = start.x;
+        moveEvent.startY = start.y;
+        moveEvent.endX = end.x;
+        moveEvent.endY = end.y;
+        moveEvent.canvasWidth = canvas.width;
+        moveEvent.canvasHeight = canvas.height;
         let url = encodeURI("http://localhost:5000/move");
-        let graphics = await postData(url, moveState);
+        let graphics = await postData(url, moveEvent);
         drawScene(graphics);
         currentPosition = end;
         lock = false;
@@ -186,13 +186,13 @@ async function zoom(start, end, camera) {
         lock = true;
         camera.Id = id++;
         let delta = end.y - start.y;
-        let zoomState = new ZoomEventDto();
-        zoomState.camera = camera;
-        zoomState.delta = delta;
-        zoomState.canvasWidth = canvas.width;
-        zoomState.canvasHeight = canvas.height;
+        let zoomEvent = new ZoomEventDto();
+        zoomEvent.camera = camera;
+        zoomEvent.delta = delta;
+        zoomEvent.canvasWidth = canvas.width;
+        zoomEvent.canvasHeight = canvas.height;
         let url = encodeURI("http://localhost:5000/zoom");
-        let graphics = await postData(url, zoomState);
+        let graphics = await postData(url, zoomEvent);
         drawScene(graphics);
         currentPosition = end;
         lock = false;

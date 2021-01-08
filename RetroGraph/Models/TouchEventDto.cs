@@ -2,7 +2,7 @@
 
 namespace RetroGraph.Models
 {
-    public class TouchStateDto
+    public class TouchEventDto
     {
         public bool IsBodyTouched { get; set; }
 

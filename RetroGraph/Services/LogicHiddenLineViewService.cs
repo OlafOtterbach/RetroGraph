@@ -56,11 +56,11 @@ namespace RetroGraph.Services
             return selection;
         }
 
-        public GraphicsDto Touch(TouchStateDto touchStateDto)
+        public GraphicsDto Touch(TouchEventDto touchEventDto)
         {
-            var touchState = touchStateDto.ToTouchState();
-            var touchCamera = _view.Touch(touchState);
-            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, touchCamera, touchState.CanvasWidth, touchState.CanvasHeight).ToArray();
+            var touchEvent = touchEventDto.ToTouchEvent();
+            var touchCamera = _view.Touch(touchEvent);
+            var lines = _hiddenLineService.GetHiddenLineGraphics(_scene, touchCamera, touchEvent.CanvasWidth, touchEvent.CanvasHeight).ToArray();
             var graphics = new GraphicsDto()
             {
                 Camera = touchCamera.ToCameraDto(),

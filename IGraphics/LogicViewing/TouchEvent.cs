@@ -3,7 +3,7 @@ using System;
 
 namespace IGraphics.LogicViewing
 {
-    public class TouchState
+    public class TouchEvent
     {
         public bool IsBodyTouched { get; set; }
 
