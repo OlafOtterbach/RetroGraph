@@ -2,7 +2,6 @@
 using IGraphics.Graphics.Services;
 using IGraphics.Mathmatics;
 using IGraphics.Mathmatics.Extensions;
-using System;
 
 namespace IGraphics.LogicViewing.Services
 {
@@ -19,39 +18,20 @@ namespace IGraphics.LogicViewing.Services
 
         public void Process(ISensor sensor, MoveEvent moveEvent)
         {
-            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.EndMoveX, moveEvent.EndMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
-            var offset = moveEvent.Camera.Frame.Offset;
-            var endMoveDirection = endMoveOffset - offset;
-            var body = _scene.GetBody(moveEvent.SelectedBodyId);
-
-            Process(body,
-                    moveEvent.BodyTouchPosition,
-                    moveEvent.StartMoveX,
-                    moveEvent.StartMoveY,
-                    moveEvent.EndMoveX,
-                    moveEvent.EndMoveY,
-                    endMoveOffset,
-                    endMoveDirection,
-                    moveEvent.CanvasWidth,
-                    moveEvent.CanvasHeight,
-                    moveEvent.Camera);
-
-        }
-
-        private static void Process(
-            Body body,
-            Position3D bodyTouchPosition,
-            double startX,
-            double startY,
-            double endX,
-            double endY,
-            Position3D endOffset,
-            Vector3D endDirection,
-            double canvasWidth,
-            double canvasHeight,
-            Camera camera)
-        {
+            var startX = moveEvent.StartMoveX;
+            var startY = moveEvent.StartMoveY;
+            var endX = moveEvent.EndMoveX;
+            var endY = moveEvent.EndMoveY;
             if (startX.EqualsTo(endX) && startY.EqualsTo(endY)) return;
+
+            var offset = moveEvent.Camera.Frame.Offset;
+            var endOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.EndMoveX, moveEvent.EndMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
+            var endDirection = endOffset - offset;
+            var body = _scene.GetBody(moveEvent.SelectedBodyId);
+            var camera = moveEvent.Camera;
+            var canvasWidth = moveEvent.CanvasWidth;
+            var canvasHeight = moveEvent.CanvasHeight;
+            var bodyTouchPosition = moveEvent.BodyTouchPosition;
 
             var canvasOrigin = ViewProjection.ProjectCanvasToSceneSystem(0.0, 0.0, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
             var canvasExPos = ViewProjection.ProjectCanvasToSceneSystem(1.0, 0.0, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
@@ -80,7 +60,6 @@ namespace IGraphics.LogicViewing.Services
             double canvasHeight,
             Camera camera)
         {
-            if (startX.EqualsTo(endX) && startY.EqualsTo(endY)) return;
             var angle = CalculateAngle(bodyTouchPosition, startX, startY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight, camera);
             var rotation = Matrix44D.CreateRotation(axisFrame.Offset, axisFrame.Ez, angle);
             body.Frame = rotation * body.Frame;
