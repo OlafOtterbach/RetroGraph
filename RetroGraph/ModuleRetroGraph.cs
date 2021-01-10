@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using IGraphics.Graphics.Creators;
+using Microsoft.Extensions.DependencyInjection;
 using RetroGraph.Services;
 
 namespace RetroGraph
@@ -7,6 +8,7 @@ namespace RetroGraph
     {
         public static void Register(IServiceCollection services)
         {
+            services.AddSingleton(SeedScene.CreateAndPopulateScene());
             services.AddSingleton<LogicHiddenLineViewService>();
         }
     }

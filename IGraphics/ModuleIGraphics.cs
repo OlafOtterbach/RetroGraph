@@ -1,6 +1,4 @@
-﻿using IGraphics.Graphics;
-using IGraphics.Graphics.Creators;
-using IGraphics.LogicViewing;
+﻿using IGraphics.LogicViewing;
 using IGraphics.LogicViewing.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +8,6 @@ namespace IGraphics
     {
         public static void Register(IServiceCollection services)
         {
-            services.AddSingleton(SeedScene.CreateAndPopulateScene());
             services.AddSingleton<ILogicView,LogicView>();
             services.AddSingleton<IMoveSensorService, CylinderSensorService>();
             services.AddSingleton<IMoveSensorService, SphereSensorService>();

@@ -1,6 +1,8 @@
-﻿using IGraphics.Mathmatics;
+﻿using IGraphics.Graphics;
+using IGraphics.Graphics.Creators;
+using IGraphics.Mathmatics;
 
-namespace IGraphics.Graphics.Creators
+namespace RetroGraph
 {
     public static class SeedScene
     {
