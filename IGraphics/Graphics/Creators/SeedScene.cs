@@ -47,7 +47,6 @@ namespace IGraphics.Graphics.Creators
             var sphere = Sphere.Create(16, 8);
             sphere.Sensor = new SphereSensor();
             sphere.Frame = Matrix44D.CreateTranslation(new Vector3D(-30, 30, 10));
-            sphere.Sensor = new SphereSensor();
             scene.Bodies.Add(sphere);
 
             return scene;
