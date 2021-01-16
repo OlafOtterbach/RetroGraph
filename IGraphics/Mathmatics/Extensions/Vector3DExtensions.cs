@@ -2,6 +2,11 @@
 {
     public static class Vector3DExtensions
     {
+        public static Position3D ToPosition3D(this Vector3D vector)
+        {
+            return new Position3D(vector.X, vector.Y, vector.Z);
+        }
+
         public static double SquaredLength(this Vector3D vector)
         {
             var squaredLength = vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z;
