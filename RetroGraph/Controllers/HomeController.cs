@@ -1,5 +1,4 @@
-﻿using IGraphics.Graphics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RetroGraph.Models;
 using RetroGraph.Services;
@@ -25,7 +24,7 @@ namespace RetroGraph.Controllers
         }
 
         [HttpGet("initial-graphics")]
-        public ActionResult GetScene([FromQuery] int canvasWidth, [FromQuery] int canvasHeight)
+        public ActionResult<SceneStateDto> GetScene([FromQuery] int canvasWidth, [FromQuery] int canvasHeight)
         {
             return Ok(_logicView.GetScene(canvasWidth, canvasHeight));
         }
@@ -38,27 +37,24 @@ namespace RetroGraph.Controllers
         }
 
         [HttpPost("touch")]
-        public ActionResult<GraphicsDto> Touch([FromBody] TouchEventDto touchEventDto)
+        public ActionResult<SceneStateDto> Touch([FromBody] TouchEventDto touchEventDto)
         {
-            var graphics = _logicView.Touch(touchEventDto);
-            graphics.Camera.Id = touchEventDto.Camera.Id;
-            return Ok(graphics);
+            var sceneState = _logicView.Touch(touchEventDto);
+            return Ok(sceneState);
         }
 
         [HttpPost("move")]
-        public ActionResult<GraphicsDto> Move([FromBody] MoveEventDto moveEventDto)
+        public ActionResult<SceneStateDto> Move([FromBody] MoveEventDto moveEventDto)
         {
-            var graphics = _logicView.Move(moveEventDto);
-            graphics.Camera.Id = moveEventDto.Camera.Id;
-            return Ok(graphics);
+            var sceneState = _logicView.Move(moveEventDto);
+            return Ok(sceneState);
         }
 
         [HttpPost("zoom")]
-        public ActionResult<GraphicsDto> Zoom([FromBody] ZoomEventDto zoomEventDto)
+        public ActionResult<SceneStateDto> Zoom([FromBody] ZoomEventDto zoomEventDto)
         {
-            var graphics = _logicView.Zoom(zoomEventDto);
-            graphics.Camera.Id = zoomEventDto.camera.Id;
-            return Ok(graphics);
+            var sceneState = _logicView.Zoom(zoomEventDto);
+            return Ok(sceneState);
         }
     }
 }

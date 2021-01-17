@@ -3,6 +3,7 @@ let bodyId;
 let bodyIntersection;
 let isBodySelected = false;
 let lock = false;
+let currentBodyStates;
 let currentCamera;
 let mouseMoved = false;
 let currentPosition;
@@ -39,9 +40,10 @@ function TouchEventDto() {
     this.isBodyTouched = false;
     this.bodyId = "00000000-0000-0000-0000-000000000000";
     this.touchPosition = new Position3D(0.0, 0.0, 0.0);
-    this.camera = null;
     this.canvasWidth = 0;
     this.canvasHeight = 0;
+    this.camera = null;
+    this.bodyStates = null;
 }
 
 function MoveEventDto() {
@@ -54,6 +56,7 @@ function MoveEventDto() {
     this.canvasWidth = 0;
     this.canvasHeight = 0;
     this.camera = null;
+    this.bodyStates = null;
 }
 
 function ZoomEventDto() {
@@ -61,6 +64,7 @@ function ZoomEventDto() {
     this.canvasWidth = 0;
     this.canvasHeight = 0;
     this.camera = null;
+    this.bodyStates = null;
 }
 
 function sleep(ms) {
@@ -84,7 +88,7 @@ function onMouseUp(event) {
         canvas.removeEventListener("contextmenu", onContextMenu);
 
         if (!mouseMoved) {
-            touch(currentCamera);
+            touch();
         }
         mouseMoved = false;
     }
@@ -98,9 +102,9 @@ function onMouseMoved(event) {
             mouseMoved = true;
             let movedPosition = getPosition(event, canvas)
             if (event.buttons === 1) {
-                move(bodyId, currentPosition, movedPosition, currentCamera);
+                move(bodyId, currentPosition, movedPosition);
             } else {
-                zoom(currentPosition, movedPosition, currentCamera);
+                zoom(currentPosition, movedPosition);
             }
         }
     }
@@ -124,11 +128,10 @@ async function getScenery() {
     drawScene(graphics);
 }
 
-async function select(x, y, camera) {
+async function select(x, y) {
     lock = true;
-    camera.Id = id++;
     let selectEvent = new SelectEventDto();
-    selectEvent.camera = camera;
+    selectEvent.camera = currentCamera;
     selectEvent.selectPositionX = x;
     selectEvent.selectPositionY = y;
     selectEvent.canvasWidth = canvas.width;
@@ -141,29 +144,28 @@ async function select(x, y, camera) {
     lock = false;
 }
 
-async function touch(camera) {
+async function touch() {
     lock = true;
-    camera.Id = id++;
     let touchEvent = new TouchEventDto();
     touchEvent.bodyId = bodyId;
     touchEvent.touchPosition = bodyIntersection;
     touchEvent.isBodyTouched = isBodySelected;
-    touchEvent.camera = camera;
+    touchEvent.camera = currentCamera;
     touchEvent.canvasWidth = canvas.width;
     touchEvent.canvasHeight = canvas.height;
+    touchEvent.bodyStates = currentBodyStates;
     let url = encodeURI("http://localhost:5000/touch");
-    let graphics = await postData(url, touchEvent);
+    let sceneState = await postData(url, touchEvent);
     lock = false;
-    drawScene(graphics);
+    drawScene(sceneState);
 }
 
-async function move(bodyId, start, end, camera) {
+async function move(bodyId, start, end) {
     sleep(50);
     if (!lock) {
         lock = true;
-        camera.Id = id++;
         let moveEvent = new MoveEventDto();
-        moveEvent.camera = camera;
+        moveEvent.camera = currentCamera;
         moveEvent.bodyId = bodyId;
         moveEvent.bodyIntersection = bodyIntersection;
         moveEvent.startX = start.x;
@@ -172,36 +174,38 @@ async function move(bodyId, start, end, camera) {
         moveEvent.endY = end.y;
         moveEvent.canvasWidth = canvas.width;
         moveEvent.canvasHeight = canvas.height;
+        moveEvent.bodyStates = currentBodyStates;
         let url = encodeURI("http://localhost:5000/move");
-        let graphics = await postData(url, moveEvent);
-        drawScene(graphics);
+        let sceneState = await postData(url, moveEvent);
+        drawScene(sceneState);
         currentPosition = end;
         lock = false;
     }
 }
 
-async function zoom(start, end, camera) {
+async function zoom(start, end) {
     sleep(50);
     if (!lock) {
         lock = true;
-        camera.Id = id++;
         let delta = end.y - start.y;
         let zoomEvent = new ZoomEventDto();
-        zoomEvent.camera = camera;
+        zoomEvent.camera = currentCamera;
         zoomEvent.delta = delta;
         zoomEvent.canvasWidth = canvas.width;
         zoomEvent.canvasHeight = canvas.height;
+        zoomEvent.bodyStates = currentBodyStates;
         let url = encodeURI("http://localhost:5000/zoom");
-        let graphics = await postData(url, zoomEvent);
-        drawScene(graphics);
+        let sceneState = await postData(url, zoomEvent);
+        drawScene(sceneState);
         currentPosition = end;
         lock = false;
     }
 }
 
-function drawScene(graphics) {
-    if (graphics !== undefined) {
-        currentCamera = graphics.Camera;
+function drawScene(sceneState) {
+    if (sceneState !== undefined) {
+        currentCamera = sceneState.Camera;
+        currentBodyStates = sceneState.BodyStates;
 
         ctx.beginPath();
         ctx.setLineDash([]);
@@ -212,7 +216,7 @@ function drawScene(graphics) {
         ctx.lineCap = "round";
         ctx.setLineDash([]);
 
-        var lines = graphics.DrawLines;
+        var lines = sceneState.DrawLines;
         var n = lines.length;
         for (i = 0; i < n; i += 4) {
             let x1 = lines[i];
