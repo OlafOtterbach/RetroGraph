@@ -1,15 +1,16 @@
-﻿let id = 1;
-let bodyId;
-let bodyIntersection;
-let isBodySelected = false;
+﻿const lineWidth = 1.0;
+const backgroundColor = "#FFFFFF";
+const foregroundColor = "#000000"
 let lock = false;
+
+let currentBodyId;
+let currentBodyIntersection;
+let currentlyIsBodySelected = false;
 let currentBodyStates;
 let currentCamera;
+
 let mouseMoved = false;
-let currentPosition;
-let lineWidth =  1.0;
-let backgroundColor = "#FFFFFF";
-let foregroundColor = "#000000"
+let currentMousePosition;
 
 let canvas = document.querySelector("canvas");
 canvas.addEventListener("mousedown", onMouseDown);
@@ -77,8 +78,8 @@ function onMouseDown(event) {
         canvas.addEventListener("contextmenu", onContextMenu);
 
         mouseMoved = false;
-        currentPosition = getPosition(event, canvas)
-        select(currentPosition.x, currentPosition.y, currentCamera);
+        currentMousePosition = getPosition(event, canvas)
+        select(currentMousePosition.x, currentMousePosition.y, currentCamera);
     }
 }
 
@@ -100,11 +101,11 @@ function onMouseMoved(event) {
     } else {
         if (event.buttons === 1 || event.buttons === 2) {
             mouseMoved = true;
-            let movedPosition = getPosition(event, canvas)
+            let movedMousePosition = getPosition(event, canvas)
             if (event.buttons === 1) {
-                move(bodyId, currentPosition, movedPosition);
+                move(currentBodyId, currentMousePosition, movedMousePosition);
             } else {
-                zoom(currentPosition, movedPosition);
+                zoom(currentMousePosition, movedMousePosition);
             }
         }
     }
@@ -138,18 +139,18 @@ async function select(x, y) {
     selectEvent.canvasHeight = canvas.height;
     let url = encodeURI("http://localhost:5000/select");
     let bodySelection = await postData(url, selectEvent);
-    bodyId = bodySelection.BodyId;
-    bodyIntersection = bodySelection.BodyIntersection;
-    isBodySelected = bodySelection.IsBodyIntersected;
+    currentBodyId = bodySelection.BodyId;
+    currentBodyIntersection = bodySelection.BodyIntersection;
+    currentlyIsBodySelected = bodySelection.IsBodyIntersected;
     lock = false;
 }
 
 async function touch() {
     lock = true;
     let touchEvent = new TouchEventDto();
-    touchEvent.bodyId = bodyId;
-    touchEvent.touchPosition = bodyIntersection;
-    touchEvent.isBodyTouched = isBodySelected;
+    touchEvent.bodyId = currentBodyId;
+    touchEvent.touchPosition = currentBodyIntersection;
+    touchEvent.isBodyTouched = currentlyIsBodySelected;
     touchEvent.camera = currentCamera;
     touchEvent.canvasWidth = canvas.width;
     touchEvent.canvasHeight = canvas.height;
@@ -167,7 +168,7 @@ async function move(bodyId, start, end) {
         let moveEvent = new MoveEventDto();
         moveEvent.camera = currentCamera;
         moveEvent.bodyId = bodyId;
-        moveEvent.bodyIntersection = bodyIntersection;
+        moveEvent.bodyIntersection = currentBodyIntersection;
         moveEvent.startX = start.x;
         moveEvent.startY = start.y;
         moveEvent.endX = end.x;
@@ -178,7 +179,7 @@ async function move(bodyId, start, end) {
         let url = encodeURI("http://localhost:5000/move");
         let sceneState = await postData(url, moveEvent);
         drawScene(sceneState);
-        currentPosition = end;
+        currentMousePosition = end;
         lock = false;
     }
 }
@@ -197,7 +198,7 @@ async function zoom(start, end) {
         let url = encodeURI("http://localhost:5000/zoom");
         let sceneState = await postData(url, zoomEvent);
         drawScene(sceneState);
-        currentPosition = end;
+        currentMousePosition = end;
         lock = false;
     }
 }
