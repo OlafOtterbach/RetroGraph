@@ -43,7 +43,7 @@
                 second = matrix * second;
 
                 // Angle between t_vecA as X-Axis and t_vecB
-                alpha = AngleMath.VectorToAngle(second.X, second.Y);
+                alpha = (second.X, second.Y).ToAngle();
             }
             else
             {

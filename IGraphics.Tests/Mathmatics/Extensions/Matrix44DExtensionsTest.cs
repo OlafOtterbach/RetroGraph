@@ -6,7 +6,7 @@ using Xunit;
 namespace IGraphics.Tests.Mathmatics.Extensions
 {
    
-   public class DMatrix4x4ExtensionsTest
+   public class Matrix44DExtensionsTest
    {
         [Fact]
         public void ToCardanTest1()

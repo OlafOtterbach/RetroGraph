@@ -30,7 +30,7 @@ namespace IGraphics.Mathmatics
 
         public override int GetHashCode()
         {
-            return Translation.GetHashCode() * (int)AlphaAngleAxisX * (int)BetaAngleAxisY * (int)GammaAngleAxisZ;
+            return Translation.GetHashCode() * (int)AlphaAngleAxisX^2 * (int)BetaAngleAxisY^3 * (int)GammaAngleAxisZ^4;
         }
 
         public override bool Equals(Object obj)

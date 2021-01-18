@@ -56,52 +56,20 @@ namespace IGraphics.Mathmatics
             return alpha;
         }
 
-        public static double VectorToAngle(double xpos, double ypos)
+        public static double ToAngle(this (double X,double Y) vector)
         {
-            double alpha = 0.0;
-            if ((Math.Abs(xpos) > ConstantsMath.Epsilon)
-                || (Math.Abs(ypos) > ConstantsMath.Epsilon)
-               )
+            var x = vector.X;
+            var y = vector.Y;
+
+            if (x.EqualsTo(0.0) && y.EqualsTo(0.0))
             {
-                double a = 0.0;
-                if (xpos < 0.0)
-                {
-                    a = -xpos;
-                }
-                else
-                {
-                    a = xpos;
-                }
-                var cosAlpha = a / Math.Sqrt(xpos * xpos + ypos * ypos);
-                alpha = Math.Acos(cosAlpha);
-                if (xpos >= 0.0)
-                {
-                    if (ypos >= 0.0)
-                    {
-                        //alpha = alpha;
-                    }
-                    else
-                    {
-                        alpha = ConstantsMath.Pi2 - alpha; // 360° - m_alpha
-                    }
-                }
-                else
-                {
-                    if (ypos >= 0.0)
-                    {
-                        alpha = ConstantsMath.Pi - alpha;  // 180° - m_alpha
-                    }
-                    else
-                    {
-                        alpha = ConstantsMath.Pi + alpha; // 180° + m_alpha
-                    }
-                }
+                return 0.0;
             }
-            else
             {
-                alpha = 0.0;
+                var alpha = Math.Atan2(y, x);
+                alpha = alpha >= 0.0 ? alpha : ConstantsMath.Pi2 + alpha;
+                return alpha;
             }
-            return alpha;
         }
     }
 }

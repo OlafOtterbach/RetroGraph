@@ -9,15 +9,15 @@ namespace IGraphics.Mathmatics.Extensions
             var ex = matrix.Ex;
             var ey = matrix.Ey;
 
-            var gammaAngleAxisZ = AngleMath.VectorToAngle(ex.X, ex.Y);
+            var gammaAngleAxisZ = (ex.X, ex.Y).ToAngle();
 
             var rotationXY = Matrix44D.CreateRotation(new Vector3D(0, 0, 1), -gammaAngleAxisZ);
             var ex1 = rotationXY * ex;
-            var betaAngleAxisY = -AngleMath.VectorToAngle(ex1.X, ex1.Z);
+            var betaAngleAxisY = -(ex1.X, ex1.Z).ToAngle();
 
             var rotationXZ = Matrix44D.CreateRotation(new Vector3D(0, 1, 0), -betaAngleAxisY);
             var ey1 = rotationXZ * rotationXY * ey;
-            var alphaAngleAxisX = AngleMath.VectorToAngle(ey1.Y, ey1.Z);
+            var alphaAngleAxisX = (ey1.Y, ey1.Z).ToAngle();
 
             return new CardanFrame(matrix.Translation, alphaAngleAxisX, betaAngleAxisY, gammaAngleAxisZ);
         }
