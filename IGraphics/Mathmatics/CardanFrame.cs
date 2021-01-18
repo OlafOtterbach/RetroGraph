@@ -5,12 +5,15 @@ namespace IGraphics.Mathmatics
 {
     public struct CardanFrame : IEquatable<CardanFrame>
     {
+        private int _hashCode;
+
         public CardanFrame(Position3D offset, double alphaAngleAxisX, double betaAngleAxisY, double gammaAngleAxisZ) : this()
         {
             Offset = offset;
             AlphaAngleAxisX = alphaAngleAxisX.Modulo2Pi();
             BetaAngleAxisY = betaAngleAxisY.Modulo2Pi();
             GammaAngleAxisZ = gammaAngleAxisZ.Modulo2Pi();
+            _hashCode = (int)(Offset.GetHashCode() + AlphaAngleAxisX * 13.0 + BetaAngleAxisY * 127.0 + GammaAngleAxisZ * 341.0);
         }
 
         public CardanFrame(Vector3D translation, double alphaAngleAxisX, double betaAngleAxisY, double gammaAngleAxisZ) : this(translation.ToPosition3D(), alphaAngleAxisX, betaAngleAxisY, gammaAngleAxisZ)
@@ -28,10 +31,7 @@ namespace IGraphics.Mathmatics
         public double BetaAngleAxisY { get; }
         public double GammaAngleAxisZ { get; }
 
-        public override int GetHashCode()
-        {
-            return Translation.GetHashCode() * (int)AlphaAngleAxisX^2 * (int)BetaAngleAxisY^3 * (int)GammaAngleAxisZ^4;
-        }
+        public override int GetHashCode() => _hashCode;
 
         public override bool Equals(Object obj)
         {

@@ -64,5 +64,32 @@ namespace IGraphics.Tests.Mathmatics
 
             Assert.Equal(original.GetHashCode(), cardan.GetHashCode());
         }
+
+        [Fact]
+        public void GetHashCodeTest2()
+        {
+            var original = new CardanFrame(new Position3D(10, 20, 30), 10.0.DegToRad(), 20.0.DegToRad(), 30.0.DegToRad());
+            var cardan = new CardanFrame(new Position3D(10, 20, 30), 30.0.DegToRad(), 20.0.DegToRad(), 10.0.DegToRad());
+
+            Assert.NotEqual(original.GetHashCode(), cardan.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCodeTest3()
+        {
+            var original = new CardanFrame(new Position3D(10, 20, 30), 10.0.DegToRad(), 20.0.DegToRad(), 30.0.DegToRad());
+            var cardan = new CardanFrame(new Position3D(30, 20, 10), 10.0.DegToRad(), 20.0.DegToRad(), 30.0.DegToRad());
+
+            Assert.NotEqual(original.GetHashCode(), cardan.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCodeTest4()
+        {
+            var original = new CardanFrame(new Position3D(10, 20, 30), 10.0.DegToRad(), 20.0.DegToRad(), 30.0.DegToRad());
+            var cardan = new CardanFrame(new Position3D(30, 20, 10), 30.0.DegToRad(), 10.0.DegToRad(), 20.0.DegToRad());
+
+            Assert.NotEqual(original.GetHashCode(), cardan.GetHashCode());
+        }
     }
 }
