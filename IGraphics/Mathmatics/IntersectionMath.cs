@@ -52,24 +52,23 @@ namespace IGraphics.Mathmatics
             return (true, xi, yi);
         }
 
-        public static Position3D CalculatePerpendicularPoint(this Position3D position, Position3D offset, Vector3D direction)
+        public static Position3D CalculatePerpendicularPoint(this Position3D position, Position3D axisOffset, Vector3D axisDirection)
         {
             var point = position;
 
-            var delta = position - offset;
+            var delta = axisOffset - position;
             var len = delta.Length;
             if (!len.EqualsTo(0.0))
             {
-                var normal = direction.Normalize();
-                double product = delta * normal;
-                double divProduct = direction * normal;
+                double product = delta * axisDirection;
+                double divProduct = axisDirection * axisDirection;
                 if (divProduct.Equals(0.0))
                 {
                     divProduct = 0.01;
                 }
                 double lamda = -product / divProduct;
-                normal = normal * lamda;
-                point = offset + normal;
+                var normal = axisDirection * lamda;
+                point = axisOffset + normal;
             }
             return point;
         }
