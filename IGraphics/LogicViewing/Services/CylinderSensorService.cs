@@ -59,27 +59,26 @@ namespace IGraphics.LogicViewing.Services
         {
             if (startX.EqualsTo(endX) && startY.EqualsTo(endY)) return;
 
-            var axisFrame = body.Frame * Matrix44D.CreateRotation(cylinderSensor.Axis, 0.0);
+            var axis = new Axis3D(body.Frame.Offset, body.Frame * cylinderSensor.Axis);
 
             double angle;
-            if (IsAxisIsInCameraPlane(axisFrame, camera))
+            if (IsAxisIsInCameraPlane(axis, camera))
             {
-                angle = CalculateAngleForAxisLieingInCanvas(bodyTouchPosition ,startX, startY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight, camera);
+                angle = CalculateAngleForAxisLieingInCanvas(bodyTouchPosition ,startX, startY, endOffset, endDirection, axis, canvasWidth, canvasHeight, camera);
             }
             else
             {
-                angle = CalculateAngleForAxisNotLieingInCanvas(startX, startY, startOffset, startDirection, endX, endY, endOffset, endDirection, axisFrame, canvasWidth, canvasHeight);
+                angle = CalculateAngleForAxisNotLieingInCanvas(startX, startY, startOffset, startDirection, endX, endY, endOffset, endDirection, axis, canvasWidth, canvasHeight);
             }
 
             Rotate(body, cylinderSensor.Axis, angle);
         }
 
-        private static bool IsAxisIsInCameraPlane(Matrix44D axisFrame, Camera camera)
+        private static bool IsAxisIsInCameraPlane(Axis3D axis, Camera camera)
         {
-            var axis = axisFrame.Ez;
             var cameraDirection = camera.Frame.Ey;
             double limitAngle = 25.0;
-            double alpha = axis.CounterClockwiseAngleWith(cameraDirection);
+            double alpha = axis.Direction.CounterClockwiseAngleWith(cameraDirection);
             alpha = alpha.Modulo2Pi();
             alpha = alpha.RadToDeg();
             var result = !((Math.Abs(alpha) < limitAngle) || (Math.Abs(alpha) > (180.0 - limitAngle)));
@@ -93,17 +92,16 @@ namespace IGraphics.LogicViewing.Services
             double startY,
             Position3D endOffset,
             Vector3D endDirection,
-            Matrix44D axisFrame,
+            Axis3D axis,
             double canvasWidth,
             double canvasHeight,
             Camera camera
         )
         {
             var angle = 0.0;
-            var axis = axisFrame.Ez;
             var cameraDirection = camera.Frame.Ey;
 
-            var direction = (cameraDirection & axis).Normalize() * 10000.0;
+            var direction = (cameraDirection & axis.Direction).Normalize() * 10000.0;
             var offset = ViewProjection.ProjectCanvasToSceneSystem(startX, startY, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
             var p1 = offset - direction;
             var p2 = offset + direction;
@@ -122,12 +120,11 @@ namespace IGraphics.LogicViewing.Services
                 // Projektion der Scheitelpunkte auf Canvas.
                 // Abstand Scheitelpunkte auf Achse ist die Mausbewegung für 180°.
                 // Winkel ist Verhältnis Länge Mausbewegung zur Länge für 180°.
-                var axisOffset = axisFrame.Offset;
-                var plumpPoint = IntersectionMath.CalculatePerpendicularPoint(bodyTouchPosition, axisOffset, axis);
+                var plumpPoint = axis.CalculatePerpendicularPoint(bodyTouchPosition);
                 var distance = (bodyTouchPosition - plumpPoint).Length;
                 direction = direction.Normalize() * distance;
-                var startPosition = axisOffset - direction;
-                var endPosition = axisOffset + direction;
+                var startPosition = axis.Offset - direction;
+                var endPosition = axis.Offset + direction;
                 (startX, startY) = ViewProjection.ProjectSceneSystemToCanvas(startPosition, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
                 (endX, endY) = ViewProjection.ProjectSceneSystemToCanvas(endPosition, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
                 var lengthOfHalfRotation = Vector2DMath.Length(startX, startY, endX, endY);
@@ -149,10 +146,11 @@ namespace IGraphics.LogicViewing.Services
             double endY,
             Position3D endOffset,
             Vector3D endDirection,
-            Matrix44D axisFrame,
+            Axis3D axis,
             double canvasWidth,
             double canvasHeight)
         {
+            var axisFrame = Matrix44D.CreateRotation(axis.Offset, axis.Direction);
             startOffset = GetPosition(startOffset, startDirection, axisFrame);
             endOffset = GetPosition(endOffset, endDirection, axisFrame);
 

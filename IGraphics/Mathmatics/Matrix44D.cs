@@ -252,6 +252,9 @@ namespace IGraphics.Mathmatics
             }
         }
 
+        public static Matrix44D CreateRotation(Position3D offset, Vector3D axis)
+            => CreateRotation(offset, axis, 0.0);
+
         public static Matrix44D CreateRotation(Position3D offset, Vector3D axis, double angle)
         {
             // create rotation coordinate system

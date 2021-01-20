@@ -71,61 +71,124 @@ namespace IGraphics.Tests
         public void CalculatePerpendicularPointTest_WhenLineInPlaneXYAndPosition_ThenPlumpPointIsCalculated()
         {
             var position = new Position3D(100, 100, 200);
+            var axis = new Axis3D(new Position3D(), new Vector3D(1, 1, 0));
 
-            var plump = position.CalculatePerpendicularPoint(new Position3D(), new Vector3D(1,1,0));
+            var plump = axis.CalculatePerpendicularPoint(position);
+            var plump2 = position.CalculatePerpendicularPoint(axis);
 
             var expected = new Position3D(100, 100, 0);
             Assert.Equal(expected, plump);
+            Assert.Equal(expected, plump2);
         }
 
         [Fact]
         public void CalculatePerpendicularPointTest_WhenLineInPlaneXZAndPosition_ThenPlumpPointIsCalculated()
         {
             var position = new Position3D(100, 200, 100);
+            var axis = new Axis3D(new Position3D(0, 0, 0), new Vector3D(1, 0, 1));
 
-            var plump = position.CalculatePerpendicularPoint(new Position3D(0, 0, 0), new Vector3D(1, 0, 1));
+            var plump = axis.CalculatePerpendicularPoint(position);
+            var plump2 = position.CalculatePerpendicularPoint(axis);
 
             var expected = new Position3D(100, 0, 100);
             Assert.Equal(expected, plump);
+            Assert.Equal(expected, plump2);
         }
 
         [Fact]
         public void CalculatePerpendicularPointTest_WhenLineInPlaneYZAndPosition_ThenPlumpPointIsCalculated()
         {
             var position = new Position3D(200, 100, 100);
+            var axis = new Axis3D(new Position3D(0, 0, 0), new Vector3D(0, 1, 1));
 
-            var plump = position.CalculatePerpendicularPoint(new Position3D(0, 0, 0), new Vector3D(0, 1, 1));
+            var plump = axis.CalculatePerpendicularPoint(position);
+            var plump2 = position.CalculatePerpendicularPoint(axis);
 
             var expected = new Position3D(0, 100, 100);
             Assert.Equal(expected, plump);
+            Assert.Equal(expected, plump2);
         }
 
         [Fact]
         public void CalculatePerpendicularPointTest_WhenTwoLinesInPararllelPlaneXY_ThenPlumpPointIsCalculated()
         {
-            var baseOffset = new Position3D(10, 20, 0);
-            var baseDirection = new Vector3D(1, 0, 0);
-            var secondOffest = new Position3D(10, 20, 100);
-            var secondDirection = new Vector3D(0, 1, 0);
+            var baseAxis = new Axis3D(new Position3D(10, 20, 0), new Vector3D(1, 0, 0));
+            var secondAxis = new Axis3D(new Position3D(10, 20, 100), new Vector3D(0, 1, 0));
 
-            var (success, plumpOnBaseAxis) = IntersectionMath.CalculatePerpendicularPoint(baseOffset, baseDirection, secondOffest, secondDirection);
+            var (success, plumpOnBaseAxis) = baseAxis.CalculatePerpendicularPoint(secondAxis);
 
             Assert.True(success);
-            Assert.Equal(baseOffset, plumpOnBaseAxis);
+            Assert.Equal(baseAxis.Offset, plumpOnBaseAxis);
         }
 
         [Fact]
         public void CalculatePerpendicularPointTest_WhenTwoCrossingLines_ThenPlumpPointIsCrossPoint()
         {
-            var baseOffset = new Position3D(0, 0, 100);
-            var baseDirection = new Vector3D(1, 1, -1);
-            var secondOffest = new Position3D(0, 0, -100);
-            var secondDirection = new Vector3D(1, 1, 1);
+            var baseAxis = new Axis3D(new Position3D(0, 0, 100), new Vector3D(1, 1, -1));
+            var secondAxis = new Axis3D(new Position3D(0, 0, -100), new Vector3D(1, 1, 1));
 
-            var (success, plumpOnBaseAxis) = IntersectionMath.CalculatePerpendicularPoint(baseOffset, baseDirection, secondOffest, secondDirection);
+            var (success, plumpOnBaseAxis) = baseAxis.CalculatePerpendicularPoint(secondAxis);
 
             Assert.True(success);
             Assert.Equal(new Position3D(100, 100, 0), plumpOnBaseAxis);
+        }
+
+        [Fact]
+        public void IntersectTest_WhenStraightLineZIntersectsPlaneXY_ThenResultIsIntersection()
+        {
+            var plane = new Plane3D(new Position3D(0, 0, 100), new Vector3D(0, 0, 1));
+            var axis = new Axis3D(new Position3D(100, 100, 0), new Vector3D(0, 0, 1));
+
+            var (success, intersection) = plane.Intersect(axis);
+            var (success2, intersection2) = axis.Intersect(plane);
+
+            Assert.True(success);
+            Assert.Equal(new Position3D(100, 100, 100), intersection);
+            Assert.True(success2);
+            Assert.Equal(new Position3D(100, 100, 100), intersection2);
+        }
+
+        [Fact]
+        public void IntersectTest_WhenStraightLineXIntersectsPlaneYZ_ThenResultIsIntersection()
+        {
+            var plane = new Plane3D(new Position3D(100, 0, 0), new Vector3D(1, 0, 0));
+            var axis = new Axis3D(new Position3D(0, 100, 100), new Vector3D(1, 0, 0));
+
+            var (success, intersection) = plane.Intersect(axis);
+            var (success2, intersection2) = axis.Intersect(plane);
+
+            Assert.True(success);
+            Assert.Equal(new Position3D(100, 100, 100), intersection);
+            Assert.True(success2);
+            Assert.Equal(new Position3D(100, 100, 100), intersection2);
+        }
+
+        [Fact]
+        public void IntersectTest_WhenStraightLineYIntersectsPlaneXZ_ThenResultIsIntersection()
+        {
+            var plane = new Plane3D(new Position3D(0, 100, 0), new Vector3D(0, 1, 0));
+            var axis = new Axis3D(new Position3D(100, 0, 100), new Vector3D(0, 1, 0));
+
+            var (success, intersection) = plane.Intersect(axis);
+            var (success2, intersection2) = axis.Intersect(plane);
+
+            Assert.True(success);
+            Assert.Equal(new Position3D(100, 100, 100), intersection);
+            Assert.True(success2);
+            Assert.Equal(new Position3D(100, 100, 100), intersection2);
+        }
+
+        [Fact]
+        public void IntersectTest_WhenParallelStraightLineNotIntersectsPlane_ThenResultIsEmpty()
+        {
+            var plane = new Plane3D(new Position3D(100, 100, 0), new Vector3D(0, 0, 1));
+            var axis = new Axis3D(new Position3D(100, 100, 100), new Vector3D(1, 1, 0));
+
+            var (success, intersection) = plane.Intersect(axis);
+            var (success2, intersection2) = axis.Intersect(plane);
+
+            Assert.False(success);
+            Assert.False(success2);
         }
     }
 }

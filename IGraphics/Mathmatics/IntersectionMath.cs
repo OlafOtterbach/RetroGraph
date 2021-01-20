@@ -52,6 +52,33 @@ namespace IGraphics.Mathmatics
             return (true, xi, yi);
         }
 
+
+
+
+        public static Position3D CalculatePerpendicularPoint(this Position3D position, Axis3D axis)
+            => axis.CalculatePerpendicularPoint(position);
+
+        public static Position3D CalculatePerpendicularPoint(this Axis3D axis, Position3D position)
+        {
+            var point = position;
+
+            var delta = axis.Offset - position;
+            var len = delta.Length;
+            if (!len.EqualsTo(0.0))
+            {
+                double product = delta * axis.Direction;
+                double divProduct = axis.Direction * axis.Direction;
+                if (divProduct.Equals(0.0))
+                {
+                    divProduct = 0.01;
+                }
+                double lamda = -product / divProduct;
+                var normal = axis.Direction * lamda;
+                point = axis.Offset + normal;
+            }
+            return point;
+        }
+
         public static Position3D CalculatePerpendicularPoint(this Position3D position, Position3D axisOffset, Vector3D axisDirection)
         {
             var point = position;
@@ -71,6 +98,56 @@ namespace IGraphics.Mathmatics
                 point = axisOffset + normal;
             }
             return point;
+        }
+
+
+
+
+        public static (bool, Position3D) CalculatePerpendicularPoint(this Axis3D baseAxis, Axis3D neighbourAxis)
+        {
+            // Lotpunkte ermittel, deren Lot gebildet aus deren Verbindungslinie
+            // senkrecht auf beiden Geraden steht
+
+            // Parameter fuer Gerade 1: g1=a+k*v initialisieren
+            bool result = false;
+            var perpendicularPoint = new Position3D(double.MinValue, double.MinValue, double.MinValue);
+
+            double a1 = baseAxis.Offset.X;
+            double a2 = baseAxis.Offset.Y;
+            double a3 = baseAxis.Offset.Z;
+            double v1 = baseAxis.Direction.X;
+            double v2 = baseAxis.Direction.Y;
+            double v3 = baseAxis.Direction.Z;
+
+            double b1 = neighbourAxis.Offset.X;
+            double b2 = neighbourAxis.Offset.Y;
+            double b3 = neighbourAxis.Offset.Z;
+            double w1 = neighbourAxis.Direction.X;
+            double w2 = neighbourAxis.Direction.Y;
+            double w3 = neighbourAxis.Direction.Z;
+
+            // Gleichung 1: A1-k*K1+l*L1=0 erzeugen
+            double A1 = v1 * b1 + v2 * b2 + v3 * b3 - v1 * a1 - v2 * a2 - v3 * a3;
+            double K1 = v1 * v1 + v2 * v2 + v3 * v3;
+            double L1 = v1 * w1 + v2 * w2 + v3 * w3; // = K2
+
+            // Gleichung 2: A2-k*K2+l*L2=0 erzeugen
+            double A2 = w1 * b1 + w2 * b2 + w3 * b3 - w1 * a1 - w2 * a2 - w3 * a3;
+            double K2 = w1 * v1 + w2 * v2 + w3 * v3; // = L1
+            double L2 = w1 * w1 + w2 * w2 + w3 * w3;
+
+            // Calculate factor k
+            double k = L1 * K2 - L2 * K1;
+            if (k != 0.0)
+            {
+                k = (L1 * A2 - L2 * A1) / k;
+
+                // Calculate plump point
+                var delta = baseAxis.Direction * k;
+                perpendicularPoint = baseAxis.Offset + delta;
+                result = true;
+            }
+            return (result, perpendicularPoint);
         }
 
         public static (bool, Position3D) CalculatePerpendicularPoint(Position3D baseLineOffset, Vector3D baseLineDirection, Position3D neighbourOffset, Vector3D neighbourDirection)
@@ -120,6 +197,51 @@ namespace IGraphics.Mathmatics
             return (result, perpendicularPoint);
         }
 
+
+
+
+        public static (bool, Position3D) Intersect(this Axis3D axis, Plane3D plane)
+            => plane.Intersect(axis);
+
+        public static (bool, Position3D) Intersect(this Plane3D plane, Axis3D axis)
+        {
+            bool result;
+
+            var nx = plane.Normal.X;
+            var ny = plane.Normal.Y;
+            var nz = plane.Normal.Z;
+            var x = plane.Offset.X;
+            var y = plane.Offset.Y;
+            var z = plane.Offset.Z;
+            var sx = axis.Offset.X;
+            var sy = axis.Offset.Y;
+            var sz = axis.Offset.Z;
+            var dx = axis.Direction.X;
+            var dy = axis.Direction.Y;
+            var dz = axis.Direction.Z;
+
+            // Liniengleichung in Hessenormalform der Ebene einsetzen
+            var help1 = (nx * x) + (ny * y) + (nz * z)
+                        - (nx * sx) - (ny * sy) - (nz * sz);
+            var help2 = (nx * dx) + (ny * dy) + (nz * dz);
+            Position3D intersection;
+            if (help2.NotEqualsTo(0.0))
+            {
+                // Schnittpunkt errechnen
+                var lamda = help1 / help2;
+                intersection = axis.Offset + (axis.Direction * lamda);
+                result = true;
+            }
+            else
+            {
+                // No intersection, Line parallel to plane
+                intersection = new Position3D(0.0, 0.0, 0.0);
+                result = false;
+            }
+
+            return (result, intersection);
+        }
+
         public static (bool, Position3D) Intersect(Position3D planeOffset, Vector3D planeNormal, Position3D lineOffset, Vector3D lineDirection)
         {
             bool result;
@@ -159,6 +281,28 @@ namespace IGraphics.Mathmatics
             return (result, intersection);
         }
 
+
+
+
+        public static double Distance(this Plane3D plane, Position3D position)
+            => position.Distance(plane);
+
+        public static double Distance(this Position3D position, Plane3D plane)
+        {
+            var nx = plane.Normal.X;
+            var ny = plane.Normal.Y;
+            var nz = plane.Normal.Z;
+            var x = plane.Offset.X;
+            var y = plane.Offset.Y;
+            var z = plane.Offset.Z;
+            var px = position.X;
+            var py = position.Y;
+            var pz = position.Z;
+            var direction = (px - x) * nx + (py - y) * ny + (pz - z) * nz;
+            var dist = Math.Abs(direction);
+            return dist;
+        }
+
         public static double DistancePositionToPlane(this Position3D position, Position3D offset, Vector3D normal)
         {
             var nx = normal.X;
@@ -175,6 +319,9 @@ namespace IGraphics.Mathmatics
             return dist;
         }
 
+
+
+
         public static (bool, double) GetSquaredDistanceOfIntersectionOfRayAndTriangle(Position3D rayOffset, Vector3D rayDirection, Position3D p1, Position3D p2, Position3D p3)
         {
             var normal = ((p2 - p1) & (p3 - p1)).Normalize();
@@ -182,7 +329,7 @@ namespace IGraphics.Mathmatics
             if (hasIntersection)
             {
                 var intersectDirection = (intersection - rayOffset).Normalize();
-                if(intersectDirection != rayDirection.Normalize()) return (false, -1.0);
+                if (intersectDirection != rayDirection.Normalize()) return (false, -1.0);
 
                 var mat = Matrix44D.CreatePlaneCoordinateSystem(p1, normal).Inverse();
                 p1 = mat * p1;

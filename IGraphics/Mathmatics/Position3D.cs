@@ -31,7 +31,7 @@ namespace IGraphics.Mathmatics
             return _vector.GetHashCode();
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             return (obj is Position3D) && (this.Equals((Position3D)obj));
         }
