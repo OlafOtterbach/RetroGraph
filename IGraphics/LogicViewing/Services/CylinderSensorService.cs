@@ -19,11 +19,16 @@ namespace IGraphics.LogicViewing.Services
 
         public void Process(ISensor sensor, MoveEvent moveEvent)
         {
-            var startMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.StartMoveX, moveEvent.StartMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
-            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.EndMoveX, moveEvent.EndMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
             var offset = moveEvent.Camera.Frame.Offset;
+
+            var startMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.StartMoveX, moveEvent.StartMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
             var startMoveDirection = startMoveOffset - offset;
+            var startMoveRay = new Axis3D(startMoveOffset, startMoveDirection);
+
+            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.EndMoveX, moveEvent.EndMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
             var endMoveDirection = endMoveOffset - offset;
+            var endMoveRay = new Axis3D(endMoveOffset, endMoveDirection);
+
             var body = _scene.GetBody(moveEvent.SelectedBodyId);
 
             Process(sensor as CylinderSensor,
@@ -31,12 +36,10 @@ namespace IGraphics.LogicViewing.Services
                     moveEvent.BodyTouchPosition,
                     moveEvent.StartMoveX,
                     moveEvent.StartMoveY,
-                    startMoveOffset,
-                    startMoveDirection,
+                    startMoveRay,
                     moveEvent.EndMoveX,
                     moveEvent.EndMoveY,
-                    endMoveOffset,
-                    endMoveDirection,
+                    endMoveRay,
                     moveEvent.CanvasWidth,
                     moveEvent.CanvasHeight,
                     moveEvent.Camera);
@@ -47,38 +50,36 @@ namespace IGraphics.LogicViewing.Services
             Position3D bodyTouchPosition,
             double startX,
             double startY,
-            Position3D startOffset,
-            Vector3D startDirection,
+            Axis3D startMoveRay,
             double endX,
             double endY,
-            Position3D endOffset,
-            Vector3D endDirection,
+            Axis3D endMoveRay,
             double canvasWidth,
             double canvasHeight,
             Camera camera)
         {
             if (startX.EqualsTo(endX) && startY.EqualsTo(endY)) return;
 
-            var axis = new Axis3D(body.Frame.Offset, body.Frame * cylinderSensor.Axis);
+            var cylinderAxis = new Axis3D(body.Frame.Offset, body.Frame * cylinderSensor.Axis);
 
             double angle;
-            if (IsAxisIsInCameraPlane(axis, camera))
+            if (IsAxisIsInCameraPlane(cylinderAxis, camera))
             {
-                angle = CalculateAngleForAxisLieingInCanvas(bodyTouchPosition ,startX, startY, endOffset, endDirection, axis, canvasWidth, canvasHeight, camera);
+                angle = CalculateAngleForAxisLieingInCanvas(bodyTouchPosition ,startX, startY, endMoveRay, cylinderAxis, canvasWidth, canvasHeight, camera);
             }
             else
             {
-                angle = CalculateAngleForAxisNotLieingInCanvas(startX, startY, startOffset, startDirection, endX, endY, endOffset, endDirection, axis, canvasWidth, canvasHeight);
+                angle = CalculateAngleForAxisNotLieingInCanvas(startX, startY, startMoveRay, endX, endY, endMoveRay, cylinderAxis, canvasWidth, canvasHeight);
             }
 
             Rotate(body, cylinderSensor.Axis, angle);
         }
 
-        private static bool IsAxisIsInCameraPlane(Axis3D axis, Camera camera)
+        private static bool IsAxisIsInCameraPlane(Axis3D cylinderAxis, Camera camera)
         {
             var cameraDirection = camera.Frame.Ey;
             double limitAngle = 25.0;
-            double alpha = axis.Direction.CounterClockwiseAngleWith(cameraDirection);
+            double alpha = cylinderAxis.Direction.CounterClockwiseAngleWith(cameraDirection);
             alpha = alpha.Modulo2Pi();
             alpha = alpha.RadToDeg();
             var result = !((Math.Abs(alpha) < limitAngle) || (Math.Abs(alpha) > (180.0 - limitAngle)));
@@ -90,9 +91,8 @@ namespace IGraphics.LogicViewing.Services
             Position3D bodyTouchPosition,
             double startX,
             double startY,
-            Position3D endOffset,
-            Vector3D endDirection,
-            Axis3D axis,
+            Axis3D endMoveRay,
+            Axis3D cylinderAxis,
             double canvasWidth,
             double canvasHeight,
             Camera camera
@@ -101,11 +101,12 @@ namespace IGraphics.LogicViewing.Services
             var angle = 0.0;
             var cameraDirection = camera.Frame.Ey;
 
-            var direction = (cameraDirection & axis.Direction).Normalize() * 10000.0;
+            var direction = (cameraDirection & cylinderAxis.Direction).Normalize() * 10000.0;
             var offset = ViewProjection.ProjectCanvasToSceneSystem(startX, startY, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
             var p1 = offset - direction;
             var p2 = offset + direction;
-            var (success, plump) = IntersectionMath.CalculatePerpendicularPoint(p1, p2 - p1, endOffset, endDirection);
+            var projectedAxis = new Axis3D(p1, p2 - p1);
+            var (success, plump) = projectedAxis.CalculatePerpendicularPoint(endMoveRay);
             if (success)
             {
                 // Ermitteln des Vorzeichens für Drehung
@@ -120,11 +121,11 @@ namespace IGraphics.LogicViewing.Services
                 // Projektion der Scheitelpunkte auf Canvas.
                 // Abstand Scheitelpunkte auf Achse ist die Mausbewegung für 180°.
                 // Winkel ist Verhältnis Länge Mausbewegung zur Länge für 180°.
-                var plumpPoint = axis.CalculatePerpendicularPoint(bodyTouchPosition);
+                var plumpPoint = cylinderAxis.CalculatePerpendicularPoint(bodyTouchPosition);
                 var distance = (bodyTouchPosition - plumpPoint).Length;
                 direction = direction.Normalize() * distance;
-                var startPosition = axis.Offset - direction;
-                var endPosition = axis.Offset + direction;
+                var startPosition = cylinderAxis.Offset - direction;
+                var endPosition = cylinderAxis.Offset + direction;
                 (startX, startY) = ViewProjection.ProjectSceneSystemToCanvas(startPosition, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
                 (endX, endY) = ViewProjection.ProjectSceneSystemToCanvas(endPosition, canvasWidth, canvasHeight, camera.NearPlane, camera.Frame);
                 var lengthOfHalfRotation = Vector2DMath.Length(startX, startY, endX, endY);
@@ -140,35 +141,34 @@ namespace IGraphics.LogicViewing.Services
         private static double CalculateAngleForAxisNotLieingInCanvas(
             double startX,
             double startY,
-            Position3D startOffset,
-            Vector3D startDirection,
+            Axis3D startMoveRay,
             double endX,
             double endY,
-            Position3D endOffset,
-            Vector3D endDirection,
-            Axis3D axis,
+            Axis3D endMoveRay,
+            Axis3D cylinderAxis,
             double canvasWidth,
             double canvasHeight)
         {
-            var axisFrame = Matrix44D.CreateRotation(axis.Offset, axis.Direction);
-            startOffset = GetPosition(startOffset, startDirection, axisFrame);
-            endOffset = GetPosition(endOffset, endDirection, axisFrame);
+            var axisPlane = new Plane3D(cylinderAxis.Offset, cylinderAxis.Direction);
+            var startOffset = GetPosition(startMoveRay, axisPlane);
+            var endOffset = GetPosition(endMoveRay, axisPlane);
 
-            double sign = CalculateAngleSign(axisFrame, startOffset, endOffset);
+            double sign = CalculateAngleSign(cylinderAxis, startOffset, endOffset);
             var angle = sign * 1.0 * CalculateAngle(startX, startY, endX, endY, canvasWidth, canvasHeight);
 
             return angle;
         }
 
-        private static Position3D GetPosition(Position3D offset, Vector3D direction, Matrix44D axisFrame)
+        private static Position3D GetPosition(Axis3D moveRay, Plane3D axisPlane)
         {
-            var (success, position) = IntersectionMath.Intersect(axisFrame.Offset, axisFrame.Ez, offset, direction);
-            var result = success ? position : offset;
+            var (success, position) = axisPlane.Intersect(moveRay);
+            var result = success ? position : moveRay.Offset;
             return result;
         }
 
-        private static double CalculateAngleSign(Matrix44D axisFrame, Position3D start, Position3D end)
+        private static double CalculateAngleSign(Axis3D cylinderAxis, Position3D start, Position3D end)
         {
+            var axisFrame = Matrix44D.CreateRotation(cylinderAxis.Offset, cylinderAxis.Direction);
             Matrix44D invframe = axisFrame.Inverse();
 
             var startInFrame = invframe * start;

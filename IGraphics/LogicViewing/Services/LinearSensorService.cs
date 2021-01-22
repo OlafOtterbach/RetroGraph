@@ -17,42 +17,38 @@ namespace IGraphics.LogicViewing.Services
 
         public void Process(ISensor sensor, MoveEvent moveEvent)
         {
-            var startMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.StartMoveX, moveEvent.StartMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
-            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.EndMoveX, moveEvent.EndMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
             var offset = moveEvent.Camera.Frame.Offset;
+            var startMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.StartMoveX, moveEvent.StartMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
             var startMoveDirection = startMoveOffset - offset;
+            var startMoveRay = new Axis3D(startMoveOffset, startMoveDirection);
+
+            var endMoveOffset = ViewProjection.ProjectCanvasToSceneSystem(moveEvent.EndMoveX, moveEvent.EndMoveY, moveEvent.CanvasWidth, moveEvent.CanvasHeight, moveEvent.Camera.NearPlane, moveEvent.Camera.Frame);
             var endMoveDirection = endMoveOffset - offset;
+            var endMoveRay = new Axis3D(endMoveOffset, endMoveDirection);
+
             var body = _scene.GetBody(moveEvent.SelectedBodyId);
 
-
-            Process(sensor as LinearSensor,
-                body,
-                startMoveOffset,
-                startMoveDirection,
-                endMoveOffset,
-                endMoveDirection);
+            Process(sensor as LinearSensor, body, startMoveRay, endMoveRay);
         }
 
-        private static void Process(LinearSensor linearSensor,
-             Body body,
-             Position3D startOffset,
-             Vector3D startDirection,
-             Position3D endOffset,
-             Vector3D endDirection)
+        private static void Process(LinearSensor linearSensor, Body body, Axis3D startMoveRay, Axis3D endMoveRay)
         {
-            if (startOffset == endOffset) return;
-            var moveVector = CalculateMove(body, linearSensor.Axis, startOffset, startDirection, endOffset, endDirection);
+            if (startMoveRay.Offset == endMoveRay.Offset) return;
+
+            var moveVector = CalculateMove(body, linearSensor.Axis, startMoveRay, endMoveRay);
             var moveFrame = Matrix44D.CreateTranslation(moveVector);
 
             body.Frame = moveFrame * body.Frame;
         }
 
-        private static Vector3D CalculateMove(Body body, Vector3D axis, Position3D startOffset, Vector3D startDirection, Position3D endOffset, Vector3D endDirection)
+        private static Vector3D CalculateMove(Body body, Vector3D axis, Axis3D startMoveRay, Axis3D endMoveRay)
         {
             var axisOffset = body.Frame.Offset;
             var axisDirection = body.Frame * axis;
-            var (startExist, startPlump) = IntersectionMath.CalculatePerpendicularPoint(axisOffset, axisDirection, startOffset, startDirection);
-            var (endExist, endPlump) = IntersectionMath.CalculatePerpendicularPoint(axisOffset, axisDirection, endOffset, endDirection);
+            var moveAxis = new Axis3D(axisOffset, axisDirection);
+
+            var (startExist, startPlump) = moveAxis.CalculatePerpendicularPoint(startMoveRay);
+            var (endExist, endPlump) = moveAxis.CalculatePerpendicularPoint(endMoveRay);
             var moveVector = startExist && endExist ? endPlump - startPlump : new Vector3D();
 
             return moveVector;
