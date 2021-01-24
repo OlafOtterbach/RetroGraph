@@ -1,5 +1,6 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.LogicViewing;
+using IGraphics.LogicViewing.Services;
 using IGraphics.Mathmatics;
 using IHiddenLineGraphics;
 using RetroGraph.Models;
@@ -28,10 +29,11 @@ namespace RetroGraph.Services
         {
             var camera = new Camera();
             camera.NearPlane = 1.0;
-            camera.Frame = Matrix44D.CreateCoordinateSystem(
-                new Position3D(-56.19932556152344, 77.98228454589844, 50.94441223144531),
-                new Vector3D(-0.7851186990737915, -0.6140340566635132, 0.07365952432155609),
-                new Vector3D(0.34082478284835815, -0.3296760022640228, 0.8801576495170593));
+            //camera.Frame = Matrix44D.CreateCoordinateSystem(
+            //    new Position3D(-56.19932556152344, 77.98228454589844, 50.94441223144531),
+            //    new Vector3D(-0.7851186990737915, -0.6140340566635132, 0.07365952432155609),
+            //    new Vector3D(0.34082478284835815, -0.3296760022640228, 0.8801576495170593));
+            camera.SetCamera(0.0, 90.0, 50.0);
 
             _scene.SetBodyStates(_bodyStates);
 

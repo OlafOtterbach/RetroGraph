@@ -1,10 +1,8 @@
 ﻿using IGraphics.Mathmatics;
 using IGraphics.Mathmatics.Extensions;
 using IHiddenLineGraphics.Model;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace IHiddenLineGraphics.Services
 {
@@ -20,19 +18,19 @@ namespace IHiddenLineGraphics.Services
 
         private static bool IsLineVisible(LineHL line, double nearPlaneDistance, TriangleHL[] triangles)
         {
-            var (rayOffset, rayDirection) = GetRaytracingRay(line, nearPlaneDistance);
-            var (success, edgeIntersection) = GetRayIntersectionWithEdge(rayOffset, rayDirection, line.Edge);
+            var rayAxis = GetRaytracingRay(line, nearPlaneDistance);
+            var (success, edgeIntersection) = GetRayIntersectionWithEdge(rayAxis, line.Edge);
             if (!success) return true;
 
-            rayDirection = (edgeIntersection - rayOffset);
-            var edgeDistanceSquared = rayDirection.SquaredLength();
+            var rayToEdgeDirection = (edgeIntersection - rayAxis.Offset);
+            var edgeDistanceSquared = rayToEdgeDirection.SquaredLength();
             foreach (var triangle in triangles)
             {
                 if (!IsTriangleNeighbourOfLine(triangle, line))
                 {
                     if (!IsLineInTrianglePlane(line, triangle))
                     {
-                        var (hasIntersection, triangleDistanceSquared) = IntersectionMath.GetSquaredDistanceOfIntersectionOfRayAndTriangle(rayOffset, rayDirection, triangle.P1, triangle.P2, triangle.P3);
+                        var (hasIntersection, triangleDistanceSquared) = IntersectionMath.GetSquaredDistanceOfIntersectionOfRayAndTriangle(rayAxis.Offset, rayToEdgeDirection, triangle.P1, triangle.P2, triangle.P3);
                         if (hasIntersection && triangleDistanceSquared < edgeDistanceSquared)
                         {
                             return false;
@@ -44,7 +42,7 @@ namespace IHiddenLineGraphics.Services
             return true;
         }
 
-        private static (Position3D offset, Vector3D direction) GetRaytracingRay(LineHL line, double nearPlaneDistance)
+        private static Axis3D GetRaytracingRay(LineHL line, double nearPlaneDistance)
         {
             var start = line.Start;
             var end = line.End;
@@ -52,16 +50,17 @@ namespace IHiddenLineGraphics.Services
             var centerCameraPlaneLine = ViewProjection.ProjectCameraPlaneToCameraSystem(centerViewLine.X, centerViewLine.Y, nearPlaneDistance);
             var rayOffset = new Position3D(0.0, 0.0, 0.0);
             var rayDirection = centerCameraPlaneLine - rayOffset;
-            return (rayOffset, rayDirection);
+            return new Axis3D(rayOffset, rayDirection);
         }
 
-        private static (bool, Position3D) GetRayIntersectionWithEdge(Position3D rayOffset, Vector3D rayDirection, EdgeHL edge)
+        private static (bool, Position3D) GetRayIntersectionWithEdge(Axis3D rayAxis, EdgeHL edge)
         {
             var edgeEnd = edge.End;
             var edgeOffset = edge.Start;
             var edgeDirection = edgeEnd - edgeOffset;
+            var edgeAxis = new Axis3D(edgeOffset, edgeDirection);
 
-            var (success, intersection) = IntersectionMath.CalculatePerpendicularPoint(edgeOffset, edgeDirection, rayOffset, rayDirection);
+            var (success, intersection) = edgeAxis.CalculatePerpendicularPoint(rayAxis);
 
             return (success, intersection);
         }
