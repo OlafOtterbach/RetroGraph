@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using IGraphics.Extensions;
 using IGraphics.Mathmatics;
 
 namespace IGraphics.Graphics.Creators.Creator
 {
     public class GraphicsCreator
     {
+        private Matrix44D _originFrame;
         private PointStore _store;
 
         public GraphicsCreator()
@@ -17,12 +17,18 @@ namespace IGraphics.Graphics.Creators.Creator
 
         public void Reset()
         {
+            _originFrame = Matrix44D.Identity;
             _store = new PointStore();
             Faces = new List<CreatorFace>();
         }
 
         private List<CreatorFace> Faces { get; set;  } = new List<CreatorFace>();
         private CreatorFace CurrentFace => Faces.Last();
+
+        public void SetOriginFrame(Matrix44D originFrame)
+        {
+            _originFrame = originFrame;
+        }
 
         public void AddFace(bool hasBorder, bool hasFacets)
         {
@@ -58,6 +64,7 @@ namespace IGraphics.Graphics.Creators.Creator
             var faces = Faces.Convert().ToArray();
             var points = faces.SelectMany(face => face.Triangles).SelectMany(triangle => new Point3D[] { triangle.P1.Point, triangle.P2.Point, triangle.P3.Point }).Distinct().ToArray();
             var edges = GetEdges(faces).ToArray();
+            points.ToList().ForEach(p => p.Position = _originFrame * p.Position);
 
             var body = new Body()
             {
