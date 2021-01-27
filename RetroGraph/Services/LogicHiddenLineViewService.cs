@@ -7,7 +7,6 @@ using RetroGraph.Models.Extensions;
 using System.Linq;
 
 namespace RetroGraph.Services
-
 {
     public class LogicHiddenLineViewService
     {
