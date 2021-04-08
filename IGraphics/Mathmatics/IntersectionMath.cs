@@ -23,6 +23,15 @@ namespace IGraphics.Mathmatics
 
         public static (bool, double, double) Check2DLineWithLine(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
         {
+            // Test on colinarity
+            var xvec1 = x2 - x1;
+            var yvec1 = y2 - y1;
+            var xvec2 = x4 - x3;
+            var yvec2 = y4 - y3;
+            var quot1 = xvec1 / xvec2;
+            var quot2 = yvec1 / yvec2;
+            if (quot1.EqualsTo(quot2)) return (false, 0, 0);
+
             // Calculating intersection between p1p2 and p3p4
             var dxi = (y4 - y3) * (x2 - x1) - (y2 - y1) * (x4 - x3);
             if (dxi == 0.0) return (false, 0.0, 0.0);

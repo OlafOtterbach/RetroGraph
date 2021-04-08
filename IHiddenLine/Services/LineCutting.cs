@@ -1,4 +1,5 @@
 ﻿using IGraphics.Mathmatics;
+using IGraphics.Mathmatics.Extensions;
 using IHiddenLineGraphics.Model;
 using System.Collections.Generic;
 
@@ -38,10 +39,26 @@ namespace IHiddenLineGraphics.Services
                             var first2 = new LineHL { Start = intersection, End = first.End, Edge = first.Edge };
                             var second1 = new LineHL { Start = second.Start, End = intersection, Edge = second.Edge };
                             var second2 = new LineHL { Start = intersection, End = second.End, Edge = second.Edge };
-                            target.Push(first2);
-                            target.Push(second1);
-                            target.Push(second2);
-                            first = first1;
+
+                            if(!first2.Length.EqualsTo(0.0))
+                            {
+                                if(!first1.Length.EqualsTo(0.0))
+                                {
+                                    target.Push(first2);
+                                    first = first1;
+                                }
+                                else
+                                {
+                                    first = first2;
+                                }
+                            }
+                            else
+                            {
+                                first = first1;
+                            }
+
+                            if (!second1.Length.EqualsTo(0.0)) target.Push(second1);
+                            if (!second2.Length.EqualsTo(0.0)) target.Push(second2);
                         }
                         else
                         {

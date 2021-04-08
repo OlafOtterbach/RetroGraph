@@ -1,4 +1,6 @@
 ﻿using IGraphics.Mathmatics;
+using IGraphics.Mathmatics.Extensions;
+using System;
 using Xunit;
 
 namespace IGraphics.Tests
@@ -63,6 +65,30 @@ namespace IGraphics.Tests
         public void Check2DLineWithLineTest3()
         {
             var (hasIntersection, ix, iy) = IntersectionMath.Check2DLineWithLine(0, 0, 10, 10, 0, 10, 5, 5);
+
+            Assert.True(hasIntersection);
+        }
+
+        [Fact]
+        public void Check2DLineWithLineTest4()
+        {
+            var (hasIntersection, ix, iy) = IntersectionMath.Check2DLineWithLine(0, 0, 10, 10, 10, 10, 0, 0);
+
+            Assert.False(hasIntersection);
+        }
+
+        [Fact]
+        public void Check2DLineWithLineTest5()
+        {
+            var x1 = 0.0079377614887504739;
+            var y1 = -0.093839459278913212;
+            var x2 = 0.0651634776216613;
+            var y2 = -0.046422111432387225;
+            var x3 = 0.0651634776216613;
+            var y3 = -0.046422111432387225;
+            var x4 = 0.0079377614887504687;
+            var y4 = -0.0938394592789132;
+            var (hasIntersection, ix, iy) = IntersectionMath.Check2DLineWithLine(x1, y1, x2, y2, x3, y3, x4, y4);
 
             Assert.False(hasIntersection);
         }
