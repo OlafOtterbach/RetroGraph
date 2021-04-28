@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IGraphics.Mathmatics
+namespace IGraphics.Mathematics
 {
     public static class ConstantsMath
     {

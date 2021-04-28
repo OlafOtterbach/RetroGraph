@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace IGraphics.Tests.Mathmatics
+namespace IGraphics.Tests.Mathematics
 {
     public class ViewProjectionTest
     {

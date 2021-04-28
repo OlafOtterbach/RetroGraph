@@ -1,4 +1,4 @@
-﻿using IGraphics.Mathmatics;
+﻿using IGraphics.Mathematics;
 using IHiddenLineGraphics.Model;
 using System.Collections.Generic;
 

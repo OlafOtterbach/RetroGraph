@@ -1,5 +1,5 @@
 ﻿using IGraphics.Graphics;
-using IGraphics.Mathmatics;
+using IGraphics.Mathematics;
 
 namespace IHiddenLineGraphics.Model
 {

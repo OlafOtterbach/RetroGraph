@@ -1,7 +1,7 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.Graphics.Services;
-using IGraphics.Mathmatics;
-using IGraphics.Mathmatics.Extensions;
+using IGraphics.Mathematics;
+using IGraphics.Mathematics.Extensions;
 
 namespace IGraphics.LogicViewing.Services
 {

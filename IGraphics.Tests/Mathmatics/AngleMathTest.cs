@@ -1,8 +1,8 @@
 ﻿using Xunit;
-using IGraphics.Mathmatics;
+using IGraphics.Mathematics;
 using System;
 
-namespace IGraphics.Tests.Mathmatics
+namespace IGraphics.Tests.Mathematics
 {
     public class AngleMathTest
     {

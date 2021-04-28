@@ -1,7 +1,7 @@
-﻿using IGraphics.Mathmatics.Extensions;
+﻿using IGraphics.Mathematics.Extensions;
 using System;
 
-namespace IGraphics.Mathmatics
+namespace IGraphics.Mathematics
 {
     public static class IntersectionMath
     {

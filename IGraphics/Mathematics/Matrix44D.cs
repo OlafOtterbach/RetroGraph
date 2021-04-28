@@ -1,8 +1,8 @@
-﻿using IGraphics.Mathmatics.Extensions;
+﻿using IGraphics.Mathematics.Extensions;
 using System;
 using System.Numerics;
 
-namespace IGraphics.Mathmatics
+namespace IGraphics.Mathematics
 {
     public struct Matrix44D : IEquatable<Matrix44D>
     {

@@ -1,5 +1,5 @@
 ﻿
-using IGraphics.Mathmatics;
+using IGraphics.Mathematics;
 using Xunit;
 
 namespace IGraphics.Tests

@@ -1,5 +1,5 @@
-﻿using IGraphics.Mathmatics;
-using IGraphics.Mathmatics.Extensions;
+﻿using IGraphics.Mathematics;
+using IGraphics.Mathematics.Extensions;
 using IHiddenLineGraphics.Model;
 using System.Collections.Generic;
 

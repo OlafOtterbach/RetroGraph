@@ -1,5 +1,5 @@
 ﻿using IGraphics.Extensions;
-using IGraphics.Mathmatics;
+using IGraphics.Mathematics;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using IGraphics.Graphics;
-using IGraphics.Mathmatics.Extensions;
+using IGraphics.Mathematics.Extensions;
 using System.Linq;
 
 namespace RetroGraph.Models.Extensions

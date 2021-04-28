@@ -1,8 +1,8 @@
-﻿using IGraphics.Mathmatics;
+﻿using IGraphics.Mathematics;
 using System;
 using Xunit;
 
-namespace IGraphics.Tests.Mathmatics
+namespace IGraphics.Tests.Mathematics
 {
     public class Vector2DMathTest
     {

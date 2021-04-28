@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IGraphics.Mathmatics.Extensions
+namespace IGraphics.Mathematics.Extensions
 {
     public static class MathExtensions
     {

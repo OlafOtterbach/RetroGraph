@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace IGraphics.Mathmatics
+namespace IGraphics.Mathematics
 {
     public struct Vector3D : IEquatable<Vector3D>
     {

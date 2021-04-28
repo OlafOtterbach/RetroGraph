@@ -1,6 +1,6 @@
 ﻿using System;
 using IGraphics.Graphics.Creators.Creator;
-using IGraphics.Mathmatics;
+using IGraphics.Mathematics;
 
 namespace IGraphics.Graphics.Creators
 {

@@ -1,4 +1,4 @@
-﻿namespace IGraphics.Mathmatics
+﻿namespace IGraphics.Mathematics
 {
     public static class TriangleMath
     {

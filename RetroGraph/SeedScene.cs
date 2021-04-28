@@ -1,6 +1,6 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.Graphics.Creators;
-using IGraphics.Mathmatics;
+using IGraphics.Mathematics;
 
 namespace RetroGraph
 {

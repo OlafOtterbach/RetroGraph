@@ -1,9 +1,9 @@
-﻿using IGraphics.Mathmatics;
-using IGraphics.Mathmatics.Extensions;
+﻿using IGraphics.Mathematics;
+using IGraphics.Mathematics.Extensions;
 using System;
 using Xunit;
 
-namespace IGraphics.Tests.Mathmatics.Extensions
+namespace IGraphics.Tests.Mathematics.Extensions
 {
    
    public class Matrix44DExtensionsTest

@@ -1,7 +1,7 @@
-﻿using IGraphics.Mathmatics;
+﻿using IGraphics.Mathematics;
 using Xunit;
 
-namespace IGraphics.Tests.Mathmatics
+namespace IGraphics.Tests.Mathematics
 {
     public class CardanFrameTest
     {

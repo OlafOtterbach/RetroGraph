@@ -1,4 +1,4 @@
-﻿namespace IGraphics.Mathmatics.Extensions
+﻿namespace IGraphics.Mathematics.Extensions
 {
     public static class Vector3DExtensions
     {

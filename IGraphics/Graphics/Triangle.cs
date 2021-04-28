@@ -1,4 +1,4 @@
-﻿using IGraphics.Mathmatics;
+﻿using IGraphics.Mathematics;
 
 namespace IGraphics.Graphics
 {

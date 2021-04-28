@@ -1,4 +1,4 @@
-﻿using IGraphics.Mathmatics;
+﻿using IGraphics.Mathematics;
 using System.Collections.Generic;
 
 namespace IGraphics.Graphics.Creators.Creator

@@ -1,6 +1,6 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.Graphics.Services;
-using IGraphics.Mathmatics;
+using IGraphics.Mathematics;
 
 namespace IGraphics.LogicViewing.Services
 {

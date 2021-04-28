@@ -1,6 +1,6 @@
 ﻿using IGraphics.Graphics;
 using IGraphics.LogicViewing;
-using IGraphics.Mathmatics;
+using IGraphics.Mathematics;
 using IHiddenLineGraphics;
 using RetroGraph.Models;
 using RetroGraph.Models.Extensions;
