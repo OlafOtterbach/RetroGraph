@@ -72,7 +72,7 @@ namespace IGraphics.LogicViewing.Services
                 angle = CalculateAngleForAxisNotLieingInCanvas(startX, startY, startMoveRay, endX, endY, endMoveRay, cylinderAxis, canvasWidth, canvasHeight);
             }
 
-            Rotate(body, cylinderSensor.Axis, angle);
+            Rotate(body, cylinderAxis, angle);
         }
 
         private static bool IsAxisIsInCameraPlane(Axis3D cylinderAxis, Camera camera)
@@ -198,9 +198,9 @@ namespace IGraphics.LogicViewing.Services
             return angle;
         }
 
-        private static void Rotate(Body body, Vector3D axis, double angle)
+        private static void Rotate(Body body, Axis3D axis, double angle)
         {
-            var rotation = Matrix44D.CreateRotation(body.Frame.Offset, axis, angle);
+            var rotation = Matrix44D.CreateRotation(body.Frame.Offset, axis.Direction, angle);
             body.Frame = rotation * body.Frame;
         }
     }
